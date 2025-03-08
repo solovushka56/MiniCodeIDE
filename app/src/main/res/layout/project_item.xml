@@ -1,57 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/project_item_rect"
-    android:padding="16dp"
-    android:layout_margin="15dp"
+    android:layout_marginBottom="15dp"
     >
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
+        android:id="@+id/parentRectView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:backgroundTint="@color/violet_light"
+        android:padding="15dp"
+        app:cardCornerRadius="18dp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/projectTitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
-            android:textColor="#FFFFFF"
-            tools:text="Project Title"/>
+            android:layout_margin="15dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/projectFilepath"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="#E2E2E2"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/text_wrapper_rect"
-            android:backgroundTint="@color/violet"
-            tools:text="Project description text"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/projectTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                tools:text="Project Title" />
 
-    <LinearLayout
-        android:id="@+id/buttons_container"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+            <TextView
+                android:id="@+id/projectFilepath"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/text_wrapper_rect"
+                android:backgroundTint="@color/violet"
+                android:textColor="#E2E2E2"
+                android:textSize="14sp"
+                tools:text="Project description text" />
+        </LinearLayout>
 
-        <ImageButton
-            android:visibility="invisible"
-            android:id="@+id/btn_delete"
+        <LinearLayout
+            android:id="@+id/buttons_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="@drawable/settings_menu"
-            android:background="@drawable/button_rect_common"/>
-    </LinearLayout>
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btn_delete"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/button_rect_common"
+                android:src="@drawable/settings_menu"
+                android:visibility="invisible" />
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

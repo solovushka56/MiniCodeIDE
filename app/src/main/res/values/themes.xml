@@ -5,7 +5,8 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.MiniCode" parent="Base.Theme.MiniCode" >
+    <style name="Theme.MiniCode" parent="Base.Theme.MiniCode">
+<!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
         <item name="android:fontFamily">@font/cascadia_code_semi_bold_origin</item>
         <item name="fontFamily">@font/cascadia_code_semi_bold_origin</item>
     </style>

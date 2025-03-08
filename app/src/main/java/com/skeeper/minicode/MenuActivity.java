@@ -1,5 +1,6 @@
 package com.skeeper.minicode;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -16,14 +17,17 @@ import com.skeeper.minicode.databinding.ActivityMenuBinding;
 public class MenuActivity extends AppCompatActivity {
 
 
-    private ActivityMenuBinding binding = ActivityMenuBinding
-            .inflate(getLayoutInflater());
+    private ActivityMenuBinding binding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+
+        binding = ActivityMenuBinding
+                .inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
 

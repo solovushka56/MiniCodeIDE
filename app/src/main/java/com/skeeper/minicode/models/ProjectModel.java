@@ -7,17 +7,15 @@ public class ProjectModel {
     private String projectPath;
     private String tags;
 
-    private String mainRectColorHex;
-    private String filepathRectColorHex;
+//    private String mainRectColorHex;
+//    private String filepathRectColorHex;
 
 
-    public ProjectModel(int id, String projectName, String projectPath, String tags, String mainRectColorHex, String filepathRectColorHex) {
+    public ProjectModel(int id, String projectName, String projectPath) {
         this.id = id;
         this.projectName = projectName;
         this.projectPath = projectPath;
 //        this.tags = tags;
-        this.mainRectColorHex = mainRectColorHex;
-        this.filepathRectColorHex = filepathRectColorHex;
     }
 
 
@@ -28,19 +26,6 @@ public class ProjectModel {
         this.tags = tags;
     }
 
-    public String getMainRectColorHex() {
-        return mainRectColorHex;
-    }
-    public void setMainRectColorHex(String mainRectColorHex) {
-        this.mainRectColorHex = mainRectColorHex;
-    }
-
-    public String getFilepathRectColorHex() {
-        return filepathRectColorHex;
-    }
-    public void setFilepathRectColorHex(String filepathRectColorHex) {
-        this.filepathRectColorHex = filepathRectColorHex;
-    }
 
     public int getId() {
         return id;
