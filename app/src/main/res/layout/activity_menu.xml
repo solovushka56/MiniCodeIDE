@@ -12,6 +12,21 @@
 
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="15dp"
+        app:layout_constraintBottom_toTopOf="@id/navigationView"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="15dp">
+
+        <FrameLayout
+            android:id="@+id/mainFragmentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+    </LinearLayout>
+
+    <LinearLayout
         android:id="@+id/navigationView"
         android:layout_width="match_parent"
         android:layout_height="90dp"
@@ -49,21 +64,6 @@
             app:srcCompat="@drawable/settings_menu" />
 
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_margin="15dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/navigationView">
-
-        <FrameLayout
-            android:id="@+id/mainFragmentLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible" />
-    </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
