@@ -37,6 +37,7 @@
                 android:id="@+id/projectTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/cascadia_code_semi_bold_origin"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp"
                 tools:text="Project Title" />
@@ -45,6 +46,7 @@
                 android:id="@+id/projectFilepath"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/cascadia_code_semi_bold_origin"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/text_wrapper_rect"
                 android:backgroundTint="@color/violet"

@@ -87,7 +87,6 @@ public class ProjectsFragment extends Fragment {
 
         recyclerView.setAdapter(adapter);
 
-        Toast.makeText(requireActivity(), getContext().toString(), Toast.LENGTH_LONG).show();
 
     }
 
