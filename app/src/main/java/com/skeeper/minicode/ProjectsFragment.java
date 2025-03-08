@@ -51,20 +51,34 @@ public class ProjectsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
-
-        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+        addProjectsData(models);
         setProjectsRecycler();
 
 
     }
 
 
+    private void addProjectsData(List<ProjectModel> models) {
+        // todo: сделать здесь чтение существующих проектов из директории
+        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
+        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
+        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+
+        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
+        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
+        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+
+        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
+        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
+        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+
+        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
+        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
+        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+
+    }
+
     private void setProjectsRecycler() {
-
-
         var recyclerView = binding.projectsRecyclerView;
         var adapter = new ProjectAdapter(getContext(), models);
 
