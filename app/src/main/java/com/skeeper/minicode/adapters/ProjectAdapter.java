@@ -20,6 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skeeper.minicode.ProjectOpenView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.helpers.ProjectRectColorBindings;
+import com.skeeper.minicode.helpers.animations.BackInterpolations;
+import com.skeeper.minicode.helpers.animations.QuartInterpolations;
+import com.skeeper.minicode.helpers.animations.ViewScaleComponent;
 import com.skeeper.minicode.models.ProjectModel;
 
 import java.util.Collection;
@@ -67,24 +70,38 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
 
         holder.parentRectView.setOnClickListener(v -> {
-            var intent = new Intent(holder.parentRectView.getContext(), ProjectOpenView.class);
 
-            ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
-                    (Activity) context,
-                    new Pair<View, String>(holder.parentRectView, "projectTransition")
+            ViewScaleComponent.scaleView(holder.parentRectView, 110, 0.7f, 0.7f,
+                    () -> ViewScaleComponent.scaleView(holder.parentRectView, 150, 1f, 1f, () -> {
+                                bindProjectOnClickListener(holder, currentModel);
+                            },
+                            input -> QuartInterpolations.quartIn(input)),
+                    input -> QuartInterpolations.quartOut(input)
             );
 
 
-            intent.putExtra("id", currentModel.getId());
-            intent.putExtra("projectName", currentModel.getProjectName());
-            intent.putExtra("projectFilepath", currentModel.getProjectName());
-            intent.putExtra("mainRectColor", currentModel.getMainRectColorHex());
-            intent.putExtra("innerRectColor", currentModel.getInnerRectColorHex());
-
-            context.startActivity(intent, options.toBundle());
         });
 
     }
+
+    private void bindProjectOnClickListener(@NonNull ProjectViewHolder holder, ProjectModel currentModel) {
+        var intent = new Intent(holder.parentRectView.getContext(), ProjectOpenView.class);
+
+        ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
+                (Activity) context,
+                new Pair<View, String>(holder.parentRectView, "projectTransition")
+        );
+
+
+        intent.putExtra("id", currentModel.getId());
+        intent.putExtra("projectName", currentModel.getProjectName());
+        intent.putExtra("projectFilepath", currentModel.getProjectName());
+        intent.putExtra("mainRectColor", currentModel.getMainRectColorHex());
+        intent.putExtra("innerRectColor", currentModel.getInnerRectColorHex());
+
+        context.startActivity(intent, options.toBundle());
+    }
+
     @Override
     public int getItemCount() {
         return projects.size();

@@ -9,6 +9,10 @@
 <!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
         <item name="android:fontFamily">@font/cascadia_code_semi_bold_origin</item>
         <item name="fontFamily">@font/cascadia_code_semi_bold_origin</item>
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowSharedElementEnterTransition">@transition/shared_item_enter</item>
+        <item name="android:windowSharedElementExitTransition">@transition/shared_item_exit</item>
     </style>
 
 </resources>
