@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.Theme.MiniCodeIDE.MyView" parent="">
+        <item name="android:background">@color/gray_400</item>
+        <!--        <item name="exampleColor">@color/light_blue_400</item>-->
+    </style>
+
+
+
+
+
+    <style name="CustomImageButtonActive">
+        <item name="android:scaleY">0.8</item>
+        <item name="android:scaleX">0.8</item>
+
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:background">@drawable/button_rect_common</item>
+        <item name="android:backgroundTint">@color/violet_light</item>
+        <item name="android:tint">@color/blue_light</item>
+        <item name="android:layout_margin">15dp</item>
+
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+
+
+
+    <style name="CustomImageButtonInactive">
+        <item name="android:scaleY">0.8</item>
+        <item name="android:scaleX">0.8</item>
+
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:background">@drawable/button_rect_common</item>
+        <item name="android:backgroundTint">@color/violet</item>
+        <item name="android:tint">@color/violet_light</item>
+        <item name="android:layout_margin">15dp</item>
+
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+    </style>
+
+
+
+</resources>

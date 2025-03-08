@@ -1,6 +1,5 @@
 package com.skeeper.minicode;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -9,21 +8,18 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.skeeper.minicode.databinding.ActivityMainBinding;
+import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 
-public class MainActivity extends AppCompatActivity {
+public class CodeEditorActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding  = ActivityMainBinding
+    private ActivityCodeEditorBinding binding = ActivityCodeEditorBinding
             .inflate(getLayoutInflater());
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-        setContentView(binding.getRoot());
-
+//        setContentView(R.layout.activity_code_editor);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -31,10 +27,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        binding.startButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-            startActivity(intent);
-        });
 
     }
 }

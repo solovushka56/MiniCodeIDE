@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MenuActivity"
+    android:background="@color/blue_grey"
+    android:backgroundTintMode="src_over"
+    >
+
+
+
+    <LinearLayout
+        android:id="@+id/navigationView"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/group_rect_black"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+
+        <ImageButton
+            android:id="@+id/tutorialsButton"
+            style="@style/CustomImageButtonInactive"
+            android:contentDescription="null"
+            app:srcCompat="@drawable/tutorials_menu" />
+
+        <ImageButton
+            android:id="@+id/projectsButton"
+
+            style="@style/CustomImageButtonActive"
+            android:contentDescription="null"
+            app:srcCompat="@drawable/projects_home_menu" />
+
+        <ImageButton
+            android:id="@+id/settingsButton"
+            style="@style/CustomImageButtonInactive"
+            android:contentDescription="null"
+            app:srcCompat="@drawable/settings_menu"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_margin="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/navigationView">
+
+        <FrameLayout
+            android:id="@+id/mainFragmentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
