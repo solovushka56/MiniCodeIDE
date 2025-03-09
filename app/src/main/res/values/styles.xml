@@ -7,13 +7,10 @@
     </style>
 
 
-
-
-
     <style name="CustomImageButtonActive">
         <item name="android:scaleY">0.8</item>
         <item name="android:scaleX">0.8</item>
-
+        <item name="fontFamily">@font/cascadia_code_semi_bold_origin</item>
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:background">@drawable/button_rect_common</item>
@@ -26,12 +23,10 @@
     </style>
 
 
-
-
     <style name="CustomImageButtonInactive">
         <item name="android:scaleY">0.8</item>
         <item name="android:scaleX">0.8</item>
-
+        <item name="fontFamily">@font/cascadia_code_semi_bold_origin</item>
         <item name="android:layout_width">60dp</item>
         <item name="android:layout_height">60dp</item>
         <item name="android:background">@drawable/button_rect_common</item>
@@ -48,6 +43,11 @@
         <item name="android:activityOpenExitAnimation">@anim/fade_out</item>
         <item name="android:activityCloseEnterAnimation">@anim/fade_in</item>
         <item name="android:activityCloseExitAnimation">@anim/slide_down</item>
+    </style>
+
+    <style name="Widget.Theme.MiniCode.MyView" parent="">
+        <item name="android:background">@color/gray_400</item>
+        <item name="exampleColor">@color/light_blue_400</item>
     </style>
 
 </resources>

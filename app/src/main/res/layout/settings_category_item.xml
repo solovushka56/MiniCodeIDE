@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settingCategoryItem"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/settings_category_rect"
     android:backgroundTint="@color/violet_light"
-
+    android:layout_marginBottom="10dp"
     tools:ignore="ExtraText">
 
     <TextView
         android:id="@+id/settingName"
-        android:layout_width="290dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:fontFamily="@font/cascadia_code_semi_bold_origin"
-        android:text="settingN"
+        android:gravity="start"
+        android:text="setting_name"
         android:textAlignment="gravity"
 
         android:textColor="@color/white"
         android:textSize="27dp"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/settingIcon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

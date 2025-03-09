@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/panelParent"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="649dp"
+    android:background="@drawable/ripple_shape"
+    android:clickable="true"
+    app:cardBackgroundColor="@color/violet_light"
+    app:cardCornerRadius="15dp"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:rippleColor="#4F3DC2EC"
+    app:strokeColor="@color/transparent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/nameText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Git Add"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
+
+        <CheckBox
+            android:id="@+id/checkbox"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/button_rect_common"
+            android:backgroundTint="@color/violet"
+            android:buttonTint="@color/blue_light"
+            android:clickable="false"
+            android:drawableTint="@color/blue_grey" />
+            <!--                    <com.google.android.material.switchmaterial.SwitchMaterial-->
+            <!--                        android:id="@+id/flagSwitch"-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:checked="false"/>-->
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

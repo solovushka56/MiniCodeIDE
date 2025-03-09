@@ -1,5 +1,6 @@
 package com.skeeper.minicode;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -44,5 +45,13 @@ public class ProjectOpenView extends AppCompatActivity {
         binding.projectCard.setInnerRectColor(Color.parseColor(innerRectColor));
         binding.projectCard.setProjectName(projectName);
         binding.projectCard.setProjectFilepathText(projectFilepath);
+
+
+        binding.projectOpenButton.setOnClickListener(v -> {
+            var intent = new Intent(ProjectOpenView.this, CodeEditorActivity.class);
+//            intent.putExtra("projectRef", "/src/0/name"); //todo
+            startActivity(intent);
+
+        });
     }
 }

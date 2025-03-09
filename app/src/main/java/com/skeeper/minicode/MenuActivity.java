@@ -32,8 +32,7 @@ public class MenuActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
-        binding = ActivityMenuBinding
-                .inflate(getLayoutInflater());
+        binding = ActivityMenuBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());
 
@@ -57,7 +56,6 @@ public class MenuActivity extends AppCompatActivity {
             setFragment(new TutorialsFragment());
             switchActiveButton((ImageButton) v);
         });
-
         setActiveButton(binding.projectsButton);
 
 
@@ -73,6 +71,11 @@ public class MenuActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
+
+
+
+
+
     private void setActiveButton(ImageButton button) {
         activeButton = button;
         button.setScaleX(1.2f);
@@ -80,7 +83,6 @@ public class MenuActivity extends AppCompatActivity {
         button.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.violet_light)));
         button.setImageTintList(ColorStateList.valueOf(getColor(R.color.blue_light)));
     }
-
     private void switchActiveButton(ImageButton clickedButton) {
         if (activeButton == clickedButton) return;
 

@@ -8,17 +8,13 @@
     tools:context=".TestActivity">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/projectsRecyclerView"
-        android:contentDescription="apk"
+    <com.amrdeveloper.codeview.CodeView
+        android:id="@+id/codeViewMain1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

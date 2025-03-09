@@ -41,24 +41,6 @@ public class TestActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
 
-        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
-        setProjectsRecycler();
-
-    }
-    private void setProjectsRecycler() {
-
-
-        var recyclerView = binding.projectsRecyclerView;
-        var adapter = new ProjectAdapter(this, models);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(
-                this, RecyclerView.VERTICAL, false));
-
-        recyclerView.setAdapter(adapter);
-
-        Toast.makeText(this, this.toString(), Toast.LENGTH_LONG).show();
 
     }
 

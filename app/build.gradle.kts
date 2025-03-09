@@ -45,7 +45,20 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+//    implementation("com.google.android.material:material:1.9.0") // для кнопки
 
+
+
+    implementation("io.github.amrdeveloper:codeview:1.3.9")
+
+
+    // JGIT bottom
+    // https://central.sonatype.dev/artifact/org.eclipse.jgit/org.eclipse.jgit/
+    implementation("org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r")
+    // SSH support for JGit based on Apache MINA sshd
+//    implementation("org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.4.0.202211300538-r")
+//    // GPG support for JGit based on BouncyCastle (commit signing)
+//    implementation("org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.4.0.202211300538-r")
 
 
 }

@@ -1,5 +1,6 @@
 package com.skeeper.minicode;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -45,8 +46,6 @@ public class ProjectsFragment extends Fragment {
 
 
 
-
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -54,8 +53,25 @@ public class ProjectsFragment extends Fragment {
         addProjectsData(models);
         setProjectsRecycler();
 
+        binding.createProjectButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ProjectCreateActivity.class);
+            intent.putExtra("fromGit", false);
+            startActivity(intent);
+        });
+
+        binding.cloneFromGitButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ProjectCreateActivity.class);
+            intent.putExtra("fromGit", true);
+            startActivity(intent);
+        });
+
 
     }
+
+
+
+
+
 
 
     private void addProjectsData(List<ProjectModel> models) {
@@ -77,7 +93,6 @@ public class ProjectsFragment extends Fragment {
         models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
 
     }
-
     private void setProjectsRecycler() {
         var recyclerView = binding.projectsRecyclerView;
         var adapter = new ProjectAdapter(getContext(), models);
@@ -89,10 +104,6 @@ public class ProjectsFragment extends Fragment {
 
 
     }
-
-
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();

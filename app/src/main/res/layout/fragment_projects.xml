@@ -3,19 +3,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/group_rect_black"
     tools:context=".ProjectsFragment">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:contentDescription="recycler view for project rects"
-        android:id="@+id/projectsRecyclerView"
+    <LinearLayout
         android:layout_margin="18dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
+            <Button
+                android:id="@+id/createProjectButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ripple_shape"
+                android:backgroundTint="@color/violet_light"
+                android:clickable="true"
+                android:contentDescription="@string/app_name"
+                android:fontFamily="@font/cascadia_code"
+                android:padding="15dp"
+                android:src="@drawable/save_icon"
+                android:text="Create Project"
+                app:backgroundTint="@null"
+                android:layout_marginRight="9dp"
+                />
+
+            <Button
+                android:id="@+id/cloneFromGitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/ripple_shape"
+                android:backgroundTint="@color/violet_light"
+                android:clickable="true"
+                android:contentDescription="@string/app_name"
+                android:fontFamily="@font/cascadia_code"
+                android:padding="15dp"
+                android:src="@drawable/save_icon"
+                android:text="Clone From Git"
+                app:backgroundTint="@null"
+
+                />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/projectsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="36dp"
+            android:contentDescription="recycler view for project rects"
+            android:clipToOutline="true"
+            />
+    </LinearLayout>
 
 
 </FrameLayout>
