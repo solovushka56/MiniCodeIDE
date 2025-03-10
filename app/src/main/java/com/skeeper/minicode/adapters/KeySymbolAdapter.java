@@ -4,15 +4,16 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amrdeveloper.codeview.CodeView;
-import com.skeeper.minicode.CodeEditorActivity;
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.helpers.VibrationManager;
 import com.skeeper.minicode.models.KeySymbolItemModel;
+import com.skeeper.minicode.singleton.CodeDataSingleton;
 
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeyS
     @Override
     public void onBindViewHolder(@NonNull KeySymbolViewHolder holder, int position) {
         var currentModel = models.get(position);
-        var currentButton = holder.button;
+        TextView currentButton = holder.textView;
 
 
         //content description is text that will be paste in code editor on click
@@ -44,9 +45,14 @@ public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeyS
         currentButton.setContentDescription(currentModel.getSymbolValue());
 
 
-        holder.button.setOnClickListener(v -> {
-            var symbolView = (CodeEditorActivity) currentButton.getContext();
-            symbolView.onSymbolClick(currentButton);
+        holder.rect.setOnClickListener(v -> {
+//            var symbolView = (CodeEditorActivity) currentButton.getContext();
+//            symbolView.onSymbolClick(currentButton);
+            var currentCodeView = CodeDataSingleton.getInstance().currentCodeView;
+            VibrationManager.vibrate(40L, currentButton.getContext());
+            if (currentCodeView != null) {
+                currentCodeView.append(currentModel.getSymbolValue());
+            }
         });
     }
 
@@ -56,11 +62,12 @@ public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeyS
     }
 
     public static final class KeySymbolViewHolder extends RecyclerView.ViewHolder {
-        public Button button;
-
+        public TextView textView;
+        public CardView rect;
         public KeySymbolViewHolder(@NonNull View itemView) {
             super(itemView);
-            button = itemView.findViewById(R.id.textButton);
+            rect = itemView.findViewById(R.id.keyTextRect);
+            textView = itemView.findViewById(R.id.textButton);
         }
     }
 }

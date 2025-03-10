@@ -30,6 +30,7 @@ import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.models.KeySymbolBarModel;
 import com.skeeper.minicode.models.KeySymbolItemModel;
+import com.skeeper.minicode.singleton.CodeDataSingleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,11 +40,12 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class CodeEditorActivity extends AppCompatActivity {
-
+    
     private ActivityCodeEditorBinding binding;
 
+    private final CodeDataSingleton codeDataSingleton = CodeDataSingleton.getInstance();
     private CodeView codeView;
-
+    
     private View rootView;
     private RecyclerView bottomPanel;
     private int minKeyboardHeight = 100;
@@ -72,7 +74,7 @@ public class CodeEditorActivity extends AppCompatActivity {
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
 
-
+        codeDataSingleton.setCurrentCodeView(codeView);
         models.add(new KeySymbolItemModel(0, "{}", "{}"));
         models.add(new KeySymbolItemModel(1, "pb", "public"));
 
@@ -113,8 +115,9 @@ public class CodeEditorActivity extends AppCompatActivity {
         pairCompleteMap.put('"', '"');
 
         setupKeyboardListener();
+        
     }
-
+    
 
     private void setRecycler() {
         var recyclerView = binding.symbolsPanel;
@@ -137,7 +140,8 @@ public class CodeEditorActivity extends AppCompatActivity {
             int keyboardHeight = screenHeight - rect.bottom;
 
             if (keyboardHeight > convertDpToPx(minKeyboardHeight)) {
-                bottomPanel.getLayoutParams().height = keyboardHeight;
+                int fillerTab = 40;
+                bottomPanel.getLayoutParams().height = keyboardHeight + fillerTab;
                 bottomPanel.setVisibility(View.VISIBLE);
             } else {
                 bottomPanel.setVisibility(View.GONE);
@@ -217,6 +221,9 @@ public class CodeEditorActivity extends AppCompatActivity {
 
 //        codeView.setHighlightWhileTextChanging();
     }
+
+
+
 
     public void onSymbolClick(View view) {
         Button btn = (Button) view;
