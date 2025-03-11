@@ -12,13 +12,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
+import com.skeeper.minicode.models.ProjectModel;
 
 public class ProjectOpenView extends AppCompatActivity {
 
     private ActivityProjectOpenViewBinding binding;
 
-    ProjectItemView projectItemView = null;
-
+//    ProjectItemView projectItemView = null;
+    ProjectModel boundModel = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,31 +28,33 @@ public class ProjectOpenView extends AppCompatActivity {
 
         binding = ActivityProjectOpenViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-//        setContentView(R.layout.activity_project_open_view);
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        int id = getIntent().getIntExtra("id", 0);
-        String projectFilepath = getIntent().getStringExtra("projectFilepath");
-        String projectName = getIntent().getStringExtra("projectName");
-        String mainRectColor = getIntent().getStringExtra("mainRectColor");
-        String innerRectColor = getIntent().getStringExtra("innerRectColor");
-
-
-        binding.projectCard.setMainRectColor(Color.parseColor(mainRectColor));
-        binding.projectCard.setInnerRectColor(Color.parseColor(innerRectColor));
-        binding.projectCard.setProjectName(projectName);
-        binding.projectCard.setProjectFilepathText(projectFilepath);
+        initByModel();
 
 
         binding.projectOpenButton.setOnClickListener(v -> {
             var intent = new Intent(ProjectOpenView.this, CodeEditorActivity.class);
 //            intent.putExtra("projectRef", "/src/0/name"); //todo
             startActivity(intent);
-
         });
     }
+
+    private void initByModel() {
+        boundModel = (ProjectModel) getIntent().getParcelableExtra("projectModel");
+        String projectFilepath = boundModel.getProjectPath();
+        String projectName = boundModel.getProjectName();
+        String mainRectColor = boundModel.getMainRectColorHex();
+        String innerRectColor = boundModel.getInnerRectColorHex();
+
+        binding.projectCard.setMainRectColor(Color.parseColor(mainRectColor));
+        binding.projectCard.setInnerRectColor(Color.parseColor(innerRectColor));
+        binding.projectCard.setProjectName(projectName);
+        binding.projectCard.setProjectFilepathText(projectFilepath);
+    }
+
 }

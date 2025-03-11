@@ -25,6 +25,7 @@ import com.skeeper.minicode.helpers.animations.QuartInterpolations;
 import com.skeeper.minicode.helpers.animations.ViewScaleComponent;
 import com.skeeper.minicode.models.ProjectModel;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -59,15 +60,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
 
         ProjectModel currentModel = projects.get(position);
-
-        // background main
-        holder.parentRectView.setBackgroundTintList(
-                ColorStateList.valueOf(Color.parseColor(currentModel.getMainRectColorHex())));
-
-        // background inner
-        holder.filepathView.setBackgroundTintList(
-                ColorStateList.valueOf(Color.parseColor(currentModel.getInnerRectColorHex())));
-
+        bindProjectVisuals(holder, currentModel);
 
         holder.parentRectView.setOnClickListener(v -> {
 
@@ -84,7 +77,23 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
     }
 
+
+    private void bindProjectVisuals(@NonNull ProjectViewHolder holder, ProjectModel currentModel) {
+        holder.projectNameView.setText(currentModel.getProjectName());
+        holder.filepathView.setText(currentModel.getProjectPath());
+
+        // background main
+        holder.parentRectView.setBackgroundTintList(
+                ColorStateList.valueOf(Color.parseColor(currentModel.getMainRectColorHex())));
+
+        // background inner
+        holder.filepathView.setBackgroundTintList(
+                ColorStateList.valueOf(Color.parseColor(currentModel.getInnerRectColorHex())));
+    }
+
+
     private void bindProjectOnClickListener(@NonNull ProjectViewHolder holder, ProjectModel currentModel) {
+
         var intent = new Intent(holder.parentRectView.getContext(), ProjectOpenView.class);
 
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
@@ -93,11 +102,13 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         );
 
 
-        intent.putExtra("id", currentModel.getId());
-        intent.putExtra("projectName", currentModel.getProjectName());
-        intent.putExtra("projectFilepath", currentModel.getProjectName());
-        intent.putExtra("mainRectColor", currentModel.getMainRectColorHex());
-        intent.putExtra("innerRectColor", currentModel.getInnerRectColorHex());
+        intent.putExtra("projectModel", currentModel);
+
+//        intent.putExtra("id", currentModel.getId());
+//        intent.putExtra("projectName", currentModel.getProjectName());
+//        intent.putExtra("projectFilepath", currentModel.getProjectName());
+//        intent.putExtra("mainRectColor", currentModel.getMainRectColorHex());
+//        intent.putExtra("innerRectColor", currentModel.getInnerRectColorHex());
 
         context.startActivity(intent, options.toBundle());
     }

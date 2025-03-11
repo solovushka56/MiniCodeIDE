@@ -6,7 +6,17 @@
         <!--        <item name="exampleColor">@color/light_blue_400</item>-->
     </style>
 
+    
+<!--    <style name="CommonTextButton">-->
+<!--        <item name="app"-->
+<!--        -->
+<!--    </style>-->
 
+    <style name="MinicodeTextDefault">
+        <item name="color">@color/white</item>
+        <item name="fontFamily">@font/cascadia_code</item>
+    </style>
+    
     <style name="CustomImageButtonActive">
         <item name="android:scaleY">0.8</item>
         <item name="android:scaleX">0.8</item>

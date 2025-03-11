@@ -20,6 +20,103 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginBottom="18dp"
+            >
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/buttonPanelRemove"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_shape"
+                android:clickable="true"
+                app:cardBackgroundColor="@color/orange"
+                app:cardCornerRadius="10dp"
+                app:rippleColor="#47E91E63"
+                app:strokeColor="@color/transparent"
+                android:layout_marginRight="15dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
+
+
+                    <ImageView
+                        android:id="@+id/gitAddCheckbox"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_margin="10dp"
+                        android:clickable="false"
+                        android:src="@drawable/trash"
+                        app:tint="@color/white" />
+
+
+                    <TextView
+                        android:id="@+id/panelButtonText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:fontFamily="@font/cascadia_code"
+                        android:gravity="center"
+                        android:text="Remove"
+                        android:textColor="@color/white" />
+
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_weight="1"
+                android:id="@+id/buttonPanelEditName"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/ripple_shape"
+                android:clickable="true"
+                app:cardBackgroundColor="@color/soft_blue"
+                app:cardCornerRadius="10dp"
+                app:rippleColor="#47E91E63"
+                app:strokeColor="@color/transparent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_margin="10dp"
+                        android:clickable="false"
+                        android:src="@drawable/editor"
+                        app:tint="@color/white" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="8dp"
+                        android:fontFamily="@font/cascadia_code"
+                        android:gravity="center"
+                        android:text="Edit name"
+                        android:textColor="@color/white" />
+
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+
         <com.skeeper.minicode.ProjectItemView
             android:id="@+id/projectCard"
             android:layout_width="match_parent"
@@ -27,6 +124,40 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:backgroundTint="@color/blue_grey"
+            app:cardCornerRadius="15dp">
+
+            <LinearLayout
+                android:layout_margin="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textLastEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cascadia_code"
+                    android:text="<date>"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/textCreationDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cascadia_code"
+                    android:text="<date>"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
     <Button
@@ -35,6 +166,10 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="25dp"
         android:text="Open project"
+        android:fontFamily="@font/cascadia_code"
+        app:backgroundTint="@null"
+        android:background="@drawable/ripple_shape"
+        android:backgroundTint="@color/violet_light"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
