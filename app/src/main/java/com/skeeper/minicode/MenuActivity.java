@@ -58,8 +58,8 @@ public class MenuActivity extends AppCompatActivity {
         });
         setActiveButton(binding.projectsButton);
 
-
-
+        setFragment(new ProjectsFragment());
+//        switchActiveButton((ImageButton) v);
     }
 
 
@@ -67,7 +67,7 @@ public class MenuActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.mainFragmentLayout, newFragment);
-        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.addToBackStack(null); // закомментил, чтобы не отлеживалась история фрагментов
         fragmentTransaction.commit();
     }
 

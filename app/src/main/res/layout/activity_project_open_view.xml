@@ -139,6 +139,15 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+
+                <TextView
+                    android:textColor="@color/white"
+                    android:id="@+id/projectDescriptonText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:text="project description"
+                    />
                 <TextView
                     android:id="@+id/textLastEdit"
                     android:layout_width="match_parent"

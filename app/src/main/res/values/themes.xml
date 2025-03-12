@@ -3,6 +3,11 @@
     <style name="Base.Theme.MiniCode" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+
+<!--        <item name="android:background">@color/blue_dark</item>-->
+<!--        <item name="android:windowBackground">@color/blue_dark</item>-->
+        <item name="fontFamily">@font/cascadia_code</item>
+        <item name="android:fontFamily">@font/cascadia_code</item>
     </style>
 
     <style name="Theme.MiniCode" parent="Base.Theme.MiniCode">

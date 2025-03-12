@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId = "com.skeeper.minicode"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -51,6 +51,7 @@ dependencies {
 
     implementation("io.github.amrdeveloper:codeview:1.3.9")
 
+//    implementation ("com.jakewharton.threetenabp:threetenabp:1.4.6")
 
     // JGIT bottom
     // https://central.sonatype.dev/artifact/org.eclipse.jgit/org.eclipse.jgit/

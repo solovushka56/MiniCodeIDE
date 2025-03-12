@@ -82,17 +82,9 @@ public class ProjectsFragment extends Fragment {
         }
 
 
-//        Toast.makeText(
-//                getContext(),
-//                ProjectManager
-//                        .getProjectConfigDir(getContext(), "xdd")
-//                        .toString(),
-//                Toast.LENGTH_LONG).show();
 
-
-
-        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
+//        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
+//        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
 //        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
 //
 //        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));

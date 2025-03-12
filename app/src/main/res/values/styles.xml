@@ -3,10 +3,18 @@
 
     <style name="Widget.Theme.MiniCodeIDE.MyView" parent="">
         <item name="android:background">@color/gray_400</item>
+
+<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+<!--        <item name="android:windowIsTranslucent">true</item>-->
+
+        <item name="fontFamily">@font/cascadia_code</item>
         <!--        <item name="exampleColor">@color/light_blue_400</item>-->
     </style>
 
-    
+    <style name="Theme.NoFlash" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
 <!--    <style name="CommonTextButton">-->
 <!--        <item name="app"-->
 <!--        -->

@@ -13,6 +13,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.models.ProjectModel;
+import com.skeeper.minicode.singleton.ProjectManager;
+
+import java.time.LocalDateTime;
 
 public class ProjectOpenView extends AppCompatActivity {
 
@@ -20,11 +23,12 @@ public class ProjectOpenView extends AppCompatActivity {
 
 //    ProjectItemView projectItemView = null;
     ProjectModel boundModel = null;
-
+    String time;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
         binding = ActivityProjectOpenViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -42,6 +46,12 @@ public class ProjectOpenView extends AppCompatActivity {
 //            intent.putExtra("projectRef", "/src/0/name"); //todo
             startActivity(intent);
         });
+
+        binding.buttonPanelRemove.setOnClickListener(v -> {
+            ProjectManager.deleteProject(this, boundModel.getProjectName());
+            startActivity(new Intent(ProjectOpenView.this, MenuActivity.class));
+        });
+
     }
 
     private void initByModel() {
@@ -50,11 +60,14 @@ public class ProjectOpenView extends AppCompatActivity {
         String projectName = boundModel.getProjectName();
         String mainRectColor = boundModel.getMainRectColorHex();
         String innerRectColor = boundModel.getInnerRectColorHex();
+        String creationDateTime = boundModel.getCreationDateTime();
 
         binding.projectCard.setMainRectColor(Color.parseColor(mainRectColor));
         binding.projectCard.setInnerRectColor(Color.parseColor(innerRectColor));
         binding.projectCard.setProjectName(projectName);
         binding.projectCard.setProjectFilepathText(projectFilepath);
+        binding.projectDescriptonText.setText(boundModel.getProjectDescription());
+        binding.textCreationDate.setText(creationDateTime);
     }
 
 }

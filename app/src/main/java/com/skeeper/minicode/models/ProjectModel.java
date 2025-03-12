@@ -12,6 +12,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.time.LocalDateTime;
+
 
 public class ProjectModel implements Parcelable {
 
@@ -24,6 +26,10 @@ public class ProjectModel implements Parcelable {
     private String mainRectColorHex;
     private String innerRectColorHex;
 
+    private String creationDateTime;
+    private String lastOpenDateTime = "";
+
+
     public ProjectModel(int id, String projectName, String projectPath) {
         this.id = id;
         this.projectName = projectName;
@@ -31,7 +37,9 @@ public class ProjectModel implements Parcelable {
         initRandomPalette();
     }
 
-    public ProjectModel(int id, String projectName, String projectDescription, String projectPath, String[] tags, String mainRectColorHex, String innerRectColorHex) {
+    public ProjectModel(int id, String projectName, String projectDescription,
+                        String projectPath, String[] tags, String mainRectColorHex,
+                        String innerRectColorHex, String creationDateTime) {
         this.id = id;
         this.projectName = projectName;
         this.projectDescription = projectDescription;
@@ -39,6 +47,7 @@ public class ProjectModel implements Parcelable {
         this.tags = tags;
         this.mainRectColorHex = mainRectColorHex;
         this.innerRectColorHex = innerRectColorHex;
+        this.creationDateTime = creationDateTime;
     }
 
     protected ProjectModel(Parcel in) {
@@ -96,9 +105,21 @@ public class ProjectModel implements Parcelable {
         setInnerRectColorHex(randomizedPalette.innerRectColor);
     }
 
+    public String getCreationDateTime() {
+        return creationDateTime;
+    }
 
+    public void setCreationDateTime(String creationDateTime) {
+        this.creationDateTime = creationDateTime;
+    }
 
+    public String getLastOpenDateTime() {
+        return lastOpenDateTime;
+    }
 
+    public void setLastOpenDateTime(String lastOpenDateTime) {
+        this.lastOpenDateTime = lastOpenDateTime;
+    }
 
     public String getMainRectColorHex() {
         return mainRectColorHex;

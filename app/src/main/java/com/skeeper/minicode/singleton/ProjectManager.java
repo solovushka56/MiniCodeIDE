@@ -107,9 +107,7 @@ public class ProjectManager {
                 return false;
             }
         }
-
         if (!projectDir.mkdirs()) return false;
-
         try {
             generateProjectIdeFiles(context, projectDir, model);
         }
@@ -133,14 +131,6 @@ public class ProjectManager {
         String content = gson.toJson(model);
 
         saveFile(context, ideFilesPath, ideProjectConfigFilename, content);
-
-//        try (FileOutputStream outputStream = context
-//                .openFileOutput(ideProjectConfigFilename, Context.MODE_PRIVATE)) {
-//            outputStream.write(content.getBytes());
-//        }
-//        catch (IOException e) { e.printStackTrace(); }
-
-
     }
 
 
