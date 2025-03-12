@@ -1,5 +1,9 @@
 package com.skeeper.minicode.helpers;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public class ProjectRectColorBinding {
     public String mainRectColor;
     public String innerRectColor;
@@ -9,6 +13,22 @@ public class ProjectRectColorBinding {
         this.mainRectColor = mainRectColor;
         this.innerRectColor = innerRectColor;
     }
+
+    public ProjectRectColorBinding() {
+        setRandomPalette();
+    }
+
+    public void setRandomPalette() {
+        List<ProjectRectColorBinding> colorBindings = new ArrayList<>(
+                ProjectRectColorBindings.bindingsList);
+        Collections.shuffle(colorBindings);
+
+        var randomizedPalette = colorBindings.get(0);
+
+        setMainRectColor(randomizedPalette.mainRectColor);
+        setInnerRectColor(randomizedPalette.innerRectColor);
+    }
+
 
     public String getMainRectColor() {
         return mainRectColor;

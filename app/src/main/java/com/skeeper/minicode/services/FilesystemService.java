@@ -16,7 +16,7 @@ import java.io.IOException;
 public class FilesystemService {
 
 
-    public void saveText(String text, String filename, Context context) {
+    public static void saveText(String text, String filename, Context context) {
         FileOutputStream outputStream = null;
 
         try {
@@ -40,7 +40,7 @@ public class FilesystemService {
 
 
     @Nullable
-    public String getTextFromFile(String filename, Context context) {
+    public static String getTextFromFile(String filename, Context context) {
         String text = null;
 
         FileInputStream fin = null;

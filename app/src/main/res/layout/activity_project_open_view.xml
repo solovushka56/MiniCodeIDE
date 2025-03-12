@@ -37,7 +37,7 @@
                 android:clickable="true"
                 app:cardBackgroundColor="@color/orange"
                 app:cardCornerRadius="10dp"
-                app:rippleColor="#47E91E63"
+                app:rippleColor="#67FFEB3B"
                 app:strokeColor="@color/transparent"
                 android:layout_marginRight="15dp">
 
@@ -83,7 +83,7 @@
                 android:clickable="true"
                 app:cardBackgroundColor="@color/soft_blue"
                 app:cardCornerRadius="10dp"
-                app:rippleColor="#47E91E63"
+                app:rippleColor="#6587C6E9"
                 app:strokeColor="@color/transparent">
 
                 <LinearLayout
@@ -144,7 +144,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cascadia_code"
-                    android:text="<date>"
+                    android:text="date"
                     android:textColor="@color/white" />
 
                 <TextView
@@ -152,7 +152,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cascadia_code"
-                    android:text="<date>"
+                    android:text="date"
                     android:textColor="@color/white" />
             </LinearLayout>
 

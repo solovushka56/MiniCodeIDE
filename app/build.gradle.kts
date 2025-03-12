@@ -47,7 +47,7 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
 //    implementation("com.google.android.material:material:1.9.0") // для кнопки
 
-
+    implementation("com.google.code.gson:gson:2.11.0")
 
     implementation("io.github.amrdeveloper:codeview:1.3.9")
 

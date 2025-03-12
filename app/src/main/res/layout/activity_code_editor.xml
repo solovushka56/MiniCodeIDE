@@ -6,25 +6,89 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CodeEditorActivity"
-    android:background="@color/blue_dark"
+    android:background="@color/blue_grey"
     >
 
 
-    <com.amrdeveloper.codeview.CodeView
-        android:id="@+id/codeViewMain"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/blue_grey"
-        android:dropDownHorizontalOffset="0dp"
-        android:fontFamily="@font/cascadia_code_semi_bold_origin"
-        android:gravity="top|start"
-        android:textColor="#E5DADA"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <LinearLayout
+            android:gravity="center"
+            android:padding="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_bar_rect">
+
+            <ImageButton
+                android:src="@drawable/img_icon_back"
+                android:layout_weight="4"
+                android:background="@drawable/ripple_shape"
+
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+            <ImageButton
+                android:layout_weight="1"
+
+                android:src="@drawable/img_icon_folder"
+                android:background="@drawable/ripple_shape"
+                android:layout_margin="8dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+            <ImageButton
+                android:layout_weight="1"
+
+                android:src="@drawable/img_icon_run"
+                android:background="@drawable/ripple_shape"
+
+                android:layout_margin="8dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+            <ImageButton
+                android:layout_weight="1"
+
+                android:src="@drawable/img_icon_save"
+                android:background="@drawable/ripple_shape"
+
+                android:layout_margin="8dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+            <ImageButton
+                android:src="@drawable/img_icon_options"
+                android:layout_weight="1"
+
+                android:background="@drawable/ripple_shape"
+
+                android:layout_margin="8dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+
+
+        </LinearLayout>
+
+        <com.amrdeveloper.codeview.CodeView
+            android:id="@+id/codeViewMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blue_grey"
+            android:dropDownHorizontalOffset="0dp"
+            android:fontFamily="@font/cascadia_code_semi_bold_origin"
+            android:gravity="top|start"
+            android:textColor="#E5DADA" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/symbols_panel"
             android:layout_width="match_parent"
             android:layout_height="0dp"

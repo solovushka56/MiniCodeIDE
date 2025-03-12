@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -115,9 +116,51 @@ public class CodeEditorActivity extends AppCompatActivity {
         pairCompleteMap.put('"', '"');
 
         setupKeyboardListener();
-        
+//        addAutocomplete();
     }
-    
+
+    private void codeViewSetup() {
+        addKeywordsTokens(codeView);
+
+        codeView.setEnableAutoIndentation(true);
+        codeView.setIndentationStarts(Set.of('{'));
+        codeView.setIndentationEnds(Set.of('}'));
+
+        codeView.setEnableLineNumber(false);
+        codeView.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
+        codeView.setLineNumberTextSize(31f);
+        codeView.setTextSize(16);
+
+        codeView.setUpdateDelayTime(0);
+        codeView.setTabLength(4);
+
+
+        codeView.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
+
+
+
+        Map<Character, Character> pairCompleteMap = new HashMap<>();
+        pairCompleteMap.put('{', '}');
+        pairCompleteMap.put('[', ']');
+        pairCompleteMap.put('(', ')');
+        pairCompleteMap.put('<', '>');
+        pairCompleteMap.put('"', '"');
+
+    }
+
+
+
+    private void addAutocomplete() {
+        String[] languageKeywords = keywords;
+        var adapter = new ArrayAdapter<String>(
+                this, R.layout.activity_code_editor, binding.codeViewMain.getId(), languageKeywords);
+        codeView.setAdapter(adapter);
+    }
+
+
+
+
+
 
     private void setRecycler() {
         var recyclerView = binding.symbolsPanel;
@@ -157,6 +200,8 @@ public class CodeEditorActivity extends AppCompatActivity {
                 getResources().getDisplayMetrics()
         );
     }
+
+
 
     private void addKeywordsTokens(CodeView codeView) {
         String regex_classname;
