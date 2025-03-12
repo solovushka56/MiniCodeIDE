@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.skeeper.minicode.adapters.ProjectAdapter;
 import com.skeeper.minicode.databinding.FragmentProjectsBinding;
 import com.skeeper.minicode.models.ProjectModel;
+import com.skeeper.minicode.singleton.ProjectManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,21 +77,35 @@ public class ProjectsFragment extends Fragment {
 
     private void addProjectsData(List<ProjectModel> models) {
         // todo: сделать здесь чтение существующих проектов из директории
-        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+        for (ProjectModel model : ProjectManager.loadAllProjectModels(getContext())) {
+            models.add(model);
+        }
+
+
+//        Toast.makeText(
+//                getContext(),
+//                ProjectManager
+//                        .getProjectConfigDir(getContext(), "xdd")
+//                        .toString(),
+//                Toast.LENGTH_LONG).show();
+
+
 
         models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
         models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
-
-        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
-
-        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+//        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+//
+//        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
+//        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
+//        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+//
+//        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
+//        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
+//        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
+//
+//        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
+//        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
+//        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
 
     }
     private void setProjectsRecycler() {

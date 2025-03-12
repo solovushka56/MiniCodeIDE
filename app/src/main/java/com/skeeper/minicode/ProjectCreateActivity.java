@@ -1,6 +1,7 @@
 package com.skeeper.minicode;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,9 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.skeeper.minicode.databinding.ActivityProjectCreateBinding;
 import com.skeeper.minicode.helpers.ProjectRectColorBinding;
 import com.skeeper.minicode.models.ProjectModel;
-import com.skeeper.minicode.singleton.ProjectManagerSingleton;
-
-import java.io.File;
+import com.skeeper.minicode.singleton.ProjectManager;
 
 public class ProjectCreateActivity extends AppCompatActivity {
 
@@ -38,21 +37,28 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
 
         binding.buttonCreate.setOnClickListener(v -> {
-            String projName = binding.projectNameEditText.getText().toString();
-            String projDescription = binding.projectDescripton.getTag().toString();
 
-            String projFilepath = (new File(ProjectManagerSingleton
-                    .getAllProjectsFolder(this), projName))
-                    .getAbsolutePath();
+            String projName = binding.projectNameEditText.getText().toString();
+            String projDescription = binding.projectDescripton.getText().toString();
+
+            if (projName.isEmpty()) {
+                Toast.makeText(this, "Enter project name!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+//            String projFilepath = (new File(ProjectManagerSingleton
+//                    .getAllProjectsFolder(this), projName))
+//                    .getAbsolutePath();
             var rectPalette = new ProjectRectColorBinding();
             ProjectModel model = new ProjectModel(0,
                     projName,
                     projDescription,
-                    projFilepath,
+                    "projFilepath",
                     new String[] {"s", "jiva", "kotlet"},
                     rectPalette.getMainRectColor(),
-                    rectPalette.getInnerRectColor() );
+                    rectPalette.getInnerRectColor());
 
+            ProjectManager.createProject(this, model, false);
 
         });
 
