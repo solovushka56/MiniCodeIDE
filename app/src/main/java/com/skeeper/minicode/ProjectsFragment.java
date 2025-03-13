@@ -61,10 +61,13 @@ public class ProjectsFragment extends Fragment {
         });
 
         binding.cloneFromGitButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), ProjectCreateActivity.class);
+            Intent intent = new Intent(getContext(), ProjectCloneActivity.class);
             intent.putExtra("fromGit", true);
             startActivity(intent);
         });
+
+
+
 
 
     }

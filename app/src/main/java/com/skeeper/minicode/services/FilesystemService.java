@@ -9,11 +9,26 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public class FilesystemService {
+
+    public static void saveFile(Context context, File directory,
+                                String fileName, String content) throws IOException {
+        if (!directory.exists() && !directory.mkdirs()) {
+            throw new IOException("failed to create proj dir");
+        }
+
+        File file = new File(directory, fileName);
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(content);
+        }
+    }
+
 
 
     public static void saveText(String text, String filename, Context context) {

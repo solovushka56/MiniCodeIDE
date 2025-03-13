@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class UserPreferencesService {
 
     private static final String PREF_NAME = "user_settings";
@@ -84,5 +87,21 @@ public class UserPreferencesService {
     public static boolean contains(String key) {
         checkInitialization();
         return sharedPreferences.contains(key);
+    }
+
+
+
+    public static void setStringSet(String key, Set<String> value) {
+        checkInitialization();
+        if (!TextUtils.isEmpty(key)) {
+            editor.putStringSet(key, value);
+            editor.apply();
+        }
+    }
+
+    public static Set<String> getStringSet(String key, Set<String> defaultValue) {
+        checkInitialization();
+        Set<String> storedSet = sharedPreferences.getStringSet(key, defaultValue);
+        return storedSet != null ? new HashSet<>(storedSet) : defaultValue;
     }
 }

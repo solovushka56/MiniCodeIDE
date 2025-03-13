@@ -63,7 +63,7 @@ public class SettingsFragment extends Fragment {
 
         binding.codeEditorSetting.setIcon(R.drawable.editor);
         binding.codeEditorSetting.setText("Code editor");
-        binding.codeEditorSetting.setClickIntent(new Intent(getContext(), MainActivity.class));
+        binding.codeEditorSetting.setClickIntent(new Intent(getContext(), CodeEditorSettingsActivity.class));
 
 
         binding.gitSettings.setIcon(R.drawable.git_icon);

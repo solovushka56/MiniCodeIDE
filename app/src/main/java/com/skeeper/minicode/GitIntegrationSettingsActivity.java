@@ -1,5 +1,6 @@
 package com.skeeper.minicode;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -30,6 +31,7 @@ public class GitIntegrationSettingsActivity extends AppCompatActivity {
 
         binding.buttonConfirm.setOnClickListener(v -> {
             onBackPressed();
+
         });
     }
 }

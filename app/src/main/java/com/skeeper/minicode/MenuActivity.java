@@ -30,7 +30,6 @@ public class MenuActivity extends AppCompatActivity {
     private ActivityMenuBinding binding;
 
     private ImageButton activeButton;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,14 +49,18 @@ public class MenuActivity extends AppCompatActivity {
 
         // todo: migrate to nav
         binding.projectsButton.setOnClickListener(v -> {
+            if (getCurrentFragment() instanceof ProjectsFragment) return;
             setFragment(new ProjectsFragment());
             switchActiveButton((ImageButton) v);
         });
         binding.settingsButton.setOnClickListener(v -> {
+            if (getCurrentFragment() instanceof SettingsFragment) return;
             setFragment(new SettingsFragment());
+
             switchActiveButton((ImageButton) v);
         });
         binding.tutorialsButton.setOnClickListener(v -> {
+            if (getCurrentFragment() instanceof TutorialsFragment) return;
             setFragment(new TutorialsFragment());
             switchActiveButton((ImageButton) v);
         });
@@ -84,6 +87,10 @@ public class MenuActivity extends AppCompatActivity {
 
     }
 
+    public Fragment getCurrentFragment() {
+        return getSupportFragmentManager().findFragmentById(binding.mainFragmentLayout.getId());
+
+    }
 
     public void setFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();

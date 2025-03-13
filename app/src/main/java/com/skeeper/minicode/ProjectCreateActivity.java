@@ -45,7 +45,6 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
 
         binding.buttonCreate.setOnClickListener(v -> {
-
             String projName = binding.projectNameEditText.getText().toString();
             String projDescription = binding.projectDescripton.getText().toString();
 
@@ -53,8 +52,14 @@ public class ProjectCreateActivity extends AppCompatActivity {
                 Toast.makeText(this, "Enter project name!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
-
+            if (ProjectManager.projectExists(this, projName)) {
+                Toast.makeText(
+                        this,
+                        "Project with this name already exists!",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
 
             var rectPalette = new ProjectRectColorBinding();
             ProjectModel model = new ProjectModel(0,
@@ -64,13 +69,17 @@ public class ProjectCreateActivity extends AppCompatActivity {
                     new String[] {"s", "jiva", "kotlet"},
                     rectPalette.getMainRectColor(),
                     rectPalette.getInnerRectColor(),
-                    "hello"
+                    "today"
             );
-            Toast.makeText(this, currentDateTime, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, currentDateTime, Toast.LENGTH_SHORT).show();
 
             ProjectManager.createProject(this, model, false);
 
+
+
         });
+
+
 
 
 

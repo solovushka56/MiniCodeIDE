@@ -1,7 +1,5 @@
 package com.skeeper.minicode;
 
-import static java.security.AccessController.getContext;
-
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -11,8 +9,6 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,14 +20,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
-import com.amrdeveloper.codeview.KeywordTokenizer;
 import com.skeeper.minicode.adapters.KeySymbolAdapter;
-import com.skeeper.minicode.adapters.ProjectAdapter;
 import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
-import com.skeeper.minicode.models.KeySymbolBarModel;
+import com.skeeper.minicode.helpers.GsonMapHelper;
 import com.skeeper.minicode.models.KeySymbolItemModel;
 import com.skeeper.minicode.singleton.CodeDataSingleton;
+import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -52,7 +47,7 @@ public class CodeEditorActivity extends AppCompatActivity {
     private int minKeyboardHeight = 100;
     private final String[] keywords = KeywordsTemplate.keywords;
 
-    private List<KeySymbolItemModel> models = new ArrayList<>();
+    private List<KeySymbolItemModel> keySymbolModels = new ArrayList<>();
 
 
     @Override
@@ -75,10 +70,14 @@ public class CodeEditorActivity extends AppCompatActivity {
         bottomPanel = binding.symbolsPanel;
 
         codeDataSingleton.setCurrentCodeView(codeView);
-        models.add(new KeySymbolItemModel(0, "{}", "{}"));
-        models.add(new KeySymbolItemModel(1, "pb", "public"));
 
-        setRecycler();
+        loadKeySymbolModels();
+        setKeySymbolsRecycler();
+
+//        keySymbols.add(new KeySymbolItemModel(0, "{}", "{}"));
+//        keySymbols.add(new KeySymbolItemModel(1, "pb", "public"));
+
+
         addKeywordsTokens(codeView);
 
         codeView.setEnableAutoIndentation(true);
@@ -149,12 +148,24 @@ public class CodeEditorActivity extends AppCompatActivity {
 
 
 
+    private void loadKeySymbolModels() {
+        keySymbolModels = PanelSnippetsDataSingleton.loadList(
+                this,
+                "keySymbolsData.json");
+//        List<KeySymbolItemModel> loadedModels = new ArrayList<>();
+//        Map<String, String> keySymbolsMap = GsonMapHelper.loadMap(this, "keySymbols");
+//        for (String key : keySymbolsMap.keySet()) {
+//            KeySymbolItemModel parsedModel = new KeySymbolItemModel(0, key,
+//                    keySymbolsMap.get(key));
+//            loadedModels.add(parsedModel);
+//        }
+//        keySymbolModels = loadedModels;
+    }
 
 
-
-    private void setRecycler() {
+    private void setKeySymbolsRecycler() {
         var recyclerView = binding.symbolsPanel;
-        var adapter = new KeySymbolAdapter(this, models);
+        var adapter = new KeySymbolAdapter(this, keySymbolModels);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 this, RecyclerView.HORIZONTAL, false));
@@ -258,7 +269,7 @@ public class CodeEditorActivity extends AppCompatActivity {
     }
 
 
-    
+
     public void onSymbolClick(View view) {
         Button btn = (Button) view;
         EditText editText = codeView;

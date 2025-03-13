@@ -5,10 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProjectCreateActivity"
+    tools:context=".ProjectCloneActivity"
     android:background="@color/blue_dark"
     >
-
 
     <ScrollView
         android:layout_margin="25dp"
@@ -33,18 +32,20 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="25dp"
                 android:fontFamily="@font/cascadia_code"
-                android:text="Create Project"
+                android:text="Clone from Git"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="25dp" />
 
 
+
+
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/projectNameInputLayout1"
+                android:id="@+id/nameInput"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Project Name"
+                android:hint="Enter project name"
                 app:endIconDrawable="@drawable/editor"
                 android:layout_marginBottom="15dp"
                 >
@@ -63,95 +64,33 @@
                     android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
 
+
+
+
+
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/projectNameInputLayout2"
+                android:id="@+id/projectUrlInput"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Project description"
+                android:hint="Enter project url"
                 app:endIconDrawable="@drawable/editor"
                 android:layout_marginBottom="15dp"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/projectDescripton"
+                    android:id="@+id/projectUrlEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_rect_common"
                     android:backgroundTint="@color/blue_grey"
                     android:fontFamily="@font/cascadia_code"
-                    android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
-                    android:scrollHorizontally="false"
-                    android:gravity="top"
-                    android:minLines="2"
-                    android:maxLines="25"
-                    android:overScrollMode="always"
-                    android:textColor="@color/white"
-                    android:paddingVertical="12dp" />
-
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences|textAutoCorrect"
+                    android:maxLength="50"
+                    android:maxLines="1"
+                    android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
-
-
-
-
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/booleanFlagCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardCornerRadius="15dp"
-                app:strokeColor="@color/transparent"
-                android:clickable="true"
-                app:rippleColor="#4F3DC2EC"
-                android:background="@drawable/ripple_shape"
-                app:cardBackgroundColor="@color/violet_light"
-                >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:padding="16dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:fontFamily="@font/cascadia_code"
-                        android:textColor="@color/white"
-                        android:id="@+id/flagTitle"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Git Add"
-                        android:textSize="16sp"/>
-
-
-                    <CheckBox
-                        android:id="@+id/gitAddCheckbox"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:buttonTint="@color/blue_light"
-                        android:drawableTint="@color/blue_grey"
-                        android:backgroundTint="@color/violet"
-                        android:background="@drawable/button_rect_common"
-                        android:clickable="false"
-                        android:visibility="gone"
-                        />
-
-                    <Switch
-                        android:thumbTint="@color/white"
-                        android:switchMinWidth="60dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:clickable="false"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <ExpandableListView
-                android:id="@+id/projectTemplateLang"
-                android:layout_marginTop="15dp"
-
-                android:background="@drawable/ripple_shape"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
 
 
 
@@ -171,8 +110,10 @@
         android:fontFamily="@font/cascadia_code"
         android:padding="15dp"
         android:src="@drawable/save_icon"
-        android:text="Create Project"
+        android:text="Clone"
         app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
