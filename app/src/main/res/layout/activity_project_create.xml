@@ -15,7 +15,7 @@
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/button"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCreate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -133,13 +133,15 @@
                         android:backgroundTint="@color/violet"
                         android:background="@drawable/button_rect_common"
                         android:clickable="false"
+                        android:visibility="gone"
                         />
-<!--                    <com.google.android.material.switchmaterial.SwitchMaterial-->
-<!--                        android:id="@+id/flagSwitch"-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        android:checked="false"/>-->
 
+                    <Switch
+                        android:thumbTint="@color/white"
+                        android:switchMinWidth="60dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:clickable="false"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

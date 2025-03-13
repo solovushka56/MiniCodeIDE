@@ -1,5 +1,6 @@
 package com.skeeper.minicode;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -59,12 +60,25 @@ public class SettingsFragment extends Fragment {
             panels.add(binding.panelsContainer.getChildAt(i));
         }
 
-        for (View panel : panels) {
-            if (panel instanceof SettingItemView) {
-                ((SettingItemView) panel).setIcon(R.drawable.icon);
-                ((SettingItemView) panel).setText("hello");
-            }
-        }
+
+        binding.codeEditorSetting.setIcon(R.drawable.editor);
+        binding.codeEditorSetting.setText("Code editor");
+        binding.codeEditorSetting.setClickIntent(new Intent(getContext(), MainActivity.class));
+
+
+        binding.gitSettings.setIcon(R.drawable.git_icon);
+        binding.gitSettings.setText("Git Integration");
+
+
+        binding.langSettings.setIcon(R.drawable.redo);
+        binding.langSettings.setText("Language and Font");
+
+        //        for (View panel : panels) {
+//            if (panel instanceof SettingItemView) {
+//                ((SettingItemView) panel).setIcon(R.drawable.icon);
+//                ((SettingItemView) panel).setText("hello");
+//            }
+//        }
 //        binding.editorSetting.settingIcon.setImageResource(R.drawable.settings_icon);
     }
 

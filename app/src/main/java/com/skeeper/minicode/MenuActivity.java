@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.motion.widget.OnSwipe;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -18,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.skeeper.minicode.databinding.ActivityMenuBinding;
+import com.skeeper.minicode.helpers.OnSwipeTouchListener;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -56,17 +58,36 @@ public class MenuActivity extends AppCompatActivity {
             setFragment(new TutorialsFragment());
             switchActiveButton((ImageButton) v);
         });
+
+
+
         setActiveButton(binding.projectsButton);
 
         setFragment(new ProjectsFragment());
-//        switchActiveButton((ImageButton) v);
+        //        binding.mainFragmentLayout.setOnTouchListener(new OnSwipeTouchListener(this) {
+//            @Override
+//            public void onSwipeLeft() {
+//                switchToNextFragment();
+//            }
+//
+//            @Override
+//            public void onSwipeRight() {
+//                setFragment(new SettingsFragment());
+//                switchActiveButton((ImageButton) binding.settingsButton);
+//            }
+//        });
+
+
+
     }
 
 
     public void setFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
         fragmentTransaction.replace(R.id.mainFragmentLayout, newFragment);
+
 //        fragmentTransaction.addToBackStack(null); // закомментил, чтобы не отлеживалась история фрагментов
         fragmentTransaction.commit();
     }

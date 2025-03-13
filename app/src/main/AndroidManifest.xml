@@ -18,6 +18,12 @@
         android:theme="@style/Theme.MiniCode"
         tools:targetApi="31">
         <activity
+            android:name=".CodeEditorSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GitIntegrationSettingsActivity"
+            android:exported="false" />
+        <activity
             android:name=".EditorCategorySettingActivity"
             android:exported="false" />
         <activity

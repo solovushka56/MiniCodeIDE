@@ -145,16 +145,18 @@
                     android:id="@+id/projectDescriptonText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
-                    android:text="project description"
+                    android:layout_marginBottom="5dp"
+                    android:text="No description."
                     />
+
                 <TextView
                     android:id="@+id/textLastEdit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cascadia_code"
                     android:text="date"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/textCreationDate"
@@ -162,7 +164,8 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/cascadia_code"
                     android:text="date"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

@@ -28,20 +28,19 @@
                 />
 
             <com.skeeper.minicode.SettingItemView
+                android:id="@+id/gitSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 />
 
             <com.skeeper.minicode.SettingItemView
+                android:id="@+id/langSettings"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"/>
 
-            <com.skeeper.minicode.SettingItemView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"/>
+
         </LinearLayout>
 
     </ScrollView>

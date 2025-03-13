@@ -64,7 +64,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
                     new String[] {"s", "jiva", "kotlet"},
                     rectPalette.getMainRectColor(),
                     rectPalette.getInnerRectColor(),
-                    "13.02 00"
+                    "hello"
             );
             Toast.makeText(this, currentDateTime, Toast.LENGTH_SHORT).show();
 

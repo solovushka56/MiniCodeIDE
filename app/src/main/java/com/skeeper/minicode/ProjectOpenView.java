@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,13 +62,16 @@ public class ProjectOpenView extends AppCompatActivity {
         String mainRectColor = boundModel.getMainRectColorHex();
         String innerRectColor = boundModel.getInnerRectColorHex();
         String creationDateTime = boundModel.getCreationDateTime();
-
+        Toast.makeText(this, creationDateTime, Toast.LENGTH_SHORT).show();
         binding.projectCard.setMainRectColor(Color.parseColor(mainRectColor));
         binding.projectCard.setInnerRectColor(Color.parseColor(innerRectColor));
         binding.projectCard.setProjectName(projectName);
         binding.projectCard.setProjectFilepathText(projectFilepath);
-        binding.projectDescriptonText.setText(boundModel.getProjectDescription());
-        binding.textCreationDate.setText(creationDateTime);
+
+        if (!boundModel.getProjectDescription().isEmpty()){
+            binding.projectDescriptonText.setText(boundModel.getProjectDescription());
+        }
+//        binding.textCreationDate.setText(creationDateTime);
     }
 
 }

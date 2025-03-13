@@ -1,6 +1,7 @@
 package com.skeeper.minicode;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -11,9 +12,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class SettingItemView extends ConstraintLayout {
 
-    TextView textView;
-    ImageView imageView;
-
+    private TextView textView = null;
+    private ImageView imageView = null;
+    private Intent onClickIntent = null;
 
 
     public SettingItemView(Context context) {
@@ -33,8 +34,11 @@ public class SettingItemView extends ConstraintLayout {
         imageView = findViewById(R.id.settingIcon);
 
         setOnClickListener(v -> {
-            Toast.makeText(getContext(), "amigo", Toast.LENGTH_LONG).show();
-
+            if (onClickIntent == null) {
+                Toast.makeText(getContext(), "Error: no intent setup", Toast.LENGTH_LONG).show();
+                return;
+            }
+            getContext().startActivity(onClickIntent);
         });
 
 
@@ -46,6 +50,10 @@ public class SettingItemView extends ConstraintLayout {
     }
     public void setIcon(int iconId) {
         imageView.setImageResource(iconId);
+    }
+
+    public void setClickIntent(Intent onClickIntent) {
+        this.onClickIntent = onClickIntent;
     }
 
 }
