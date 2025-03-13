@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
                     new KeySymbolItemModel(1, "{}", "{}"),
                     new KeySymbolItemModel(1, "[]", "[]"),
                     new KeySymbolItemModel(1, "()", "()"),
-                    new KeySymbolItemModel(1, "!", "!"),
+                    new KeySymbolItemModel(1, ";", ";"),
                     new KeySymbolItemModel(1, "pb", "public"),
                     new KeySymbolItemModel(1, "pr", "private")
             )));

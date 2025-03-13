@@ -1,6 +1,7 @@
 package com.skeeper.minicode.adapters;
 
 import android.content.Context;
+import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,12 +47,15 @@ public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeyS
 
 
         holder.rect.setOnClickListener(v -> {
-//            var symbolView = (CodeEditorActivity) currentButton.getContext();
-//            symbolView.onSymbolClick(currentButton);
             var currentCodeView = CodeDataSingleton.getInstance().currentCodeView;
             VibrationManager.vibrate(40L, currentButton.getContext());
             if (currentCodeView != null) {
-                currentCodeView.append(currentModel.getSymbolValue());
+                int cursorPosition = currentCodeView.getSelectionEnd();
+                Editable editable = currentCodeView.getText();
+                editable.insert(cursorPosition, currentModel.getSymbolValue());
+                currentCodeView.setSelection(cursorPosition + currentModel.getSymbolValue().length());
+
+//                currentCodeView.append(currentModel.getSymbolValue());
             }
         });
     }

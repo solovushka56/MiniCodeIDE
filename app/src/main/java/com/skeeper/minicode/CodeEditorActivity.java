@@ -9,6 +9,7 @@ import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class CodeEditorActivity extends AppCompatActivity {
     
@@ -47,7 +49,7 @@ public class CodeEditorActivity extends AppCompatActivity {
     private int minKeyboardHeight = 100;
     private final String[] keywords = KeywordsTemplate.keywords;
 
-    private List<KeySymbolItemModel> keySymbolModels = new ArrayList<>();
+    private List<KeySymbolItemModel> keySymbolModels;
 
 
     @Override
@@ -63,7 +65,9 @@ public class CodeEditorActivity extends AppCompatActivity {
             return insets;
         });
 
-
+        keySymbolModels = PanelSnippetsDataSingleton.loadList(
+                this,
+                "keySymbolsData.json");;
 
         codeView = binding.codeViewMain;
         rootView = binding.main;
@@ -71,13 +75,10 @@ public class CodeEditorActivity extends AppCompatActivity {
 
         codeDataSingleton.setCurrentCodeView(codeView);
 
-        loadKeySymbolModels();
+
+
+
         setKeySymbolsRecycler();
-
-//        keySymbols.add(new KeySymbolItemModel(0, "{}", "{}"));
-//        keySymbols.add(new KeySymbolItemModel(1, "pb", "public"));
-
-
         addKeywordsTokens(codeView);
 
         codeView.setEnableAutoIndentation(true);
@@ -97,14 +98,15 @@ public class CodeEditorActivity extends AppCompatActivity {
 
 
 
-        Map<Character, Character> pairCompleteMap = new HashMap<>();
-        pairCompleteMap.put('{', '}');
-        pairCompleteMap.put('[', ']');
-        pairCompleteMap.put('(', ')');
-        pairCompleteMap.put('<', '>');
-        pairCompleteMap.put('"', '"');
+//        Map<Character, Character> pairCompleteMap = new HashMap<>();
+//        pairCompleteMap.put('{', '}');
+//        pairCompleteMap.put('[', ']');
+//        pairCompleteMap.put('(', ')');
+//        pairCompleteMap.put('<', '>');
+//        pairCompleteMap.put('"', '"');
 
         setupKeyboardListener();
+
 //        addAutocomplete();
     }
 
@@ -148,19 +150,6 @@ public class CodeEditorActivity extends AppCompatActivity {
 
 
 
-    private void loadKeySymbolModels() {
-        keySymbolModels = PanelSnippetsDataSingleton.loadList(
-                this,
-                "keySymbolsData.json");
-//        List<KeySymbolItemModel> loadedModels = new ArrayList<>();
-//        Map<String, String> keySymbolsMap = GsonMapHelper.loadMap(this, "keySymbols");
-//        for (String key : keySymbolsMap.keySet()) {
-//            KeySymbolItemModel parsedModel = new KeySymbolItemModel(0, key,
-//                    keySymbolsMap.get(key));
-//            loadedModels.add(parsedModel);
-//        }
-//        keySymbolModels = loadedModels;
-    }
 
 
     private void setKeySymbolsRecycler() {
@@ -193,7 +182,6 @@ public class CodeEditorActivity extends AppCompatActivity {
             bottomPanel.requestLayout();
         });
     }
-
     private int convertDpToPx(int dp) {
         return (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP,
@@ -211,22 +199,69 @@ public class CodeEditorActivity extends AppCompatActivity {
 
 
         int keywordColor = Color.parseColor("#4B70F5");
-        int method_color = Color.parseColor("#DCDCAA");
-        int pinked_color = Color.parseColor("#C270D6");
+        int methodColor = Color.parseColor("#DCDCAA");
+        int pinkedColor = Color.parseColor("#C270D6");
+        int strColor = Color.parseColor("#00BCB2");
+        int greenColor = Color.parseColor("#00BCB2");
+
+        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
+                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
+                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
+                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
+                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
+                + "true|false|null)\\b";
+//
+//        String typesRegex = "\\b(boolean|byte|char|short|int|long|float|double|void|"
+//                + "Boolean|Byte|Character|Short|Integer|Long|Float|Double|String|Object|Class)\\b";
+//
+//        String stringsRegex = "\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'";
+//
+//        String numbersRegex = "\\b(0b[01_]+|0x[0-9a-fA-F_]+|0[0-7_]*|\\d[\\d_]*(\\.\\d[\\d_]*)?([eE][+-]?\\d[\\d_]*)?[fFdDlL]?)\\b";
+//
+//        String commentsRegex = "//.*|/\\*(.|\\R)*?\\*/|/\\*\\*(.|\\R)*?\\*/";
+//
+//        String annotationsRegex = "@[\\w$]+(\\([^)]*\\))?";
+//
+//        String classDeclarationRegex = "\\b(class|interface|enum|record)\\s+([A-Z$][\\w$]*)";
+//
+//        String methodDeclarationRegex = "\\b([A-Za-z_$][\\w$]*\\s+)+([A-Za-z_$][\\w$]*)\\s*\\([^)]*\\)\\s*\\{";
+//
+        String methodCallRegex = "\\b([A-Za-z_$][\\w$]*)\\s*\\([^)]*\\)";
+//
+//        String importsRegex = "\\bimport\\s+(static\\s+)?[\\w$.]+\\s*;";
+//        String packagesRegex = "\\bpackage\\s+[\\w$.]+\\s*;";
+//
+//        String operatorsRegex = "([+=\\-*/%&|^<>!~?:]|&&|\\|\\||<<|>>|==|!=|<=|>=|->|::)"; // invalid
+//
+//        String bracketsRegex = "[{}\\[\\]()]";
+//
+//        try {
+//            codeView.addSyntaxPattern(Pattern.compile(keywordsRegex), keywordColor);
+//            codeView.addSyntaxPattern(
+//                    Pattern.compile(commentsRegex, Pattern.DOTALL | Pattern.MULTILINE),
+//                    strColor);
+//            codeView.addSyntaxPattern(Pattern.compile(typesRegex), keywordColor);
+//            codeView.addSyntaxPattern(Pattern.compile(classDeclarationRegex), greenColor);
+//            codeView.addSyntaxPattern(Pattern.compile(methodDeclarationRegex), methodColor);
+//            codeView.addSyntaxPattern(Pattern.compile(methodCallRegex), methodColor);
+//
+//        }
+//        catch (Exception e) {
+//            Toast.makeText(this, "syntax highlighter error", Toast.LENGTH_SHORT).show();
+//        }
+
+
 
         String[] expressionsPint = new String[] {
                 "{",
                 "}"
         };
-
-
-        for (String keyword : keywords) {
-//            String keywordRegex = "\\s+(" + keyword + ")\\s+";
-//            codeView.addSyntaxPattern(Pattern.compile(keywordRegex), keywordColor);
-            codeView.addSyntaxPattern(Pattern.compile(keyword), keywordColor);
-
-        }
-
+        codeView.addSyntaxPattern(Pattern.compile(keywordsRegex), keywordColor);
+//        for (String keyword : keywords) {
+//            codeView.addSyntaxPattern(
+//                    Pattern.compile("\\s+(" + keyword + ")\\s+"),
+//                    keywordColor);
+//        }
         // to classes
         codeView.addSyntaxPattern(
                 Pattern.compile("\\b[A-Z][a-zA-Z]*\\b"),
@@ -254,18 +289,31 @@ public class CodeEditorActivity extends AppCompatActivity {
         );
 
 //         to methods
-        codeView.addSyntaxPattern(
-                Pattern.compile("\\b\\w+\\("),
-                Color.parseColor("#DCDCAA")
-        );
+//        codeView.addSyntaxPattern(
+//                Pattern.compile("\\b(\\w+)\\s*\\(\\)"),
+//                Color.parseColor("#DCDCAA")
+//        );
         // to .method()
+
+        String METHOD_REGEX =
+                "(?xi)" +
+                        "(?:@\\w+(?:\\(.*?\\))?\\s+)*" +
+                        "\\b((public|protected|private|static|final|" +
+                        "synchronized|abstract|volatile|native|strictfp|default)\\b\\s+)*" +
+                        "(<[^>]+>\\s+)?" +
+                        "([\\w.<>\\[\\],\\s]+?)\\s+" +
+                        "(\\w+)\\s*\\(";
+
+
+
         codeView.addSyntaxPattern(
-                Pattern.compile("(?<=\\.)(\\w+)(?=(\\(\\w+|^\\)))"),
+                Pattern.compile("\\b\\w+\\s*\\.\\s*\\w+\\s*$.*?$\n"),
+//                Pattern.compile(METHOD_REGEX),
+//                Pattern.compile("\\b(\\w+)\\s*\\$.*?\\$"),
+//                Pattern.compile("(?<=\\.)(\\w+)(?=(\\(\\w+|^\\)))"),
+//                Pattern.compile(methodCallRegex),
                 Color.parseColor("#DCDCAA")
         );
-
-
-//        codeView.setHighlightWhileTextChanging();
     }
 
 
