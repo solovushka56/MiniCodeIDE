@@ -44,24 +44,49 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageButton
-            android:id="@+id/tutorialsButton"
-            style="@style/CustomImageButtonInactive"
-            android:contentDescription="null"
-            app:srcCompat="@drawable/tutorials_menu" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/projectsButton"
+            <ImageButton
+                android:id="@+id/tutorialsButton"
+                style="@style/CustomImageButtonInactive"
+                android:contentDescription="null"
+                app:srcCompat="@drawable/tutorials_menu" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tutorials"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                />
+        </LinearLayout>
 
-            style="@style/CustomImageButtonActive"
-            android:contentDescription="null"
-            app:srcCompat="@drawable/projects_home_menu" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/settingsButton"
-            style="@style/CustomImageButtonInactive"
-            android:contentDescription="null"
-            app:srcCompat="@drawable/settings_menu" />
+            <ImageButton
+                android:id="@+id/projectsButton"
+                style="@style/CustomImageButtonActive"
+
+                android:contentDescription="null"
+                app:srcCompat="@drawable/projects_home_menu" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageButton
+                android:id="@+id/settingsButton"
+                style="@style/CustomImageButtonInactive"
+                android:contentDescription="null"
+                app:srcCompat="@drawable/settings_menu" />
+        </LinearLayout>
 
     </LinearLayout>
 

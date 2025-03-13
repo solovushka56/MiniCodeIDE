@@ -2,6 +2,7 @@ package com.skeeper.minicode;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -20,6 +21,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.skeeper.minicode.databinding.ActivityMenuBinding;
 import com.skeeper.minicode.helpers.OnSwipeTouchListener;
+import com.skeeper.minicode.helpers.animations.BackInterpolations;
+import com.skeeper.minicode.helpers.animations.QuartInterpolations;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -61,9 +64,9 @@ public class MenuActivity extends AppCompatActivity {
 
 
 
-        setActiveButton(binding.projectsButton);
 
         setFragment(new ProjectsFragment());
+        setActiveButton(binding.projectsButton);
         //        binding.mainFragmentLayout.setOnTouchListener(new OnSwipeTouchListener(this) {
 //            @Override
 //            public void onSwipeLeft() {
@@ -99,8 +102,8 @@ public class MenuActivity extends AppCompatActivity {
 
     private void setActiveButton(ImageButton button) {
         activeButton = button;
-        button.setScaleX(1.2f);
-        button.setScaleY(1.2f);
+        button.setScaleX(1.0f);
+        button.setScaleY(1.0f);
         button.setBackgroundTintList(ColorStateList.valueOf(getColor(R.color.violet_light)));
         button.setImageTintList(ColorStateList.valueOf(getColor(R.color.blue_light)));
     }
@@ -112,26 +115,33 @@ public class MenuActivity extends AppCompatActivity {
         activeButton = clickedButton;
     }
     private void animateButton(ImageButton button, boolean activate) {
-        float targetScale = activate ? 1.2f : 0.8f;
+        float targetScale = activate ? 1.0f : 0.8f;
         int bgColor = activate ? getColor(R.color.violet_light) : getColor(R.color.violet);
         int tintColor = activate ? getColor(R.color.blue_light) : getColor(R.color.violet_light);
-
-        // Анимация масштаба
 
         ObjectAnimator scaleX = ObjectAnimator.ofFloat(button, "scaleX", targetScale);
         ObjectAnimator scaleY = ObjectAnimator.ofFloat(button, "scaleY", targetScale);
 
-        // Анимация цвета фона
+        var scaleInterpolator = new TimeInterpolator() {
+            @Override
+            public float getInterpolation(float input) {
+                return BackInterpolations.backInOut(input);
+            }
+        };
+
+        scaleX.setInterpolator(scaleInterpolator);
+        scaleY.setInterpolator(scaleInterpolator);
+
+
         ValueAnimator bgAnimator = ValueAnimator.ofArgb(button.getBackgroundTintList().getDefaultColor(), bgColor);
         bgAnimator.addUpdateListener(anim ->
                 button.setBackgroundTintList(ColorStateList.valueOf((int) anim.getAnimatedValue())));
 
-        // Анимация цвета иконки
+
         ValueAnimator tintAnimator = ValueAnimator.ofArgb(button.getImageTintList().getDefaultColor(), tintColor);
         tintAnimator.addUpdateListener(anim ->
                 button.setImageTintList(ColorStateList.valueOf((int) anim.getAnimatedValue())));
 
-        // Запуск анимаций вместе
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.playTogether(scaleX, scaleY, bgAnimator, tintAnimator);
         animatorSet.setDuration(300);

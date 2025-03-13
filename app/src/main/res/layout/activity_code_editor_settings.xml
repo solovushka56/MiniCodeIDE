@@ -5,6 +5,129 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".CodeEditorSettingsActivity">
+    tools:context=".CodeEditorSettingsActivity"
+    android:background="@color/blue_dark"
+    >
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="25dp"
+        app:layout_constraintBottom_toTopOf="@+id/buttonConfirm"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="25dp"
+                android:fontFamily="@font/cascadia_code"
+                android:text="Editor Settings"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="25dp" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/gutUsernameInput"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:hint="Enter your git username"
+                app:endIconDrawable="@drawable/editor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/gutUsernameTextEdit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rect_common"
+                    android:backgroundTint="@color/blue_grey"
+                    android:fontFamily="@font/cascadia_code"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences|textAutoCorrect"
+                    android:maxLength="50"
+                    android:maxLines="1"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/userEmailInput"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:hint="Enter your email"
+                app:endIconDrawable="@drawable/editor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/userEmailEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rect_common"
+                    android:backgroundTint="@color/blue_grey"
+                    android:fontFamily="@font/cascadia_code"
+                    android:imeOptions="actionDone"
+                    android:inputType="textCapSentences|textAutoCorrect"
+                    android:maxLength="50"
+                    android:maxLines="1"
+                    android:textColor="@color/white" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/gitPatInput"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:hint="Enter your git PAT"
+                app:endIconDrawable="@drawable/editor">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/gitPatEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rect_common"
+                    android:backgroundTint="@color/blue_grey"
+                    android:fontFamily="@font/cascadia_code"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:maxLength="500"
+                    android:maxLines="1"
+                    android:textColor="@color/white"
+
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:layout_margin="25dp"
+        android:id="@+id/buttonConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/ripple_shape"
+        android:backgroundTint="@color/violet_light"
+        android:clickable="true"
+        android:contentDescription="@string/app_name"
+        android:fontFamily="@font/cascadia_code"
+        android:padding="15dp"
+        android:text="Confirm"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

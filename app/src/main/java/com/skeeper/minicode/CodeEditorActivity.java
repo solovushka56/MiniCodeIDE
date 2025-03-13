@@ -59,17 +59,16 @@ public class CodeEditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-//        setContentView(R.layout.activity_code_editor);
-
-         binding = ActivityCodeEditorBinding
-                .inflate(getLayoutInflater());
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        binding = ActivityCodeEditorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
 
         codeView = binding.codeViewMain;
         rootView = binding.main;
@@ -80,15 +79,6 @@ public class CodeEditorActivity extends AppCompatActivity {
         models.add(new KeySymbolItemModel(1, "pb", "public"));
 
         setRecycler();
-
-
-
-
-
-
-
-
-
         addKeywordsTokens(codeView);
 
         codeView.setEnableAutoIndentation(true);
@@ -268,8 +258,7 @@ public class CodeEditorActivity extends AppCompatActivity {
     }
 
 
-
-
+    
     public void onSymbolClick(View view) {
         Button btn = (Button) view;
         EditText editText = codeView;

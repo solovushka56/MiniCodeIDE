@@ -22,7 +22,7 @@
 
         <LinearLayout
             android:gravity="center"
-            android:padding="15dp"
+            android:padding="9dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/top_bar_rect">
@@ -32,8 +32,8 @@
                 android:src="@drawable/back"
 
                 android:adjustViewBounds="true"
-
-                android:layout_weight="2"
+                android:layout_marginRight="16dp"
+                android:layout_weight="1"
                 android:backgroundTint="@color/violet"
                 android:background="@drawable/ripple_shape"
                 android:layout_width="50dp"
@@ -97,10 +97,10 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">

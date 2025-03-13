@@ -68,7 +68,7 @@ public class SettingsFragment extends Fragment {
 
         binding.gitSettings.setIcon(R.drawable.git_icon);
         binding.gitSettings.setText("Git Integration");
-
+        binding.gitSettings.setClickIntent(new Intent(getContext(), GitIntegrationSettingsActivity.class));
 
         binding.langSettings.setIcon(R.drawable.redo);
         binding.langSettings.setText("Language and Font");

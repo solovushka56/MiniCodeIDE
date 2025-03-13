@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="25dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/buttonConfirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -32,7 +32,7 @@
                 android:layout_gravity="center"
                 android:layout_marginBottom="25dp"
                 android:fontFamily="@font/cascadia_code"
-                android:text="Create Project"
+                android:text="Git Integration"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textSize="25dp" />
@@ -62,10 +62,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
-
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/userEmailInput"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -90,8 +86,6 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/gitPatInput"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -109,14 +103,31 @@
                     android:backgroundTint="@color/blue_grey"
                     android:fontFamily="@font/cascadia_code"
                     android:imeOptions="actionDone"
-                    android:inputType="textCapSentences|textAutoCorrect"
-                    android:maxLength="50"
+                    android:inputType="textPassword"
+                    android:maxLength="500"
                     android:maxLines="1"
                     android:textColor="@color/white"
-                    
+
                     />
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:layout_margin="25dp"
+        android:id="@+id/buttonConfirm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/ripple_shape"
+        android:backgroundTint="@color/violet_light"
+        android:clickable="true"
+        android:contentDescription="@string/app_name"
+        android:fontFamily="@font/cascadia_code"
+        android:padding="15dp"
+        android:text="Confirm"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
