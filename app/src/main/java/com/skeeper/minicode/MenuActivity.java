@@ -34,8 +34,8 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+//        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet_average));
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
-
         binding = ActivityMenuBinding.inflate(getLayoutInflater());
 
         setContentView(binding.getRoot());

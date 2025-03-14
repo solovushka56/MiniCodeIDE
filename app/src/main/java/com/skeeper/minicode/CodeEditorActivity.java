@@ -56,7 +56,9 @@ public class CodeEditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+
+//        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+
         binding = ActivityCodeEditorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {

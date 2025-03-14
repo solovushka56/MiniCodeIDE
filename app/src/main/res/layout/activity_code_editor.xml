@@ -6,12 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".CodeEditorActivity"
-    android:background="@color/blue_grey"
+    android:background="@color/violet_average"
     >
 
 
     <LinearLayout
-        android:background="#4E17102E"
+        android:background="#231F33"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -22,7 +22,11 @@
 
         <LinearLayout
             android:gravity="center"
-            android:padding="9dp"
+            android:paddingTop="1dp"
+            android:paddingRight="9dp"
+            android:paddingLeft="9dp"
+            android:paddingBottom="9dp"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/top_bar_rect">
