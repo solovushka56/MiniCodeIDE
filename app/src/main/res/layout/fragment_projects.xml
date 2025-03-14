@@ -5,14 +5,29 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/group_rect_black"
-    tools:context=".ProjectsFragment">
+    tools:context=".ProjectsFragment"
+    >
 
 
     <LinearLayout
         android:layout_margin="18dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="130dp"
         android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Your projects"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -22,9 +37,10 @@
             android:orientation="horizontal">
 
             <Button
+                android:layout_weight="1"
                 android:id="@+id/createProjectButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@drawable/ripple_shape"
                 android:backgroundTint="@color/violet_light"
@@ -33,15 +49,16 @@
                 android:fontFamily="@font/cascadia_code"
                 android:padding="15dp"
                 android:src="@drawable/save_icon"
-                android:text="Create Project"
+                android:text="@string/create_project"
                 app:backgroundTint="@null"
-                android:layout_marginRight="9dp"
+                android:layout_marginRight="15dp"
                 />
 
             <Button
+                android:layout_weight="1"
                 android:id="@+id/cloneFromGitButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:background="@drawable/ripple_shape"
                 android:backgroundTint="@color/violet_light"
@@ -50,7 +67,7 @@
                 android:fontFamily="@font/cascadia_code"
                 android:padding="15dp"
                 android:src="@drawable/save_icon"
-                android:text="Clone From Git"
+                android:text="@string/clone_from_git"
                 app:backgroundTint="@null"
 
                 />
@@ -60,7 +77,7 @@
             android:id="@+id/projectsRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="36dp"
+            android:layout_marginTop="22dp"
             android:contentDescription="recycler view for project rects"
             android:clipToOutline="true"
             />

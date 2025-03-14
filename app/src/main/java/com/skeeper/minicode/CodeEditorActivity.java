@@ -72,9 +72,15 @@ public class CodeEditorActivity extends AppCompatActivity {
         codeView = binding.codeViewMain;
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
-
         codeDataSingleton.setCurrentCodeView(codeView);
 
+
+        binding.backButton.setOnClickListener(v -> {
+            finish();
+        });
+        binding.backButton.setOnClickListener(v -> {
+
+        });
 
 
 

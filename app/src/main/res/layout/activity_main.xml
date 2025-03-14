@@ -10,54 +10,121 @@
     >
 
     <LinearLayout
-        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@drawable/start_background"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:fontFamily="@font/cascadia_code_semi_bold_origin"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="MiniCodeIDE"
+            android:layout_gravity="center"
+            android:fontFamily="@font/cascadia_code_semi_bold_origin"
+            android:text="@string/app_title"
             android:textColor="@color/white"
             android:textSize="44dp" />
 
         <TextView
-            android:fontFamily="@font/cascadia_code_semi_bold_origin"
             android:id="@+id/textView"
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="A modern mobile
-            code editor"
+            android:layout_gravity="center"
+            android:fontFamily="@font/cascadia_code_semi_bold_origin"
+            android:text="@string/app_description"
             android:textAlignment="center"
             android:textColor="#D9D9D9"
             android:textSize="22dp" />
 
         <ImageButton
-            android:id="@+id/startButton"
-            android:layout_gravity="center"
+            android:id="@+id/___startButton"
             android:layout_width="150dp"
             android:layout_height="70dp"
+            android:layout_gravity="center"
             android:layout_marginTop="50dp"
             android:background="@drawable/app_start_button"
             android:contentDescription="start btn"
             android:textColor="@color/white"
             android:textSize="30dp"
+            android:visibility="gone"
 
             />
+
+        <LinearLayout
+
+            android:id="@+id/startButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/ripple_shape"
+            android:backgroundTint="@color/soft_blue"
+            android:gravity="center"
+            app:rippleColor="#81848CD9">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp"
+                android:fontFamily="@font/cascadia_code_semi_bold_origin"
+                android:gravity="start"
+                android:text="@string/start_text"
+                android:textAlignment="gravity"
+                android:textColor="@color/white"
+
+                android:textSize="22dp"
+
+
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/settingIcon"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:layout_margin="15dp"
+                android:layout_marginEnd="25dp"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:src="@drawable/ic_run_mini"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.474"
+                tools:visibility="visible" />
+        </LinearLayout>
+
+
     </LinearLayout>
 
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/start_background"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="-205dp"
-        tools:layout_editor_absoluteY="300dp" />
+    <LinearLayout
+        android:id="@+id/sourceCodeButton"
+        android:layout_margin="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageButton
+            style="@style/CustomImageButtonActive"
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:contentDescription="null"
+            app:srcCompat="@drawable/github" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/source_code"
+            android:textColor="@color/white" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

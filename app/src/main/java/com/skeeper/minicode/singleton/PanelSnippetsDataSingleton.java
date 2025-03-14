@@ -11,7 +11,9 @@ import com.skeeper.minicode.models.KeySymbolItemModel;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class PanelSnippetsDataSingleton {
     // snippet is key-value for code editor key symbols panel
@@ -24,7 +26,7 @@ public class PanelSnippetsDataSingleton {
     }
 
     private static final Gson gson = new Gson();
-    public static final String FILEPATH = "keySymbolsData.json";
+    public static final String FILENAME= "keySymbolsData.json";
 //    private List<KeySymbolItemModel> models = null;
 //
 //
@@ -41,6 +43,53 @@ public class PanelSnippetsDataSingleton {
 //
 //    }
 
+    public static void addSnippet(Context context, String key, String value) {
+        List<KeySymbolItemModel> list = loadList(context);
+        boolean keyExists = list.stream()
+                .anyMatch(item -> item.getSymbolKey().equals(key));
+        if (!keyExists) {
+            list.add(new KeySymbolItemModel(0, key, value));
+            saveList(context, list);
+        }
+
+//        list.add(new KeySymbolItemModel(0, key, value));
+//        saveList(context, list);
+    }
+    public static void removeSnippet(Context context, String snippetKey) {
+        var loadedList = loadList(context);
+        for (var item : loadedList) {
+            if (Objects.equals(item.getSymbolKey(), snippetKey)) {
+                loadedList.remove(item);
+                saveList(context, loadedList);
+
+            }
+        }
+    }
+
+    public static void saveList(Context context, List<KeySymbolItemModel> models) {
+        List<SerializablePair> serializableList = convertToSerializable(toPairList(models));
+        String json = gson.toJson(serializableList);
+        try (FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+             OutputStreamWriter writer = new OutputStreamWriter(fos)) {
+            writer.write(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static List<KeySymbolItemModel> loadList(Context context) {
+        try (FileInputStream fis = context.openFileInput(FILENAME);
+             InputStreamReader reader = new InputStreamReader(fis)) {
+            Type type = new TypeToken<List<SerializablePair>>(){}.getType();
+            List<SerializablePair> loaded = gson.fromJson(reader, type);
+            return toModelList(convertFromSerializable(loaded));
+        } catch (IOException | JsonSyntaxException e) {
+            e.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
+
+
 
     public static void saveList(Context context, String fileName, List<KeySymbolItemModel> models) {
         List<SerializablePair> serializableList = convertToSerializable(toPairList(models));
@@ -52,8 +101,6 @@ public class PanelSnippetsDataSingleton {
             e.printStackTrace();
         }
     }
-
-
     public static List<KeySymbolItemModel> loadList(Context context, String fileName) {
         try (FileInputStream fis = context.openFileInput(fileName);
              InputStreamReader reader = new InputStreamReader(fis)) {

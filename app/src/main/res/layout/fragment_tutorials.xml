@@ -3,12 +3,40 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TutorialsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".TutorialsFragment"
+    android:background="@drawable/group_rect_black"
+    >
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <LinearLayout
+        android:layout_margin="18dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Tutorials"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/projectsRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="36dp"
+            android:contentDescription="recycler view for project rects"
+            android:clipToOutline="true"
+            />
+    </LinearLayout>
+
 
 </FrameLayout>

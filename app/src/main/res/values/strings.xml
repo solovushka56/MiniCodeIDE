@@ -10,6 +10,26 @@
 
     <string name="projectTransition">projectTransition</string>
 
+    <string name="app_settings_title">Settings</string>
+    <string name="projects_home_title">Projects</string>
+    <string name="tutorials_title">Tutorials</string>
+
+    <string name="editor_settings">Editor settings</string>
+    <string name="git_integration_settings">Git Integration</string>
+    <string name="language_settings">Language Settings</string>
+
+    <string name="start_text">Start</string>
+    <string name="error">Error</string>
+
+    <string name="project_already_exists_exception">Project with this name already exists!</string>
+
+
+    <string name="create_project">Create new</string>
+    <string name="clone_from_git">Clone from git</string>
+
+    <string name="app_title">MiniCode IDE</string>
+    <string name="app_description">A modern mobile \ncode editor</string>
+    <string name="source_code">Source Code</string>
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus

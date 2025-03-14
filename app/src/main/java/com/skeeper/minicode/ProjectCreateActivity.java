@@ -1,5 +1,6 @@
 package com.skeeper.minicode;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -55,7 +56,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
             if (ProjectManager.projectExists(this, projName)) {
                 Toast.makeText(
                         this,
-                        "Project with this name already exists!",
+                        R.string.project_already_exists_exception,
                         Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -74,9 +75,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
 //            Toast.makeText(this, currentDateTime, Toast.LENGTH_SHORT).show();
 
             ProjectManager.createProject(this, model, false);
-
-
-
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+            Intent intent = new Intent(ProjectCreateActivity.this, MenuActivity.class);
+            startActivity(intent);
         });
 
 

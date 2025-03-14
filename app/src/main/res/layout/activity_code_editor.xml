@@ -36,7 +36,8 @@
                 android:layout_weight="1"
                 android:backgroundTint="@color/violet"
                 android:background="@drawable/ripple_shape"
-                android:layout_width="50dp"
+                app:rippleColor="#713DC2EC"
+                android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 />
 
@@ -47,12 +48,13 @@
                 android:src="@drawable/folder_filled"
                 android:background="@drawable/ripple_shape"
                 android:backgroundTint="@color/violet"
-
+                app:rippleColor="#4F3DC2EC"
                 android:layout_margin="8dp"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 />
             <ImageButton
+                android:visibility="gone"
                 android:id="@+id/runCodeButton"
                 android:layout_weight="1"
 
@@ -67,7 +69,7 @@
             <ImageButton
                 android:id="@+id/saveButton"
                 android:layout_weight="1"
-
+                app:rippleColor="#4F3DC2EC"
                 android:src="@drawable/save_icon"
                 android:scaleType="centerInside"
                 android:background="@drawable/ripple_shape"
@@ -80,6 +82,7 @@
 
 
             <ImageButton
+                app:rippleColor="#4F3DC2EC"
                 android:id="@+id/optionsButton"
                 android:src="@drawable/actions_icon"
                 android:layout_weight="1"

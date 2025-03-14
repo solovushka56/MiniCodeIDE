@@ -7,43 +7,58 @@
     android:background="@drawable/group_rect_black"
     >
 
-    <!-- TODO: Update blank fragment layout -->
-    <ScrollView
-        android:layout_margin="15dp"
-        android:contentDescription="scrview"
+    <LinearLayout
+        android:layout_margin="18dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/panelsContainer"
+        <TextView
+            android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Settings"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
 
-            <com.skeeper.minicode.SettingItemView
-                android:id="@+id/codeEditorSetting"
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="scrview">
+
+            <LinearLayout
+                android:id="@+id/panelsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                />
+                android:orientation="vertical">
 
-            <com.skeeper.minicode.SettingItemView
-                android:id="@+id/gitSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                />
+                <com.skeeper.minicode.SettingItemView
+                    android:id="@+id/codeEditorSetting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp" />
 
-            <com.skeeper.minicode.SettingItemView
-                android:id="@+id/langSettings"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"/>
+                <com.skeeper.minicode.SettingItemView
+                    android:id="@+id/gitSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp" />
+
+                <com.skeeper.minicode.SettingItemView
+                    android:id="@+id/langSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp" />
 
 
-        </LinearLayout>
+            </LinearLayout>
 
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 
 
 </FrameLayout>

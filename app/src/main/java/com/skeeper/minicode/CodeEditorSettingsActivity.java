@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.databinding.ActivityCodeEditorSettingsBinding;
+import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
 
 public class CodeEditorSettingsActivity extends AppCompatActivity {
 
@@ -84,7 +85,10 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
 
     }
 
+    private void addKey() {
+        PanelSnippetsDataSingleton.loadList(this, "keySymbolsData.json");
 
+    }
 
 
 }

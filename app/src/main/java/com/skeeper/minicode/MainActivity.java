@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -72,8 +74,21 @@ public class MainActivity extends AppCompatActivity {
 //            var bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
 //            overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
         });
+        binding.sourceCodeButton.setOnClickListener(v -> {
+            String url = "https://github.com/solovushka56/MiniCodeIDE";
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
 
-
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
+            else {
+                Toast.makeText(
+                        MainActivity.this,
+                        "Браузер не найден",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
         
 
     }
