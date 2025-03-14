@@ -27,6 +27,12 @@
     <string name="create_project">Create new</string>
     <string name="clone_from_git">Clone from git</string>
 
+    <string name="enter_snippet_key">key</string>
+    <string name="enter_snippet_value">value</string>
+
+    <string name="add_new">Add new</string>
+    <string name="remove">Remove</string>
+
     <string name="app_title">MiniCode IDE</string>
     <string name="app_description">A modern mobile \ncode editor</string>
     <string name="source_code">Source Code</string>

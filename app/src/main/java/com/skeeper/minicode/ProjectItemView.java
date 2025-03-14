@@ -44,10 +44,10 @@ public class ProjectItemView extends ConstraintLayout {
 
 
 
-        setOnClickListener(v -> {
-            Toast.makeText(getContext(), "amigo", Toast.LENGTH_LONG).show();
-
-        });
+//        setOnClickListener(v -> {
+//            Toast.makeText(getContext(), "amigo", Toast.LENGTH_LONG).show();
+//
+//        });
 
 
 

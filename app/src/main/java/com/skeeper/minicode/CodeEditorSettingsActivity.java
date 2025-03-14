@@ -6,7 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,11 +18,22 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.databinding.ActivityCodeEditorSettingsBinding;
+import com.skeeper.minicode.helpers.VibrationManager;
+import com.skeeper.minicode.helpers.animations.ViewAnimator;
+import com.skeeper.minicode.models.KeySymbolItemModel;
 import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
+
+import java.util.List;
 
 public class CodeEditorSettingsActivity extends AppCompatActivity {
 
     ActivityCodeEditorSettingsBinding binding;
+
+    List<KeySymbolItemModel> snippetsList;
+
+    private TextInputEditText keyInputView;
+    private TextInputEditText valueInputView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +49,57 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
             return insets;
         });
 
+        keyInputView = binding.keyTextEdit;
+        valueInputView = binding.valueTextEdit;
 
-        binding.buttonConfirm.setOnClickListener(v -> {
-            showPopupWindow(v);
+        snippetsList = PanelSnippetsDataSingleton.loadList(this);
+        for (var model : snippetsList) {
+            createSnippetPanel(model);
+        }
+
+        binding.addSnippetButton.setOnClickListener(v -> {
+            VibrationManager.vibrate(25, this);
+            if (keyInputView.getText().toString().isEmpty() || valueInputView.getText().toString().isEmpty()) {
+                Toast.makeText(this, "Enter key and value to add!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            var newSnippetModel = new KeySymbolItemModel(0,
+                    keyInputView.getText().toString(),
+                    valueInputView.getText().toString());
+
+            createSnippetPanel(newSnippetModel);
+            snippetsList.add(newSnippetModel);
+
+            keyInputView.setText("");
+            valueInputView.setText("");
+
         });
 
+        binding.buttonConfirm.setOnClickListener(v -> {
+            PanelSnippetsDataSingleton.saveList(this, snippetsList);
+            finish();
+        });
 
+    }
+
+    private void createSnippetPanel(KeySymbolItemModel boundModel) {
+        var snippetPanel = new SnippetPanelViewItem(this);
+        snippetPanel.setBoundModel(boundModel);
+        snippetPanel.setKeyValue(boundModel.getSymbolKey(), boundModel.getSymbolValue());
+        var layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(0, 0, 0, 30);
+        snippetPanel.setLayoutParams(layoutParams);
+
+        snippetPanel.removeButton.setOnClickListener(v -> {
+            VibrationManager.vibrate(70, this);
+            snippetsList.remove(boundModel);
+            ViewAnimator.collapseRight(snippetPanel, 200L, true);
+//                binding.mainLinearLayout.removeView(snippetPanel);
+        });
+        binding.mainLinearLayout.addView(snippetPanel);
     }
 
     private void showPopupWindow(View anchorView) {
@@ -62,26 +120,8 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
         TextInputEditText valueText = findViewById(R.id.valueTextEdit);
         Button confirmButton = findViewById(R.id.popupButtonConfirm);
 
-//        confirmButton.setOnClickListener(v -> {
-////            String key = keyText.getText().toString();
-////            String value = valueText.getText().toString();
-////            if (key.isEmpty() || value.isEmpty()) {
-////                return;
-////            }
-////            var existingMap = GsonMapHelper.loadMap(this, "keySymbols");
-////            existingMap.put(key, value);
-////            Map<String, String> map = new HashMap<>();
-////            map.put(key, value);
-////            GsonMapHelper.saveMap(this, "keySymbols", map);
-////            KeySymbolsService.addSnippet(this, key, value);
-////
-////            Map<String, String> map = SharedPreferencesHelper.loadMap(
-////                    this,
-////                    KeySymbolsService.mapSharedKey);
-//
-//
-//
-//        });
+
+
 
     }
 

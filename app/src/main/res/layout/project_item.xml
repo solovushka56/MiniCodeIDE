@@ -17,7 +17,8 @@
         app:backgroundTint="@null"
         android:backgroundTint="@color/violet_light"
         android:background="@drawable/ripple_shape"
-
+        android:clickable="true"
+        app:rippleColor="#E5FFFFFF"
         android:padding="15dp"
         app:cardCornerRadius="18dp"
 
@@ -73,6 +74,7 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/button_rect_common"
                 android:src="@drawable/settings_menu"
+
                 android:visibility="invisible" />
         </LinearLayout>
 

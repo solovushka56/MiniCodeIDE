@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/key_symbol_settings_rect"
+    android:backgroundTint="@color/blue_grey"
+    android:layout_marginBottom="15dp"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/keyName"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_rect_common"
+            android:backgroundTint="@color/blue_dark"
+            android:text="sample_key"
+            android:textColor="@color/white"
+            android:layout_marginRight="10dp"
+            />
+
+        <TextView
+            android:gravity="center"
+            android:layout_weight="2"
+            android:id="@+id/keyValue"
+            android:layout_marginRight="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/button_rect_common"
+            android:text="sample_key"
+            android:backgroundTint="@color/blue_dark"
+            android:textColor="@color/white"  />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+            android:id="@+id/snippetRemoveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_shape"
+            android:clickable="true"
+            app:cardBackgroundColor="@color/orange"
+            app:cardCornerRadius="10dp"
+            app:rippleColor="#67FFEB3B"
+            app:strokeColor="@color/transparent">
+                <ImageView
+                    android:layout_gravity="center"
+                    android:id="@+id/gitAddCheckbox"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_margin="10dp"
+                    android:clickable="false"
+                    android:src="@drawable/trash"
+                    app:tint="@color/white" />
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

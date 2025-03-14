@@ -43,6 +43,7 @@ public class PanelSnippetsDataSingleton {
 //
 //    }
 
+
     public static void addSnippet(Context context, String key, String value) {
         List<KeySymbolItemModel> list = loadList(context);
         boolean keyExists = list.stream()
@@ -51,10 +52,9 @@ public class PanelSnippetsDataSingleton {
             list.add(new KeySymbolItemModel(0, key, value));
             saveList(context, list);
         }
-
-//        list.add(new KeySymbolItemModel(0, key, value));
-//        saveList(context, list);
     }
+
+
     public static void removeSnippet(Context context, String snippetKey) {
         var loadedList = loadList(context);
         for (var item : loadedList) {
