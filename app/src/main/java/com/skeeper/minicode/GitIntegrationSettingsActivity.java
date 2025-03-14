@@ -29,6 +29,10 @@ public class GitIntegrationSettingsActivity extends AppCompatActivity {
 
 
 
+
+
+
+
         binding.buttonConfirm.setOnClickListener(v -> {
             onBackPressed();
 

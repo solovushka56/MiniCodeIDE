@@ -1,14 +1,18 @@
 package com.skeeper.minicode;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,10 +29,15 @@ import com.skeeper.minicode.adapters.KeySymbolAdapter;
 import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.helpers.GsonMapHelper;
+import com.skeeper.minicode.helpers.TextUndoManager;
+import com.skeeper.minicode.helpers.UndoRedoManager;
+import com.skeeper.minicode.helpers.VibrationManager;
 import com.skeeper.minicode.models.KeySymbolItemModel;
 import com.skeeper.minicode.singleton.CodeDataSingleton;
 import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
+import com.skeeper.minicode.singleton.ProjectManager;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +58,9 @@ public class CodeEditorActivity extends AppCompatActivity {
     private int minKeyboardHeight = 100;
     private final String[] keywords = KeywordsTemplate.keywords;
 
+
+    TextUndoManager undoManager;
+    UndoRedoManager undoRedoManager;
     private List<KeySymbolItemModel> keySymbolModels;
 
 
@@ -76,16 +88,21 @@ public class CodeEditorActivity extends AppCompatActivity {
         bottomPanel = binding.symbolsPanel;
         codeDataSingleton.setCurrentCodeView(codeView);
 
-
         binding.backButton.setOnClickListener(v -> {
             finish();
         });
-        binding.backButton.setOnClickListener(v -> {
-
+        binding.openFolderButton.setOnClickListener(v -> {
+            Toast.makeText(this, "in development...", Toast.LENGTH_SHORT).show();
+        });
+        binding.optionsButton.setOnClickListener(v -> {
+            startActivity(new Intent(CodeEditorActivity.this, CodeEditorSettingsActivity.class));
         });
 
 
-
+        binding.recreateButton.setOnClickListener( v-> {
+            recreate();
+//            startActivity(new Intent(CodeEditorActivity.this, CodeEditorActivity.class));
+        });
         setKeySymbolsRecycler();
         addKeywordsTokens(codeView);
 
@@ -116,8 +133,71 @@ public class CodeEditorActivity extends AppCompatActivity {
         setupKeyboardListener();
 
 //        addAutocomplete();
+
+
+        undoRedoManager = new UndoRedoManager(codeView);
+
+        setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
+        setupTextWatcher(codeView);
+
+
+
+        String projectName = getIntent().getStringExtra("projectName");
+        if (projectName == null) return;
+
+        try {
+            codeView.append(ProjectManager.readFile(this, projectName, "main.java"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        binding.saveButton.setOnClickListener(v -> {
+            String code = codeView.getText().toString();
+            try {
+                ProjectManager.saveFile(this, projectName, "main.java", code);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
+
+        });
+
+    }
+    private void setupButtonListeners(ImageButton btnUndo, ImageButton btnRedo) {
+        btnUndo.setOnClickListener(v -> {
+            if (!undoRedoManager.canUndo()) return;
+            VibrationManager.vibrate(30L, this);
+            undoRedoManager.undo();
+            updateButtonStates();
+        });
+
+        btnRedo.setOnClickListener(v -> {
+            if (!undoRedoManager.canRedo()) return;
+            VibrationManager.vibrate(30L, this);
+            undoRedoManager.redo();
+            updateButtonStates();
+        });
     }
 
+    private void setupTextWatcher(EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+//                updateButtonStates();
+            }
+        });
+    }
+
+    private void updateButtonStates() {
+        binding.buttonUndo.setEnabled(undoRedoManager.canUndo());
+        binding.buttonRedo.setEnabled(undoRedoManager.canRedo());
+    }
     private void codeViewSetup() {
         addKeywordsTokens(codeView);
 
@@ -156,6 +236,37 @@ public class CodeEditorActivity extends AppCompatActivity {
         codeView.setAdapter(adapter);
     }
 
+
+//    private void initUndoRedo() {
+//        var undoButton = binding.buttonUndo;
+//        var redoButton = binding.buttonRedo;
+//
+//        undoManager = new TextUndoManager(codeView);
+//
+//        undoButton.setOnClickListener(v -> {
+//            undoManager.undo();
+//            updateButtonStates(undoButton, redoButton);
+//        });
+//
+//        redoButton.setOnClickListener(v -> {
+//            undoManager.redo();
+//            updateButtonStates(undoButton, redoButton);
+//        });
+//
+//        codeView.addTextChangedListener(new TextWatcher() {
+//            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+//            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                updateButtonStates(undoButton, redoButton);
+//            }
+//        });
+//
+//    }
+//    private void updateButtonStates(ImageButton btnUndo, ImageButton btnRedo) {
+//        btnUndo.setEnabled(undoManager.canUndo());
+//        btnRedo.setEnabled(undoManager.canRedo());
+//    }
 
 
 
@@ -265,6 +376,8 @@ public class CodeEditorActivity extends AppCompatActivity {
                 "}"
         };
         codeView.addSyntaxPattern(Pattern.compile(keywordsRegex), keywordColor);
+
+
 //        for (String keyword : keywords) {
 //            codeView.addSyntaxPattern(
 //                    Pattern.compile("\\s+(" + keyword + ")\\s+"),

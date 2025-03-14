@@ -11,9 +11,9 @@
 
 
     <LinearLayout
-        android:background="#231F33"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#231F33"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,95 +21,105 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:gravity="center"
-            android:paddingTop="1dp"
-            android:paddingRight="9dp"
-            android:paddingLeft="9dp"
-            android:paddingBottom="9dp"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/top_bar_rect">
+            android:background="@drawable/top_bar_rect"
+            android:gravity="center"
+            android:paddingLeft="9dp"
+
+            android:paddingTop="1dp"
+            android:paddingRight="9dp"
+            android:paddingBottom="9dp">
 
             <ImageButton
                 android:id="@+id/backButton"
-                android:src="@drawable/back"
+                android:layout_width="wrap_content"
 
-                android:adjustViewBounds="true"
+                android:layout_height="50dp"
                 android:layout_marginRight="16dp"
                 android:layout_weight="1"
-                android:backgroundTint="@color/violet"
-                android:background="@drawable/ripple_shape"
-                app:rippleColor="#713DC2EC"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                />
-
-            <ImageButton
-                android:id="@+id/openFolderButton"
-                android:layout_weight="1"
-
-                android:src="@drawable/folder_filled"
+                android:adjustViewBounds="true"
                 android:background="@drawable/ripple_shape"
                 android:backgroundTint="@color/violet"
-                app:rippleColor="#4F3DC2EC"
-                android:layout_margin="8dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                />
+                android:src="@drawable/back"
+                app:rippleColor="#713DC2EC" />
+
             <ImageButton
                 android:visibility="gone"
-                android:id="@+id/runCodeButton"
-                android:layout_weight="1"
+                android:id="@+id/openFolderButton"
+                android:layout_width="50dp"
 
-                android:src="@drawable/img_icon_run"
+                android:layout_height="50dp"
+                android:layout_margin="8dp"
+                android:layout_weight="1"
                 android:background="@drawable/ripple_shape"
                 android:backgroundTint="@color/violet"
+                android:src="@drawable/folder_filled"
+                app:rippleColor="#4F3DC2EC" />
 
+            <ImageButton
+                android:id="@+id/recreateButton"
+                android:layout_width="50dp"
+
+                android:layout_height="50dp"
                 android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_shape"
+                android:backgroundTint="@color/violet"
+                android:src="@drawable/ic_recreate"
+                app:rippleColor="#4F3DC2EC" />
+
+            <ImageButton
+                android:id="@+id/runCodeButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                />
+
+                android:layout_margin="8dp"
+                android:layout_weight="1"
+                android:background="@drawable/ripple_shape"
+
+                android:backgroundTint="@color/violet"
+                android:src="@drawable/img_icon_run"
+                android:visibility="gone" />
+
             <ImageButton
                 android:id="@+id/saveButton"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="8dp"
                 android:layout_weight="1"
-                app:rippleColor="#4F3DC2EC"
-                android:src="@drawable/save_icon"
-                android:scaleType="centerInside"
                 android:background="@drawable/ripple_shape"
                 android:backgroundTint="@color/violet"
 
-                android:layout_margin="8dp"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                />
+                android:scaleType="centerInside"
+                android:src="@drawable/save_icon"
+                app:rippleColor="#4F3DC2EC" />
 
 
             <ImageButton
-                app:rippleColor="#4F3DC2EC"
                 android:id="@+id/optionsButton"
-                android:src="@drawable/actions_icon"
-                android:layout_weight="1"
-
-                android:background="@drawable/ripple_shape"
-                android:backgroundTint="@color/violet"
-
-
-                android:layout_margin="8dp"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                />
+                android:layout_margin="8dp"
+
+                android:layout_weight="1"
+                android:background="@drawable/ripple_shape"
+
+
+                android:backgroundTint="@color/violet"
+                android:src="@drawable/actions_icon"
+                app:rippleColor="#4F3DC2EC" />
 
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginBottom="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal">
 
             <TextView
@@ -119,24 +129,24 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="TextView"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <LinearLayout
-                android:contentDescription="layout for round rect"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal"
                 android:background="@drawable/group_rect_black"
                 android:backgroundTint="@color/blue_grey"
+                android:contentDescription="layout for round rect"
+                android:orientation="horizontal"
 
                 >
 
                 <com.amrdeveloper.codeview.CodeView
                     android:id="@+id/codeViewMain"
-                    android:layout_margin="15dp"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_margin="15dp"
                     android:layout_weight="2"
 
                     android:background="@color/blue_grey"
@@ -148,6 +158,38 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/floatingUndoRedoPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/button_rect_common"
+        app:layout_constraintBottom_toBottomOf="@id/symbols_panel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.32"
+        >
+
+        <ImageButton
+            android:id="@+id/buttonUndo"
+            style="@style/CustomImageButtonActive"
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:contentDescription="null"
+            app:srcCompat="@drawable/undo" />
+
+        <ImageButton
+            android:id="@+id/buttonRedo"
+            style="@style/CustomImageButtonActive"
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:contentDescription="null"
+            app:srcCompat="@drawable/redo" />
+
+
+    </LinearLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/symbols_panel"

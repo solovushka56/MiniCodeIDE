@@ -45,6 +45,7 @@ public class ProjectOpenView extends AppCompatActivity {
         binding.projectOpenButton.setOnClickListener(v -> {
             var intent = new Intent(ProjectOpenView.this, CodeEditorActivity.class);
 //            intent.putExtra("projectRef", "/src/0/name"); //todo
+            intent.putExtra("projectName", boundModel.getProjectName());
             startActivity(intent);
         });
 
@@ -52,7 +53,9 @@ public class ProjectOpenView extends AppCompatActivity {
             ProjectManager.deleteProject(this, boundModel.getProjectName());
             startActivity(new Intent(ProjectOpenView.this, MenuActivity.class));
         });
-
+        binding.buttonPanelEditName.setOnClickListener( v -> {
+            Toast.makeText(this, "In development...", Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void initByModel() {
@@ -62,7 +65,7 @@ public class ProjectOpenView extends AppCompatActivity {
         String mainRectColor = boundModel.getMainRectColorHex();
         String innerRectColor = boundModel.getInnerRectColorHex();
         String creationDateTime = boundModel.getCreationDateTime();
-        Toast.makeText(this, creationDateTime, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, creationDateTime, Toast.LENGTH_SHORT).show();
         binding.projectCard.setMainRectColor(Color.parseColor(mainRectColor));
         binding.projectCard.setInnerRectColor(Color.parseColor(innerRectColor));
         binding.projectCard.setProjectName(projectName);

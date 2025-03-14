@@ -17,7 +17,7 @@ import com.skeeper.minicode.helpers.ProjectRectColorBinding;
 import com.skeeper.minicode.models.ProjectModel;
 import com.skeeper.minicode.singleton.ProjectManager;
 
-
+import java.io.IOException;
 
 
 public class ProjectCreateActivity extends AppCompatActivity {
@@ -75,6 +75,21 @@ public class ProjectCreateActivity extends AppCompatActivity {
 //            Toast.makeText(this, currentDateTime, Toast.LENGTH_SHORT).show();
 
             ProjectManager.createProject(this, model, false);
+            try {
+                ProjectManager.saveFile(
+                        this,
+                        model.getProjectName(),
+                        "main.java",
+                        "public class Main {\n" +
+                                "\n" +
+                                "    public static void main(String[] args) {\n" +
+                                "        System.out.println(\"Hello, World!\");\n" +
+                                "    }\n" +
+                                "}");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
             overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
             Intent intent = new Intent(ProjectCreateActivity.this, MenuActivity.class);
             startActivity(intent);

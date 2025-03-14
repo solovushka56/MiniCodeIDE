@@ -35,7 +35,7 @@ public class SettingItemView extends ConstraintLayout {
 
         setOnClickListener(v -> {
             if (onClickIntent == null) {
-                Toast.makeText(getContext(), "Error: no intent setup", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "In development...", Toast.LENGTH_SHORT).show();
                 return;
             }
             getContext().startActivity(onClickIntent);

@@ -4,8 +4,8 @@
     <style name="Widget.Theme.MiniCodeIDE.MyView" parent="">
         <item name="android:background">@color/gray_400</item>
 
-<!--        <item name="android:windowBackground">@android:color/transparent</item>-->
-<!--        <item name="android:windowIsTranslucent">true</item>-->
+        <!--        <item name="android:windowBackground">@android:color/transparent</item>-->
+        <!--        <item name="android:windowIsTranslucent">true</item>-->
 
         <item name="fontFamily">@font/cascadia_code</item>
         <!--        <item name="exampleColor">@color/light_blue_400</item>-->
@@ -15,7 +15,6 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowIsTranslucent">true</item>
     </style>
-
 
 
     <style name="StyleToggleButton" parent="Widget.AppCompat.Button.Borderless">
@@ -30,18 +29,15 @@
     </style>
 
 
-
-<!--    <style name="CommonTextButton">-->
-<!--        <item name="app"-->
-<!--        -->
-<!--    </style>-->
+    <!--    <style name="CommonTextButton">-->
+    <!--        <item name="app"-->
+    <!--        -->
+    <!--    </style>-->
 
     <style name="MinicodeTextDefault">
         <item name="color">@color/white</item>
         <item name="fontFamily">@font/cascadia_code</item>
     </style>
-
-
 
 
     <style name="NavBarButtonActive">
@@ -74,14 +70,6 @@
         <item name="android:layout_marginLeft">8dp</item>
         <item name="android:layout_marginRight">8dp</item>
     </style>
-
-
-
-
-
-
-
-
 
 
     <style name="CustomImageButtonActive">
