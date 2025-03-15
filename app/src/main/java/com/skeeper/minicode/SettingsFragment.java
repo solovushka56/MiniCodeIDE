@@ -73,6 +73,12 @@ public class SettingsFragment extends Fragment {
         binding.langSettings.setIcon(R.drawable.redo);
         binding.langSettings.setText("Language and Font");
 
+        binding.compilationSettings.setIcon(R.drawable.terminal);
+        binding.compilationSettings.setText("Compilation");
+
+        binding.themeSettings.setText("Edit Theme");
+        binding.themeSettings.setIcon(R.drawable.tutorials);
+
         //        for (View panel : panels) {
 //            if (panel instanceof SettingItemView) {
 //                ((SettingItemView) panel).setIcon(R.drawable.icon);

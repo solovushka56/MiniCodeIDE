@@ -49,11 +49,22 @@
                     android:layout_marginBottom="10dp" />
 
                 <com.skeeper.minicode.SettingItemView
-                    android:id="@+id/langSettings"
+                    android:id="@+id/compilationSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp" />
 
+                <com.skeeper.minicode.SettingItemView
+                    android:id="@+id/themeSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp" />
+
+                <com.skeeper.minicode.SettingItemView
+                    android:id="@+id/langSettings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp" />
 
             </LinearLayout>
 

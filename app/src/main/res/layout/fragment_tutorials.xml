@@ -22,10 +22,29 @@
             android:layout_gravity="center"
             android:layout_marginBottom="25dp"
             android:fontFamily="@font/cascadia_code"
-            android:text="Tutorials"
+            android:text="Tutorials and Info"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="25dp" />
+
+        <ImageButton
+            android:contentDescription="he"
+            android:layout_width="wrap_content"
+            android:layout_height="295dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/transparent"
+            android:scaleType="fitCenter"
+            android:scaleX="0.5"
+            android:scaleY="0.5"
+            android:src="@drawable/logo_minicode1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:text="MiniCode is a code editor and mobile IDE. You can create projects and clone them from a remote git repository. \nCode editor: syntax highlighting, undo/redo buttons, keyboard shortcuts that you can also edit."
+            />
 
 
         <androidx.recyclerview.widget.RecyclerView

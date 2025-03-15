@@ -428,7 +428,8 @@ public class CodeEditorActivity extends AppCompatActivity {
 
 
         codeView.addSyntaxPattern(
-                Pattern.compile("\\b\\w+\\s*\\.\\s*\\w+\\s*$.*?$\n"),
+                Pattern.compile("\\b(\\w+)\\("),
+//                Pattern.compile("\\b\\w+\\s*\\.\\s*\\w+\\s*$.*?$\n"),
 //                Pattern.compile(METHOD_REGEX),
 //                Pattern.compile("\\b(\\w+)\\s*\\$.*?\\$"),
 //                Pattern.compile("(?<=\\.)(\\w+)(?=(\\(\\w+|^\\)))"),
