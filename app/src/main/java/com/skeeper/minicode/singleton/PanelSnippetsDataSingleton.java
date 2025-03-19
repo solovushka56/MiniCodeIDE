@@ -27,21 +27,6 @@ public class PanelSnippetsDataSingleton {
 
     private static final Gson gson = new Gson();
     public static final String FILENAME= "keySymbolsData.json";
-//    private List<KeySymbolItemModel> models = null;
-//
-//
-//
-//    public List<KeySymbolItemModel> getModels() {
-//
-//        return models;
-//    }
-//
-//    public void setModels(List<KeySymbolItemModel> models) {
-//        this.models = models;
-//    }
-//    public void appendModel(KeySymbolItemModel model) {
-//
-//    }
 
 
     public static void addSnippet(Context context, String key, String value) {

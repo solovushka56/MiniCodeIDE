@@ -11,7 +11,6 @@ import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.motion.widget.OnSwipe;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,9 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.skeeper.minicode.databinding.ActivityMenuBinding;
-import com.skeeper.minicode.helpers.OnSwipeTouchListener;
 import com.skeeper.minicode.helpers.animations.BackInterpolations;
-import com.skeeper.minicode.helpers.animations.QuartInterpolations;
 
 public class MenuActivity extends AppCompatActivity {
 

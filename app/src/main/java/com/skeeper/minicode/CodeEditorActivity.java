@@ -28,8 +28,6 @@ import com.amrdeveloper.codeview.CodeView;
 import com.skeeper.minicode.adapters.KeySymbolAdapter;
 import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
-import com.skeeper.minicode.helpers.GsonMapHelper;
-import com.skeeper.minicode.helpers.TextUndoManager;
 import com.skeeper.minicode.helpers.UndoRedoManager;
 import com.skeeper.minicode.helpers.VibrationManager;
 import com.skeeper.minicode.models.KeySymbolItemModel;
@@ -38,13 +36,11 @@ import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.singleton.ProjectManager;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public class CodeEditorActivity extends AppCompatActivity {
     
@@ -59,7 +55,6 @@ public class CodeEditorActivity extends AppCompatActivity {
     private final String[] keywords = KeywordsTemplate.keywords;
 
 
-    TextUndoManager undoManager;
     UndoRedoManager undoRedoManager;
     private List<KeySymbolItemModel> keySymbolModels;
 
@@ -398,16 +393,7 @@ public class CodeEditorActivity extends AppCompatActivity {
                 Pattern.compile("\\.(\\w+)\\(\\)"),
                 Color.parseColor("#DCDCAA"));
 
-        // to "("
-        codeView.addSyntaxPattern(
-                Pattern.compile("\\("),
-                Color.parseColor("#C270D6")
-        );
-        // to ")"
-        codeView.addSyntaxPattern(
-                Pattern.compile("\\)"),
-                Color.parseColor("#C270D6")
-        );
+
 
 //         to methods
 //        codeView.addSyntaxPattern(
@@ -426,7 +412,7 @@ public class CodeEditorActivity extends AppCompatActivity {
                         "(\\w+)\\s*\\(";
 
 
-
+//        codeView.patt
         codeView.addSyntaxPattern(
                 Pattern.compile("\\b(\\w+)\\("),
 //                Pattern.compile("\\b\\w+\\s*\\.\\s*\\w+\\s*$.*?$\n"),
@@ -435,6 +421,16 @@ public class CodeEditorActivity extends AppCompatActivity {
 //                Pattern.compile("(?<=\\.)(\\w+)(?=(\\(\\w+|^\\)))"),
 //                Pattern.compile(methodCallRegex),
                 Color.parseColor("#DCDCAA")
+        );
+        // to "("
+        codeView.addSyntaxPattern(
+                Pattern.compile("\\("),
+                Color.parseColor("#C270D6")
+        );
+        // to ")"
+        codeView.addSyntaxPattern(
+                Pattern.compile("\\)"),
+                Color.parseColor("#C270D6")
         );
     }
 
