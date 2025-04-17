@@ -266,6 +266,11 @@ public class CodeEditorActivity extends AppCompatActivity {
         String stringRegex = "\"(?:\\\\.|[^\"\\\\])*\"";
         syntaxPatternsMap.put(Pattern.compile(stringRegex), stringColor);
 
+        String charRegex = "'(?:\\\\.|[^'\\\\])*'";
+        syntaxPatternsMap.put(Pattern.compile(charRegex), stringColor);
+
+
+
         String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|" +
                 "class|const|continue|default|do|double|else|enum|extends|final|finally|" +
                 "float|for|goto|if|implements|import|instanceof|int|interface|long|native|" +
@@ -284,7 +289,7 @@ public class CodeEditorActivity extends AppCompatActivity {
         String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";
         syntaxPatternsMap.put(Pattern.compile(methodCallRegex), methodColor);
 
-        syntaxPatternsMap.put(Pattern.compile("(?<=\\w)\\s*(\\(|\\))"), bracketColor);
+//        syntaxPatternsMap.put(Pattern.compile("(?<=\\w)\\s*([()])"), bracketColor);
 
         codeView.setSyntaxPatternsMap(syntaxPatternsMap);
         codeView.reHighlightSyntax();
