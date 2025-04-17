@@ -31,12 +31,14 @@ import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.helpers.UndoRedoManager;
 import com.skeeper.minicode.helpers.VibrationManager;
 import com.skeeper.minicode.models.KeySymbolItemModel;
+import com.skeeper.minicode.services.editor.codeformater.JavaCodeFormatter;
 import com.skeeper.minicode.singleton.CodeDataSingleton;
 import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.singleton.ProjectManager;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +55,7 @@ public class CodeEditorActivity extends AppCompatActivity {
     private RecyclerView bottomPanel;
     private int minKeyboardHeight = 100;
     private final String[] keywords = KeywordsTemplate.keywords;
-
+    private String projectName = null;
 
     UndoRedoManager undoRedoManager;
     private List<KeySymbolItemModel> keySymbolModels;
@@ -96,56 +98,31 @@ public class CodeEditorActivity extends AppCompatActivity {
 
         binding.recreateButton.setOnClickListener( v-> {
             recreate();
-//            startActivity(new Intent(CodeEditorActivity.this, CodeEditorActivity.class));
         });
         setKeySymbolsRecycler();
-        addKeywordsTokens(codeView);
+//        addKeywordsTokens(codeView);
+        addHighlightPatterns();
+
+
 
         codeView.setEnableAutoIndentation(true);
         codeView.setIndentationStarts(Set.of('{'));
         codeView.setIndentationEnds(Set.of('}'));
-
         codeView.setEnableLineNumber(false);
         codeView.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
         codeView.setLineNumberTextSize(31f);
         codeView.setTextSize(16);
-
         codeView.setUpdateDelayTime(0);
         codeView.setTabLength(4);
-
-
         codeView.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
-
-
-
-//        Map<Character, Character> pairCompleteMap = new HashMap<>();
-//        pairCompleteMap.put('{', '}');
-//        pairCompleteMap.put('[', ']');
-//        pairCompleteMap.put('(', ')');
-//        pairCompleteMap.put('<', '>');
-//        pairCompleteMap.put('"', '"');
-
         setupKeyboardListener();
-
-//        addAutocomplete();
-
-
         undoRedoManager = new UndoRedoManager(codeView);
-
         setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
         setupTextWatcher(codeView);
 
 
 
-        String projectName = getIntent().getStringExtra("projectName");
-        if (projectName == null) return;
-
-        try {
-            codeView.append(ProjectManager.readFile(this, projectName, "main.java"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        loadFileText();
         binding.saveButton.setOnClickListener(v -> {
             String code = codeView.getText().toString();
             try {
@@ -158,6 +135,19 @@ public class CodeEditorActivity extends AppCompatActivity {
         });
 
     }
+
+
+    private void loadFileText() {
+        projectName = getIntent().getStringExtra("projectName");
+        if (projectName == null) return;
+
+        try {
+            codeView.append(ProjectManager.readFile(this, projectName, "main.java"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private void setupButtonListeners(ImageButton btnUndo, ImageButton btnRedo) {
         btnUndo.setOnClickListener(v -> {
             if (!undoRedoManager.canUndo()) return;
@@ -212,14 +202,6 @@ public class CodeEditorActivity extends AppCompatActivity {
         codeView.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
 
 
-
-        Map<Character, Character> pairCompleteMap = new HashMap<>();
-        pairCompleteMap.put('{', '}');
-        pairCompleteMap.put('[', ']');
-        pairCompleteMap.put('(', ')');
-        pairCompleteMap.put('<', '>');
-        pairCompleteMap.put('"', '"');
-
     }
 
 
@@ -230,39 +212,6 @@ public class CodeEditorActivity extends AppCompatActivity {
                 this, R.layout.activity_code_editor, binding.codeViewMain.getId(), languageKeywords);
         codeView.setAdapter(adapter);
     }
-
-
-//    private void initUndoRedo() {
-//        var undoButton = binding.buttonUndo;
-//        var redoButton = binding.buttonRedo;
-//
-//        undoManager = new TextUndoManager(codeView);
-//
-//        undoButton.setOnClickListener(v -> {
-//            undoManager.undo();
-//            updateButtonStates(undoButton, redoButton);
-//        });
-//
-//        redoButton.setOnClickListener(v -> {
-//            undoManager.redo();
-//            updateButtonStates(undoButton, redoButton);
-//        });
-//
-//        codeView.addTextChangedListener(new TextWatcher() {
-//            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-//            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                updateButtonStates(undoButton, redoButton);
-//            }
-//        });
-//
-//    }
-//    private void updateButtonStates(ImageButton btnUndo, ImageButton btnRedo) {
-//        btnUndo.setEnabled(undoManager.canUndo());
-//        btnRedo.setEnabled(undoManager.canRedo());
-//    }
-
 
 
 
@@ -304,26 +253,79 @@ public class CodeEditorActivity extends AppCompatActivity {
         );
     }
 
+    private void addHighlightPatterns() {
+        int keywordColor = Color.parseColor("#4B70F5");
+        int typeColor = Color.parseColor("#4EC9B0");
+        int classColor = Color.parseColor("#4EC9B0");
+        int methodColor = Color.parseColor("#DCDCAA");
+        int bracketColor = Color.parseColor("#569CD6");
+        int stringColor = Color.parseColor("#CE9178");
 
+        Map<Pattern, Integer> syntaxPatternsMap = new LinkedHashMap<>();
+
+        String stringRegex = "\"(?:\\\\.|[^\"\\\\])*\"";
+        syntaxPatternsMap.put(Pattern.compile(stringRegex), stringColor);
+
+        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|" +
+                "class|const|continue|default|do|double|else|enum|extends|final|finally|" +
+                "float|for|goto|if|implements|import|instanceof|int|interface|long|native|" +
+                "new|package|private|protected|public|return|short|static|strictfp|super|" +
+                "switch|synchronized|this|throw|throws|transient|try|void|volatile|while|" +
+                "true|false|null)\\b";
+        syntaxPatternsMap.put(Pattern.compile(keywordsRegex), keywordColor);
+
+        String typeRegex = "\\b(String|Integer|Double|Boolean|Float|Long|Short|Byte|" +
+                "Character|Void|Object|Exception|Class|Number|System|Math)\\b";
+        syntaxPatternsMap.put(Pattern.compile(typeRegex), typeColor);
+
+        String classDeclarationRegex = "(?<=\\bclass\\s)[A-Za-z0-9_]+";
+        syntaxPatternsMap.put(Pattern.compile(classDeclarationRegex), classColor);
+
+        String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";
+        syntaxPatternsMap.put(Pattern.compile(methodCallRegex), methodColor);
+
+        syntaxPatternsMap.put(Pattern.compile("(?<=\\w)\\s*(\\(|\\))"), bracketColor);
+
+        codeView.setSyntaxPatternsMap(syntaxPatternsMap);
+        codeView.reHighlightSyntax();
+
+
+
+//        Map<Pattern, Integer> syntaxPatternsMap = new HashMap<>();
+//
+//        int keywordColor = Color.parseColor("#4B70F5");
+//        int methodColor = Color.parseColor("#DCDCAA");
+//        int pinkedColor = Color.parseColor("#C270D6");
+//        int strColor = Color.parseColor("#00BCB2");
+//        int greenColor = Color.parseColor("#00BCB2");
+//
+//        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
+//                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
+//                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
+//                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
+//                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
+//                + "true|false|null)\\b";
+//
+//
+//        syntaxPatternsMap.put(Pattern.compile("\"(.*?)\""), Color.parseColor("#CE9178"));
+//        syntaxPatternsMap.put(Pattern.compile(keywordsRegex), keywordColor);
+//        syntaxPatternsMap.put(
+//                Pattern.compile("(?<![\"'])\\b([A-Z][a-zA-Z]*)\\b(?![\"'])"),
+//                greenColor
+//        );
+//        syntaxPatternsMap.put(Pattern.compile("\\.(\\w+)\\(\\)"), methodColor);
+//        syntaxPatternsMap.put(Pattern.compile("\\b(\\w+)\\("), methodColor);
+//        syntaxPatternsMap.put(Pattern.compile("\\("), pinkedColor);
+//        syntaxPatternsMap.put(Pattern.compile("\\)"), pinkedColor);
+//
+//        codeView.setSyntaxPatternsMap(syntaxPatternsMap);
+    }
 
     private void addKeywordsTokens(CodeView codeView) {
         String regex_classname;
         String regex_only_before_brackets;
         String regex_only_after_point_and_before_round_brackets;
 
-
-        int keywordColor = Color.parseColor("#4B70F5");
-        int methodColor = Color.parseColor("#DCDCAA");
-        int pinkedColor = Color.parseColor("#C270D6");
-        int strColor = Color.parseColor("#00BCB2");
-        int greenColor = Color.parseColor("#00BCB2");
-
-        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
-                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
-                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
-                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
-                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
-                + "true|false|null)\\b";
 //
 //        String typesRegex = "\\b(boolean|byte|char|short|int|long|float|double|void|"
 //                + "Boolean|Byte|Character|Short|Integer|Long|Float|Double|String|Object|Class)\\b";
@@ -340,44 +342,25 @@ public class CodeEditorActivity extends AppCompatActivity {
 //
 //        String methodDeclarationRegex = "\\b([A-Za-z_$][\\w$]*\\s+)+([A-Za-z_$][\\w$]*)\\s*\\([^)]*\\)\\s*\\{";
 //
+        int keywordColor = Color.parseColor("#4B70F5");
+        int methodColor = Color.parseColor("#DCDCAA");
+        int pinkedColor = Color.parseColor("#C270D6");
+        int strColor = Color.parseColor("#00BCB2");
+        int greenColor = Color.parseColor("#00BCB2");
+
+        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
+                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
+                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
+                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
+                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
+                + "true|false|null)\\b";
+
         String methodCallRegex = "\\b([A-Za-z_$][\\w$]*)\\s*\\([^)]*\\)";
-//
-//        String importsRegex = "\\bimport\\s+(static\\s+)?[\\w$.]+\\s*;";
-//        String packagesRegex = "\\bpackage\\s+[\\w$.]+\\s*;";
-//
-//        String operatorsRegex = "([+=\\-*/%&|^<>!~?:]|&&|\\|\\||<<|>>|==|!=|<=|>=|->|::)"; // invalid
-//
-//        String bracketsRegex = "[{}\\[\\]()]";
-//
-//        try {
-//            codeView.addSyntaxPattern(Pattern.compile(keywordsRegex), keywordColor);
-//            codeView.addSyntaxPattern(
-//                    Pattern.compile(commentsRegex, Pattern.DOTALL | Pattern.MULTILINE),
-//                    strColor);
-//            codeView.addSyntaxPattern(Pattern.compile(typesRegex), keywordColor);
-//            codeView.addSyntaxPattern(Pattern.compile(classDeclarationRegex), greenColor);
-//            codeView.addSyntaxPattern(Pattern.compile(methodDeclarationRegex), methodColor);
-//            codeView.addSyntaxPattern(Pattern.compile(methodCallRegex), methodColor);
-//
-//        }
-//        catch (Exception e) {
-//            Toast.makeText(this, "syntax highlighter error", Toast.LENGTH_SHORT).show();
-//        }
 
 
-
-        String[] expressionsPint = new String[] {
-                "{",
-                "}"
-        };
         codeView.addSyntaxPattern(Pattern.compile(keywordsRegex), keywordColor);
 
 
-//        for (String keyword : keywords) {
-//            codeView.addSyntaxPattern(
-//                    Pattern.compile("\\s+(" + keyword + ")\\s+"),
-//                    keywordColor);
-//        }
         // to classes
         codeView.addSyntaxPattern(
                 Pattern.compile("\\b[A-Z][a-zA-Z]*\\b"),
@@ -392,7 +375,6 @@ public class CodeEditorActivity extends AppCompatActivity {
         codeView.addSyntaxPattern(
                 Pattern.compile("\\.(\\w+)\\(\\)"),
                 Color.parseColor("#DCDCAA"));
-
 
 
 //         to methods
@@ -415,11 +397,6 @@ public class CodeEditorActivity extends AppCompatActivity {
 //        codeView.patt
         codeView.addSyntaxPattern(
                 Pattern.compile("\\b(\\w+)\\("),
-//                Pattern.compile("\\b\\w+\\s*\\.\\s*\\w+\\s*$.*?$\n"),
-//                Pattern.compile(METHOD_REGEX),
-//                Pattern.compile("\\b(\\w+)\\s*\\$.*?\\$"),
-//                Pattern.compile("(?<=\\.)(\\w+)(?=(\\(\\w+|^\\)))"),
-//                Pattern.compile(methodCallRegex),
                 Color.parseColor("#DCDCAA")
         );
         // to "("
@@ -436,6 +413,8 @@ public class CodeEditorActivity extends AppCompatActivity {
 
 
 
+
+
     public void onSymbolClick(View view) {
         Button btn = (Button) view;
         EditText editText = codeView;
@@ -444,7 +423,6 @@ public class CodeEditorActivity extends AppCompatActivity {
         editText.getText().replace(Math.min(start, end), Math.max(start, end),
                 btn.getContentDescription(), 0, btn.getText().length());
     }
-
     private void updateKeywordPanel(WindowInsetsCompat insets) {
         boolean isKeyboardVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
         int keyboardHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
