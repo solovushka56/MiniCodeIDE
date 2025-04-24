@@ -32,21 +32,11 @@ public class FileSystemView extends RelativeLayout {
         view.setBackgroundColor(Color.TRANSPARENT);
 
 
-        List<FileItem> fileStructure = new ArrayList<>();
-        FileItem root = new FileItem("Root", true, 0);
-        root.getChildren().add(new FileItem("File1.txt", false, 1));
-        root.getChildren().add(new FileItem("File2.txt", false, 1));
-        FileItem folder = new FileItem("Documents", true, 1);
-        folder.getChildren().add(new FileItem("Doc1.pdf", false, 2));
-        root.getChildren().add(folder);
-        fileStructure.add(root);
-
-
         filesRecyclerView = view.findViewById(R.id.recycler_view);
         filesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.directory = directory;
         fileItems = buildFileTree(directory, 1);
-        filesRecyclerView.setAdapter(new FileTreeAdapter(fileStructure));
+        filesRecyclerView.setAdapter(new FileTreeAdapter(fileItems));
 
     }
 
@@ -57,7 +47,7 @@ public class FileSystemView extends RelativeLayout {
 
         if (files != null) {
             for (File file : files) {
-                FileItem item = new FileItem(file.getName(), file.isDirectory(), level);
+                FileItem item = new FileItem(file, file.getName(), file.isDirectory(), level);
                 if (file.isDirectory()) {
                     item.getChildren().addAll(buildFileTree(file, level + 1));
                 }

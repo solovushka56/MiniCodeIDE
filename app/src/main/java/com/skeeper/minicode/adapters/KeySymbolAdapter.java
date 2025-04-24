@@ -40,7 +40,6 @@ public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeyS
         var currentModel = models.get(position);
         TextView currentButton = holder.textView;
 
-
         //content description is text that will be paste in code editor on click
         currentButton.setText(currentModel.getSymbolKey());
         currentButton.setContentDescription(currentModel.getSymbolValue());
@@ -54,8 +53,6 @@ public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeyS
                 Editable editable = currentCodeView.getText();
                 editable.insert(cursorPosition, currentModel.getSymbolValue());
                 currentCodeView.setSelection(cursorPosition + currentModel.getSymbolValue().length());
-
-//                currentCodeView.append(currentModel.getSymbolValue());
             }
         });
     }

@@ -11,12 +11,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.databinding.ActivityProjectCloneBinding;
+import com.skeeper.minicode.interfaces.IFileTreeListener;
 import com.skeeper.minicode.models.FileItem;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +28,8 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
     private List<FileItem> visibleItems;
     private final List<FileItem> allItems;
     private final SparseBooleanArray expandedStates = new SparseBooleanArray();
+    private IFileTreeListener listener;
+
 
     public FileTreeAdapter(List<FileItem> items) {
         this.allItems = items;
@@ -105,7 +111,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
         FileItem item = visibleItems.get(position);
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-        params.leftMargin = item.getLevel() * 50;
+        params.leftMargin = item.getLevel() * 45;
         holder.itemView.setLayoutParams(params);
 
         holder.name.setText(item.getName());
@@ -114,8 +120,12 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
         if (item.isDirectory()) {
             holder.arrow.setVisibility(View.VISIBLE);
             holder.arrow.setRotation(item.isExpanded() ? 90 : 0);
-            holder.itemView.setOnClickListener(v -> toggleItem(position, holder));
-        } else {
+            holder.itemView.setOnClickListener(v -> {
+                toggleItem(position, holder);
+
+            });
+        }
+        else {
             holder.arrow.setVisibility(View.INVISIBLE);
             holder.itemView.setOnClickListener(null);
         }
@@ -123,6 +133,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
 
     private void toggleItem(int position, ViewHolder holder) {
         FileItem item = visibleItems.get(position);
+
         if (item.isDirectory()) {
             item.setExpanded(!item.isExpanded());
 
@@ -136,6 +147,10 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
                     item.isExpanded() ? 0 : 90, item.isExpanded() ? 90 : 0);
             rotation.setDuration(200);
             rotation.start();
+            listener.onFolderClick(item);
+        }
+        else {
+            listener.onFileClick(item);
         }
     }
 

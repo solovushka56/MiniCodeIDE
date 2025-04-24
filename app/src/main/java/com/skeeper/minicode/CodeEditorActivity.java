@@ -22,6 +22,9 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,11 +35,13 @@ import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.helpers.UndoRedoManager;
 import com.skeeper.minicode.helpers.VibrationManager;
+import com.skeeper.minicode.interfaces.IFileTreeListener;
 import com.skeeper.minicode.models.FileItem;
 import com.skeeper.minicode.models.KeySymbolItemModel;
 import com.skeeper.minicode.singleton.CodeDataSingleton;
 import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.singleton.ProjectManager;
+import com.skeeper.minicode.utils.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -47,13 +52,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class CodeEditorActivity extends AppCompatActivity {
-    
+public class CodeEditorActivity extends AppCompatActivity implements IFileTreeListener {
+
     private ActivityCodeEditorBinding binding;
 
     private final CodeDataSingleton codeDataSingleton = CodeDataSingleton.getInstance();
     private CodeView codeView;
-    
+
     private View rootView;
     private RecyclerView bottomPanel;
     private int minKeyboardHeight = 100;
@@ -81,9 +86,12 @@ public class CodeEditorActivity extends AppCompatActivity {
                 this,
                 "keySymbolsData.json");;
 
-        codeView = binding.codeViewMain;
+
+
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
+        codeView = binding.codeViewMain;
+        initCodeView(codeView);
         codeDataSingleton.setCurrentCodeView(codeView);
 
         binding.backButton.setOnClickListener(v -> {
@@ -111,53 +119,47 @@ public class CodeEditorActivity extends AppCompatActivity {
             Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
 
         });
-        initCodeView();
+        setKeySymbolsRecycler();
 
-
-
-//        FileSystemView fileSystemView = new FileSystemView(getApplicationContext(), binding.leftDrawer);
-//
-//        RecyclerView filesystemRecyclerView = fileSystemView.filesRecyclerView;
-//        filesystemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-//        List<FileItem> fileItems = buildFileTree(ProjectManager.getProjectDir(this, projectName), 1);
-//        filesystemRecyclerView.setAdapter(new FileTreeAdapter(fileItems));
 
         FileSystemView fileSystemView = new FileSystemView(this);
-        fileSystemView.init(
-                this,
-                binding.leftDrawer,
+        fileSystemView.init(this, binding.leftDrawer,
                 ProjectManager.getProjectDir(this, projectName));
         binding.leftDrawer.addView(fileSystemView);
 
 
 
-
     }
 
 
-    private void initCodeView() {
-        setKeySymbolsRecycler();
+    private void initCodeView(CodeView view) {
         addHighlightPatterns();
-        codeView.setEnableAutoIndentation(true);
-        codeView.setIndentationStarts(Set.of('{'));
-        codeView.setIndentationEnds(Set.of('}'));
-        codeView.setEnableLineNumber(false);
-        codeView.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
-        codeView.setLineNumberTextSize(31f);
-        codeView.setTextSize(16);
-        codeView.setUpdateDelayTime(0);
-        codeView.setTabLength(4);
-        codeView.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
+        view.setEnableAutoIndentation(true);
+        view.setIndentationStarts(Set.of('{'));
+        view.setIndentationEnds(Set.of('}'));
+        view.setEnableLineNumber(false);
+        view.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
+        view.setLineNumberTextSize(31f);
+        view.setTextSize(16);
+        view.setUpdateDelayTime(0);
+        view.setTabLength(4);
+        view.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
         setupKeyboardListener();
-        undoRedoManager = new UndoRedoManager(codeView);
+        undoRedoManager = new UndoRedoManager(view);
         setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
-        setupTextWatcher(codeView);
+        setupTextWatcher(view);
         loadFileText();
 
     }
-
-
-
+    public void setFragment(Fragment newFragment) {
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//        fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
+//        fragmentTransaction.replace(R.id.mainCodeFragmentLayout, newFragment);
+//
+//        fragmentTransaction.addToBackStack(null);
+//        fragmentTransaction.commit();
+    }
     private void loadFileText() {
         projectName = getIntent().getStringExtra("projectName");
         if (projectName == null) return;
@@ -175,7 +177,6 @@ public class CodeEditorActivity extends AppCompatActivity {
             undoRedoManager.undo();
             updateButtonStates();
         });
-
         btnRedo.setOnClickListener(v -> {
             if (!undoRedoManager.canRedo()) return;
             VibrationManager.vibrate(30L, this);
@@ -202,19 +203,19 @@ public class CodeEditorActivity extends AppCompatActivity {
         binding.buttonRedo.setEnabled(undoRedoManager.canRedo());
     }
     private void addAutocomplete() {
-        String[] languageKeywords = keywords;
-        var adapter = new ArrayAdapter<String>(
-                this, R.layout.activity_code_editor, binding.codeViewMain.getId(), languageKeywords);
-        codeView.setAdapter(adapter);
-    }
-    private void setKeySymbolsRecycler() {
-        var recyclerView = binding.symbolsPanel;
-        var adapter = new KeySymbolAdapter(this, keySymbolModels);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(
-                this, RecyclerView.HORIZONTAL, false));
-
-        recyclerView.setAdapter(adapter);
+//        String[] languageKeywords = keywords;
+//        var adapter = new ArrayAdapter<String>(
+//                this, R.layout.activity_code_editor, binding.codeViewMain.getId(), languageKeywords);
+//        codeView.setAdapter(adapter);
+//    }
+//    private void setKeySymbolsRecycler() {
+//        var recyclerView = binding.symbolsPanel;
+//        var adapter = new KeySymbolAdapter(this, keySymbolModels);
+//
+//        recyclerView.setLayoutManager(new LinearLayoutManager(
+//                this, RecyclerView.HORIZONTAL, false));
+//
+//        recyclerView.setAdapter(adapter);
 
     }
     private void setupKeyboardListener() {
@@ -424,6 +425,48 @@ public class CodeEditorActivity extends AppCompatActivity {
         else {
             binding.symbolsPanel.setVisibility(View.GONE);
         }
+
+    }
+    private void setKeySymbolsRecycler() {
+        var recyclerView = binding.symbolsPanel;
+        var adapter = new KeySymbolAdapter(this, keySymbolModels);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(
+                this, RecyclerView.HORIZONTAL, false));
+
+        recyclerView.setAdapter(adapter);
+
+    }
+
+
+    @Override
+    public void onFileClick(FileItem fileItem) {
+    //        var codeEditorFragment = new CodeEditorFragment(fileItem);
+//        setFragment(codeEditorFragment);
+//        codeView = codeEditorFragment.codeView;
+        if (!fileItem.isDirectory())
+        {
+            try {
+                codeView.setText(FileUtils.readFileText(this, fileItem.getDirectory()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    undoRedoManager = new UndoRedoManager(codeView);
+    }
+
+    @Override
+    public void onFolderClick(FileItem fileItem) {
+
+    }
+
+    @Override
+    public void onFolderAdd(FileItem fileItem) {
+
+    }
+
+    @Override
+    public void onFileAdd(FileItem fileItem) {
 
     }
 }
