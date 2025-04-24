@@ -1,4 +1,4 @@
-package com.skeeper.minicode.services;
+package com.skeeper.minicode.singleton.services;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

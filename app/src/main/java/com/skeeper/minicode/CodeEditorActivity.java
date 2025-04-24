@@ -31,13 +31,11 @@ import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.helpers.UndoRedoManager;
 import com.skeeper.minicode.helpers.VibrationManager;
 import com.skeeper.minicode.models.KeySymbolItemModel;
-import com.skeeper.minicode.services.editor.codeformater.JavaCodeFormatter;
 import com.skeeper.minicode.singleton.CodeDataSingleton;
 import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.singleton.ProjectManager;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

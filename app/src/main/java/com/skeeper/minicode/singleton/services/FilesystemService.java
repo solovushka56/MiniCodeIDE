@@ -1,4 +1,4 @@
-package com.skeeper.minicode.services;
+package com.skeeper.minicode.singleton.services;
 
 import static android.content.Context.MODE_PRIVATE;
 

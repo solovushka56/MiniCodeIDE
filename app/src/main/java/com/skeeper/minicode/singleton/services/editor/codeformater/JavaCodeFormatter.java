@@ -1,4 +1,4 @@
-package com.skeeper.minicode.services.editor.codeformater;
+package com.skeeper.minicode.singleton.services.editor.codeformater;
 
 import android.text.Editable;
 import android.text.TextWatcher;
