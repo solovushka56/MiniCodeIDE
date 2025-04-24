@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -96,7 +97,10 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
         snippetPanel.removeButton.setOnClickListener(v -> {
             VibrationManager.vibrate(70, this);
             snippetsList.remove(boundModel);
-            ViewAnimator.collapseRight(snippetPanel, 200L, true);
+            ViewAnimator.collapseLeft(snippetPanel, 300L, true);
+            snippetPanel.animate().alpha(0f).setDuration(250L).setInterpolator(new DecelerateInterpolator()).withEndAction(() ->
+                    snippetPanel.animate().scaleYBy(0f).setDuration(50L).setInterpolator(new DecelerateInterpolator()).start()
+                    ).start();
 //                binding.mainLinearLayout.removeView(snippetPanel);
         });
         binding.mainLinearLayout.addView(snippetPanel);

@@ -1,6 +1,8 @@
 package com.skeeper.minicode.adapters;
 
 
+import android.animation.ObjectAnimator;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skeeper.minicode.R;
@@ -20,10 +23,62 @@ import java.util.List;
 public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHolder> {
     private List<FileItem> visibleItems;
     private final List<FileItem> allItems;
+    private final SparseBooleanArray expandedStates = new SparseBooleanArray();
 
     public FileTreeAdapter(List<FileItem> items) {
         this.allItems = items;
         this.visibleItems = generateVisibleList(items);
+        saveExpandedStates();
+    }
+
+    private static class FileDiffCallback extends DiffUtil.Callback {
+        private final List<FileItem> oldList;
+        private final List<FileItem> newList;
+
+        public FileDiffCallback(List<FileItem> oldList, List<FileItem> newList) {
+            this.oldList = oldList;
+            this.newList = newList;
+        }
+
+        @Override
+        public int getOldListSize() { return oldList.size(); }
+
+        @Override
+        public int getNewListSize() { return newList.size(); }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            return oldList.get(oldItemPosition).getName().equals(newList.get(newItemPosition).getName());
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            FileItem oldItem = oldList.get(oldItemPosition);
+            FileItem newItem = newList.get(newItemPosition);
+            return oldItem.getName().equals(newItem.getName()) &&
+                    oldItem.isDirectory() == newItem.isDirectory() &&
+                    oldItem.isExpanded() == newItem.isExpanded() &&
+                    oldItem.getLevel() == newItem.getLevel();
+        }
+    }
+
+    private void saveExpandedStates() {
+        expandedStates.clear();
+        for (int i = 0; i < visibleItems.size(); i++) {
+            FileItem item = visibleItems.get(i);
+            if (item.isDirectory()) {
+                expandedStates.put(i, item.isExpanded());
+            }
+        }
+    }
+
+    private void restoreExpandedStates(List<FileItem> newVisibleItems) {
+        for (int i = 0; i < newVisibleItems.size(); i++) {
+            FileItem item = newVisibleItems.get(i);
+            if (item.isDirectory() && expandedStates.get(i, false)) {
+                item.setExpanded(true);
+            }
+        }
     }
 
     private List<FileItem> generateVisibleList(List<FileItem> items) {
@@ -56,28 +111,37 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
         holder.name.setText(item.getName());
         holder.icon.setImageResource(item.isDirectory() ? R.drawable.ic_folder : R.drawable.ic_file);
 
-
         if (item.isDirectory()) {
             holder.arrow.setVisibility(View.VISIBLE);
             holder.arrow.setRotation(item.isExpanded() ? 90 : 0);
-            holder.panel.setOnClickListener(v -> toggleItem(position));
-        }
-        else {
+            holder.itemView.setOnClickListener(v -> toggleItem(position, holder));
+        } else {
             holder.arrow.setVisibility(View.INVISIBLE);
+            holder.itemView.setOnClickListener(null);
         }
     }
 
-    private void toggleItem(int position) {
+    private void toggleItem(int position, ViewHolder holder) {
         FileItem item = visibleItems.get(position);
         if (item.isDirectory()) {
             item.setExpanded(!item.isExpanded());
+
+            List<FileItem> oldVisibleItems = new ArrayList<>(visibleItems);
+
             visibleItems = generateVisibleList(allItems);
-            notifyDataSetChanged();
+
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new FileDiffCallback(oldVisibleItems, visibleItems));
+            diffResult.dispatchUpdatesTo(this);
+            ObjectAnimator rotation = ObjectAnimator.ofFloat(holder.arrow, "rotation",
+                    item.isExpanded() ? 0 : 90, item.isExpanded() ? 90 : 0);
+            rotation.setDuration(200);
+            rotation.start();
         }
     }
 
     @Override
     public int getItemCount() { return visibleItems.size(); }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView icon;
@@ -92,6 +156,12 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
             panel = itemView.findViewById(R.id.panelBody);
         }
     }
+
+
+
+
+
+
 
     private void animateRotation(@NonNull ViewHolder holder, int position) {
         FileItem item = visibleItems.get(position);

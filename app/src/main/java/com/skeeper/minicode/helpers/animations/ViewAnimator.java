@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 
@@ -40,7 +41,7 @@ public class ViewAnimator {
 
         ValueAnimator animator = ValueAnimator.ofInt(initialWidth, 0);
         animator.setDuration(duration);
-        animator.setInterpolator(new DecelerateInterpolator());
+        animator.setInterpolator(new AccelerateDecelerateInterpolator());
         if (removeViewOnFinish) {
             animator.addListener(new AnimatorListenerAdapter() {
                 @Override

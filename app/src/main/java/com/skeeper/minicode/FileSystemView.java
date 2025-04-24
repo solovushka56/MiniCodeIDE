@@ -29,23 +29,24 @@ public class FileSystemView extends RelativeLayout {
 
     public void init(Context context, RelativeLayout parent, File directory) {
         View view = LayoutInflater.from(context).inflate(R.layout.filesystem_panel, parent, true);
+        view.setBackgroundColor(Color.TRANSPARENT);
+
+
+        List<FileItem> fileStructure = new ArrayList<>();
+        FileItem root = new FileItem("Root", true, 0);
+        root.getChildren().add(new FileItem("File1.txt", false, 1));
+        root.getChildren().add(new FileItem("File2.txt", false, 1));
+        FileItem folder = new FileItem("Documents", true, 1);
+        folder.getChildren().add(new FileItem("Doc1.pdf", false, 2));
+        root.getChildren().add(folder);
+        fileStructure.add(root);
+
+
         filesRecyclerView = view.findViewById(R.id.recycler_view);
         filesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.directory = directory;
-        view.setBackgroundColor(Color.TRANSPARENT);
-
-//        List<FileItem> fileStructure = new ArrayList<>();
-//        FileItem root = new FileItem("Root", true, 0);
-//        root.getChildren().add(new FileItem("File1.txt", false, 1));
-//        root.getChildren().add(new FileItem("File2.txt", false, 1));
-//        FileItem folder = new FileItem("Documents", true, 1);
-//        folder.getChildren().add(new FileItem("Doc1.pdf", false, 2));
-//        root.getChildren().add(folder);
-//        fileStructure.add(root);
-//        fileItems = fileStructure;
-
         fileItems = buildFileTree(directory, 1);
-        filesRecyclerView.setAdapter(new FileTreeAdapter(fileItems));
+        filesRecyclerView.setAdapter(new FileTreeAdapter(fileStructure));
 
     }
 

@@ -21,7 +21,7 @@
         <TextView
             android:id="@+id/keyName"
             android:gravity="center"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:padding="10dp"
@@ -38,21 +38,21 @@
             android:layout_weight="2"
             android:id="@+id/keyValue"
             android:layout_marginRight="10dp"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
             android:layout_gravity="center"
             android:background="@drawable/button_rect_common"
-            android:text="sample_key"
+            android:text="sample_value"
             android:backgroundTint="@color/blue_dark"
             android:textColor="@color/white"  />
 
 
         <com.google.android.material.card.MaterialCardView
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:layout_marginLeft="15dp"
             android:id="@+id/snippetRemoveButton"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/ripple_shape"
             android:clickable="true"

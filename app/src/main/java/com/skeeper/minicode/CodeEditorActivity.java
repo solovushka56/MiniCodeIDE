@@ -68,6 +68,7 @@ public class CodeEditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+
         binding = ActivityCodeEditorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -122,7 +123,6 @@ public class CodeEditorActivity extends AppCompatActivity {
 //        filesystemRecyclerView.setAdapter(new FileTreeAdapter(fileItems));
 
         FileSystemView fileSystemView = new FileSystemView(this);
-//        binding.leftDrawer.addView(fileSystemView);
         fileSystemView.init(
                 this,
                 binding.leftDrawer,
