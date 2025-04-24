@@ -1,245 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
-    android:layout_width="match_parent"
+    android:id="@+id/drawerLayout"
     android:layout_height="match_parent"
-    tools:context=".CodeEditorActivity"
-    android:background="@color/violet_average"
-    >
+    android:layout_width="match_parent">
 
-
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#231F33"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        tools:context=".CodeEditorActivity"
+        android:background="@color/violet_average"
+        >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/top_bar_rect"
-            android:gravity="center"
-            android:paddingLeft="9dp"
-
-            android:paddingTop="1dp"
-            android:paddingRight="9dp"
-            android:paddingBottom="9dp">
-
-            <ImageButton
-                android:id="@+id/backButton"
-                android:layout_width="wrap_content"
-
-                android:layout_height="50dp"
-                android:layout_marginRight="16dp"
-                android:layout_weight="1"
-                android:adjustViewBounds="true"
-                android:background="@drawable/ripple_shape"
-                android:backgroundTint="@color/violet"
-                android:src="@drawable/back"
-                app:rippleColor="#713DC2EC" />
-
-            <ImageButton
-                android:visibility="gone"
-                android:id="@+id/openFolderButton"
-                android:layout_width="50dp"
-
-                android:layout_height="50dp"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_shape"
-                android:backgroundTint="@color/violet"
-                android:src="@drawable/folder_filled"
-                app:rippleColor="#4F3DC2EC" />
-
-            <ImageButton
-                android:id="@+id/recreateButton"
-                android:layout_width="50dp"
-
-                android:layout_height="50dp"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_shape"
-                android:backgroundTint="@color/violet"
-                android:src="@drawable/ic_recreate"
-                app:rippleColor="#4F3DC2EC" />
-
-            <ImageButton
-                android:id="@+id/runCodeButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_shape"
-
-                android:backgroundTint="@color/violet"
-                android:src="@drawable/img_icon_run"
-                android:visibility="gone" />
-
-            <ImageButton
-                android:id="@+id/saveButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@drawable/ripple_shape"
-                android:backgroundTint="@color/violet"
-
-                android:scaleType="centerInside"
-                android:src="@drawable/save_icon"
-                app:rippleColor="#4F3DC2EC" />
-
-
-            <ImageButton
-                android:id="@+id/optionsButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_margin="8dp"
-
-                android:layout_weight="1"
-                android:background="@drawable/ripple_shape"
-
-
-                android:backgroundTint="@color/violet"
-                android:src="@drawable/actions_icon"
-                app:rippleColor="#4F3DC2EC" />
-
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:orientation="horizontal">
+            android:background="#231F33"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/lineNumbersText"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/top_bar_rect"
+                android:gravity="center"
+                android:paddingLeft="9dp"
 
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="TextView"
-                android:visibility="gone" />
+                android:paddingTop="1dp"
+                android:paddingRight="9dp"
+                android:paddingBottom="9dp">
+
+                <ImageButton
+                    android:id="@+id/backButton"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="50dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_weight="1"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/ripple_shape"
+                    android:backgroundTint="@color/violet"
+                    android:src="@drawable/back"
+                    app:rippleColor="#713DC2EC" />
+
+                <ImageButton
+                    android:id="@+id/openFolderButton"
+                    android:layout_width="50dp"
+
+                    android:layout_height="50dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_shape"
+                    android:backgroundTint="@color/violet"
+                    android:src="@drawable/folder_filled"
+                    app:rippleColor="#4F3DC2EC" />
+
+                <ImageButton
+                    android:id="@+id/recreateButton"
+                    android:layout_width="50dp"
+
+                    android:layout_height="50dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_shape"
+                    android:backgroundTint="@color/violet"
+                    android:src="@drawable/ic_recreate"
+                    app:rippleColor="#4F3DC2EC" />
+
+                <ImageButton
+                    android:id="@+id/runCodeButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_shape"
+
+                    android:backgroundTint="@color/violet"
+                    android:src="@drawable/img_icon_run"
+                    android:visibility="gone" />
+
+                <ImageButton
+                    android:id="@+id/saveButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_shape"
+                    android:backgroundTint="@color/violet"
+
+                    android:scaleType="centerInside"
+                    android:src="@drawable/save_icon"
+                    app:rippleColor="#4F3DC2EC" />
+
+
+                <ImageButton
+                    android:id="@+id/optionsButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_margin="8dp"
+
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_shape"
+
+
+                    android:backgroundTint="@color/violet"
+                    android:src="@drawable/actions_icon"
+                    app:rippleColor="#4F3DC2EC" />
+
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/group_rect_black"
-                android:backgroundTint="@color/blue_grey"
-                android:contentDescription="layout for round rect"
-                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal">
 
-                >
+                <TextView
+                    android:id="@+id/lineNumbersText"
 
-                <com.amrdeveloper.codeview.CodeView
-                    android:id="@+id/codeViewMain"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="TextView"
+                    android:visibility="gone" />
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="15dp"
-                    android:layout_weight="2"
+                    android:layout_weight="1"
+                    android:background="@drawable/group_rect_black"
+                    android:backgroundTint="@color/blue_grey"
+                    android:contentDescription="layout for round rect"
+                    android:orientation="horizontal"
 
-                    android:background="@color/blue_grey"
-                    android:dropDownHorizontalOffset="0dp"
-                    android:fontFamily="@font/cascadia_code_semi_bold_origin"
-                    android:gravity="top|start"
-                    android:textColor="#E5DADA" />
+                    >
+
+                    <com.amrdeveloper.codeview.CodeView
+                        android:id="@+id/codeViewMain"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="15dp"
+                        android:layout_weight="2"
+
+                        android:background="@color/blue_grey"
+                        android:dropDownHorizontalOffset="0dp"
+                        android:fontFamily="@font/cascadia_code_semi_bold_origin"
+                        android:gravity="top|start"
+                        android:textColor="#E5DADA" />
+                </LinearLayout>
+
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/floatingUndoRedoPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/button_rect_common"
+            app:layout_constraintBottom_toBottomOf="@id/symbols_panel"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.32"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            >
+
+            <ImageButton
+                android:id="@+id/buttonUndo"
+                style="@style/CustomImageButtonActive"
+                android:layout_gravity="center"
+                android:layout_margin="1dp"
+                android:contentDescription="null"
+                android:backgroundTint="@color/violet"
+                app:srcCompat="@drawable/undo" />
+
+            <ImageButton
+                android:id="@+id/buttonRedo"
+                style="@style/CustomImageButtonActive"
+                android:layout_gravity="center"
+                android:layout_margin="1dp"
+                android:contentDescription="null"
+                android:backgroundTint="@color/violet"
+                app:srcCompat="@drawable/redo" />
+
 
         </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/floatingUndoRedoPanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@drawable/button_rect_common"
-        app:layout_constraintBottom_toBottomOf="@id/symbols_panel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.32"
-        android:scaleX="0.8"
-        android:scaleY="0.8"
-        >
-
-        <ImageButton
-            android:id="@+id/buttonUndo"
-            style="@style/CustomImageButtonActive"
-            android:layout_gravity="center"
-            android:layout_margin="1dp"
-            android:contentDescription="null"
-            android:backgroundTint="@color/violet"
-            app:srcCompat="@drawable/undo" />
-
-        <ImageButton
-            android:id="@+id/buttonRedo"
-            style="@style/CustomImageButtonActive"
-            android:layout_gravity="center"
-            android:layout_margin="1dp"
-            android:contentDescription="null"
-            android:backgroundTint="@color/violet"
-            app:srcCompat="@drawable/redo" />
 
 
-    </LinearLayout>
+        <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/symbols_panel"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/key_symbol_bar_shape"
+                android:backgroundTint="#3F3694"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/symbols_panel"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/key_symbol_bar_shape"
-            android:backgroundTint="#3F3694"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent">
+            </androidx.recyclerview.widget.RecyclerView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--  FILESYSTEM  -->
+    <RelativeLayout
+        android:id="@+id/left_drawer"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:choiceMode="none"
+        android:clickable="true"
+        android:background="#FFFFFF"
+        xmlns:android="http://schemas.android.com/apk/res/android" />
 
 
-        </androidx.recyclerview.widget.RecyclerView>
-<!--    <LinearLayout-->
-<!--        android:id="@+id/symbols_panel"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="0dp"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:background="@color/violet"-->
-<!--        android:orientation="horizontal"-->
-<!--        android:visibility="gone"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        app:layout_constraintRight_toRightOf="parent">-->
-
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:onClick="onSymbolClick"-->
-<!--            android:text="#3" />-->
-
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:onClick="onSymbolClick"-->
-<!--            android:text="#" />-->
-
-<!--        <Button-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:onClick="onSymbolClick"-->
-<!--            android:text="$" />-->
-
-<!--    </LinearLayout>-->
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

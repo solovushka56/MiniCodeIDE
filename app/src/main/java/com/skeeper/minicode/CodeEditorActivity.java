@@ -19,23 +19,28 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
+import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
+import com.skeeper.minicode.adapters.FileTreeAdapter;
 import com.skeeper.minicode.adapters.KeySymbolAdapter;
 import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.helpers.UndoRedoManager;
 import com.skeeper.minicode.helpers.VibrationManager;
+import com.skeeper.minicode.models.FileItem;
 import com.skeeper.minicode.models.KeySymbolItemModel;
 import com.skeeper.minicode.singleton.CodeDataSingleton;
 import com.skeeper.minicode.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.singleton.ProjectManager;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,9 +68,6 @@ public class CodeEditorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-
-//        getWindow().setNavigationBarColor(Color.TRANSPARENT);
-
         binding = ActivityCodeEditorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -87,22 +89,55 @@ public class CodeEditorActivity extends AppCompatActivity {
             finish();
         });
         binding.openFolderButton.setOnClickListener(v -> {
-            Toast.makeText(this, "in development...", Toast.LENGTH_SHORT).show();
+            binding.drawerLayout.openDrawer(GravityCompat.START);
+//            Toast.makeText(this, "in development...", Toast.LENGTH_SHORT).show();
         });
         binding.optionsButton.setOnClickListener(v -> {
-            startActivity(new Intent(CodeEditorActivity.this, CodeEditorSettingsActivity.class));
+            startActivity(new Intent(
+                    CodeEditorActivity.this,
+                    CodeEditorSettingsActivity.class));
         });
-
-
         binding.recreateButton.setOnClickListener( v-> {
             recreate();
         });
+        binding.saveButton.setOnClickListener(v -> {
+            String code = codeView.getText().toString();
+            try {
+                ProjectManager.saveFile(this, projectName, "main.java", code);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
+
+        });
+        initCodeView();
+
+
+
+//        FileSystemView fileSystemView = new FileSystemView(getApplicationContext(), binding.leftDrawer);
+//
+//        RecyclerView filesystemRecyclerView = fileSystemView.filesRecyclerView;
+//        filesystemRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        List<FileItem> fileItems = buildFileTree(ProjectManager.getProjectDir(this, projectName), 1);
+//        filesystemRecyclerView.setAdapter(new FileTreeAdapter(fileItems));
+
+        FileSystemView fileSystemView = new FileSystemView(this);
+//        binding.leftDrawer.addView(fileSystemView);
+        fileSystemView.init(
+                this,
+                binding.leftDrawer,
+                ProjectManager.getProjectDir(this, projectName));
+        binding.leftDrawer.addView(fileSystemView);
+
+
+
+
+    }
+
+
+    private void initCodeView() {
         setKeySymbolsRecycler();
-//        addKeywordsTokens(codeView);
         addHighlightPatterns();
-
-
-
         codeView.setEnableAutoIndentation(true);
         codeView.setIndentationStarts(Set.of('{'));
         codeView.setIndentationEnds(Set.of('}'));
@@ -117,22 +152,10 @@ public class CodeEditorActivity extends AppCompatActivity {
         undoRedoManager = new UndoRedoManager(codeView);
         setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
         setupTextWatcher(codeView);
-
-
-
         loadFileText();
-        binding.saveButton.setOnClickListener(v -> {
-            String code = codeView.getText().toString();
-            try {
-                ProjectManager.saveFile(this, projectName, "main.java", code);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
-
-        });
 
     }
+
 
 
     private void loadFileText() {
@@ -145,7 +168,6 @@ public class CodeEditorActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
     }
-
     private void setupButtonListeners(ImageButton btnUndo, ImageButton btnRedo) {
         btnUndo.setOnClickListener(v -> {
             if (!undoRedoManager.canUndo()) return;
@@ -161,7 +183,6 @@ public class CodeEditorActivity extends AppCompatActivity {
             updateButtonStates();
         });
     }
-
     private void setupTextWatcher(EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -176,43 +197,16 @@ public class CodeEditorActivity extends AppCompatActivity {
             }
         });
     }
-
     private void updateButtonStates() {
         binding.buttonUndo.setEnabled(undoRedoManager.canUndo());
         binding.buttonRedo.setEnabled(undoRedoManager.canRedo());
     }
-    private void codeViewSetup() {
-        addKeywordsTokens(codeView);
-
-        codeView.setEnableAutoIndentation(true);
-        codeView.setIndentationStarts(Set.of('{'));
-        codeView.setIndentationEnds(Set.of('}'));
-
-        codeView.setEnableLineNumber(false);
-        codeView.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
-        codeView.setLineNumberTextSize(31f);
-        codeView.setTextSize(16);
-
-        codeView.setUpdateDelayTime(0);
-        codeView.setTabLength(4);
-
-
-        codeView.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
-
-
-    }
-
-
-
     private void addAutocomplete() {
         String[] languageKeywords = keywords;
         var adapter = new ArrayAdapter<String>(
                 this, R.layout.activity_code_editor, binding.codeViewMain.getId(), languageKeywords);
         codeView.setAdapter(adapter);
     }
-
-
-
     private void setKeySymbolsRecycler() {
         var recyclerView = binding.symbolsPanel;
         var adapter = new KeySymbolAdapter(this, keySymbolModels);
@@ -223,8 +217,6 @@ public class CodeEditorActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
     }
-
-
     private void setupKeyboardListener() {
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             Rect rect = new Rect();
@@ -250,7 +242,6 @@ public class CodeEditorActivity extends AppCompatActivity {
                 getResources().getDisplayMetrics()
         );
     }
-
     private void addHighlightPatterns() {
         int keywordColor = Color.parseColor("#4B70F5");
         int typeColor = Color.parseColor("#4EC9B0");
@@ -268,13 +259,12 @@ public class CodeEditorActivity extends AppCompatActivity {
         syntaxPatternsMap.put(Pattern.compile(charRegex), stringColor);
 
 
-
-        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|" +
-                "class|const|continue|default|do|double|else|enum|extends|final|finally|" +
-                "float|for|goto|if|implements|import|instanceof|int|interface|long|native|" +
-                "new|package|private|protected|public|return|short|static|strictfp|super|" +
-                "switch|synchronized|this|throw|throws|transient|try|void|volatile|while|" +
-                "true|false|null)\\b";
+        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
+                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
+                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
+                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
+                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
+                + "true|false|null)\\b";
         syntaxPatternsMap.put(Pattern.compile(keywordsRegex), keywordColor);
 
         String typeRegex = "\\b(String|Integer|Double|Boolean|Float|Long|Short|Byte|" +
@@ -323,7 +313,6 @@ public class CodeEditorActivity extends AppCompatActivity {
 //
 //        codeView.setSyntaxPatternsMap(syntaxPatternsMap);
     }
-
     private void addKeywordsTokens(CodeView codeView) {
         String regex_classname;
         String regex_only_before_brackets;
@@ -413,11 +402,6 @@ public class CodeEditorActivity extends AppCompatActivity {
                 Color.parseColor("#C270D6")
         );
     }
-
-
-
-
-
     public void onSymbolClick(View view) {
         Button btn = (Button) view;
         EditText editText = codeView;

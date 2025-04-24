@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:padding="8dp"
     android:background="@drawable/ripple_shape"
+    android:backgroundTint="@color/violet"
+    app:rippleColor="@color/violet_average"
     android:clickable="true"
-    android:id="@+id/panelBody"
-    >
+    android:id="@+id/panelBody">
 
     <ImageView
         android:id="@+id/arrow"
