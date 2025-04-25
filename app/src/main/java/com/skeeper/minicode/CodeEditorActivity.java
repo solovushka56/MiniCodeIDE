@@ -3,6 +3,7 @@ package com.skeeper.minicode;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
@@ -127,7 +129,15 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 ProjectManager.getProjectDir(this, projectName));
         binding.leftDrawer.addView(fileSystemView);
 
-
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.violet));
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                boolean isLight = true;
+//                getWindow().getDecorView().setSystemUiVisibility(
+//                        isLight ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR : 0
+//                );
+//            }
+//        }
 
     }
 
@@ -452,7 +462,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 throw new RuntimeException(e);
             }
         }
-    undoRedoManager = new UndoRedoManager(codeView);
+        undoRedoManager = new UndoRedoManager(codeView);
     }
 
     @Override

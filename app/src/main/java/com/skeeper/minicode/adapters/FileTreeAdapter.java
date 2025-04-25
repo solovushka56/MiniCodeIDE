@@ -31,9 +31,10 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
     private IFileTreeListener listener;
 
 
-    public FileTreeAdapter(List<FileItem> items) {
+    public FileTreeAdapter(List<FileItem> items, IFileTreeListener changesListener) {
         this.allItems = items;
         this.visibleItems = generateVisibleList(items);
+        this.listener = changesListener;
         saveExpandedStates();
     }
 

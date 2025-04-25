@@ -7,7 +7,9 @@
     android:clickable="true"
     android:background="@drawable/left_bar_panel"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    >
 
     <androidx.cardview.widget.CardView
         android:backgroundTint="@color/violet"
@@ -33,6 +35,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:layout_gravity="center"
                     android:id="@+id/projectNameTextView"
                     android:textSize="20sp"
                     android:layout_width="wrap_content"
@@ -40,13 +43,39 @@
                     android:layout_weight="1"
                     android:textColor="@color/white"
                     android:text="ProjectName" />
+
+                <ImageButton
+                    android:id="@+id/fileAddButton"
+                    android:scaleY="0.7"
+                    android:scaleX="0.7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/ripple_shape"
+                    android:backgroundTint="@color/blue_grey"
+                    android:src="@drawable/file_plus"
+                    app:rippleColor="#4F3DC2EC" />
+
+                <ImageButton
+                    android:scaleY="0.8"
+                    android:scaleX="0.7"
+                    android:id="@+id/folderAddButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="44dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="5dp"
+                    android:background="@drawable/ripple_shape"
+                    android:backgroundTint="@color/blue_grey"
+                    android:src="@drawable/folder_plus"
+                    app:rippleColor="#4F3DC2EC" />
+
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:layout_weight="1"
                 android:id="@+id/recycler_view"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="start"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
