@@ -1,5 +1,6 @@
 package com.skeeper.minicode;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -10,6 +11,7 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -78,12 +80,14 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
         binding = ActivityCodeEditorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
         keySymbolModels = PanelSnippetsDataSingleton.loadList(
                 this,
                 "keySymbolsData.json");;
@@ -100,7 +104,10 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             finish();
         });
         binding.openFolderButton.setOnClickListener(v -> {
+            hideKeyboard();
+            codeView.clearFocus();
             binding.drawerLayout.openDrawer(GravityCompat.START);
+
 //            Toast.makeText(this, "in development...", Toast.LENGTH_SHORT).show();
         });
         binding.optionsButton.setOnClickListener(v -> {
@@ -447,7 +454,15 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         recyclerView.setAdapter(adapter);
 
     }
-
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }
+    }
 
     @Override
     public void onFileClick(FileItem fileItem) {

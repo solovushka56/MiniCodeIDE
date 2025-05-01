@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,7 +35,16 @@ public class FileSystemView extends RelativeLayout {
         View view = LayoutInflater.from(context).inflate(R.layout.filesystem_panel, parent, true);
         view.setBackgroundColor(Color.TRANSPARENT);
 
-
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(
+                    systemBars.left,
+                    systemBars.top,
+                    systemBars.right,
+                    systemBars.bottom
+            );
+            return insets;
+        });
 
         List<FileItem> fileStructure = new ArrayList<>();
         FileItem root = new FileItem(null,"Root", true, 0);
