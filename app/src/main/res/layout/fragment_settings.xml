@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SettingsFragment"
+    tools:context=".presentation.ui.fragment.SettingsFragment"
     android:background="@drawable/group_rect_black"
     >
 
@@ -36,31 +36,31 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <com.skeeper.minicode.SettingItemView
+                <com.skeeper.minicode.presentation.ui.component.SettingItemView
                     android:id="@+id/codeEditorSetting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp" />
 
-                <com.skeeper.minicode.SettingItemView
+                <com.skeeper.minicode.presentation.ui.component.SettingItemView
                     android:id="@+id/gitSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp" />
 
-                <com.skeeper.minicode.SettingItemView
+                <com.skeeper.minicode.presentation.ui.component.SettingItemView
                     android:id="@+id/compilationSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp" />
 
-                <com.skeeper.minicode.SettingItemView
+                <com.skeeper.minicode.presentation.ui.component.SettingItemView
                     android:id="@+id/themeSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="10dp" />
 
-                <com.skeeper.minicode.SettingItemView
+                <com.skeeper.minicode.presentation.ui.component.SettingItemView
                     android:id="@+id/langSettings"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/blue_dark"
-    tools:context=".ProjectOpenView">
+    tools:context=".presentation.ui.activity.ProjectOpenView">
 
 
     <LinearLayout
@@ -117,7 +117,7 @@
         </LinearLayout>
 
 
-        <com.skeeper.minicode.ProjectItemView
+        <com.skeeper.minicode.presentation.ui.component.ProjectItemView
             android:id="@+id/projectCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -20,35 +20,35 @@
         android:theme="@style/Theme.MiniCode"
         tools:targetApi="31">
         <activity
-            android:name=".ProjectCloneActivity"
+            android:name=".presentation.ui.activity.ProjectCloneActivity"
             android:exported="false" />
         <activity
-            android:name=".CodeEditorSettingsActivity"
+            android:name=".presentation.ui.activity.CodeEditorSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".GitIntegrationSettingsActivity"
+            android:name=".presentation.ui.activity.GitIntegrationSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".EditorCategorySettingActivity"
+            android:name=".presentation.ui.activity.EditorCategorySettingActivity"
             android:exported="false" />
         <activity
-            android:name=".ProjectCreateActivity"
+            android:name=".presentation.ui.activity.ProjectCreateActivity"
             android:exported="false" />
         <activity
-            android:name=".ProjectOpenView"
+            android:name=".presentation.ui.activity.ProjectOpenView"
             android:exported="false" />
         <activity
-            android:name=".TestActivity"
+            android:name=".presentation.ui.activity.TestActivity"
             android:exported="false"
             android:theme="@style/Theme.MiniCode" />
         <activity
-            android:name=".CodeEditorActivity"
+            android:name=".presentation.ui.activity.CodeEditorActivity"
             android:exported="false" />
         <activity
-            android:name=".MenuActivity"
+            android:name=".presentation.ui.activity.MenuActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".presentation.ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
