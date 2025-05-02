@@ -21,8 +21,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.ui.component.SnippetPanelViewItem;
 import com.skeeper.minicode.databinding.ActivityCodeEditorSettingsBinding;
-import com.skeeper.minicode.core.helpers.VibrationManager;
-import com.skeeper.minicode.core.helpers.animations.ViewAnimator;
+import com.skeeper.minicode.utils.helpers.VibrationManager;
+import com.skeeper.minicode.utils.helpers.animations.ViewAnimator;
 import com.skeeper.minicode.domain.models.KeySymbolItemModel;
 import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
 

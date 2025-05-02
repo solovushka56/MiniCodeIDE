@@ -12,7 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skeeper.minicode.R;
-import com.skeeper.minicode.core.helpers.VibrationManager;
+import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.domain.models.KeySymbolItemModel;
 import com.skeeper.minicode.core.singleton.CodeDataSingleton;
 

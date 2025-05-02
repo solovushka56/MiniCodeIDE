@@ -1,4 +1,4 @@
-package com.skeeper.minicode.core.helpers.animations;
+package com.skeeper.minicode.utils.helpers.animations;
 
 import android.animation.TimeInterpolator;
 import android.view.View;

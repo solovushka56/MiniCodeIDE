@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skeeper.minicode.presentation.ui.activity.ProjectOpenView;
 import com.skeeper.minicode.R;
-import com.skeeper.minicode.core.helpers.animations.QuartInterpolations;
-import com.skeeper.minicode.core.helpers.animations.ViewScaleComponent;
+import com.skeeper.minicode.utils.helpers.animations.QuartInterpolations;
+import com.skeeper.minicode.utils.helpers.animations.ViewScaleComponent;
 import com.skeeper.minicode.domain.models.ProjectModel;
 
 import java.util.List;

@@ -5,8 +5,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
-import com.skeeper.minicode.core.helpers.ProjectRectColorBinding;
-import com.skeeper.minicode.core.helpers.ProjectRectColorBindings;
+import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
+import com.skeeper.minicode.utils.helpers.ProjectRectColorBindings;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.skeeper.minicode.core.helpers;
+package com.skeeper.minicode.utils.helpers;
 
 import android.text.Editable;
 import android.text.TextWatcher;

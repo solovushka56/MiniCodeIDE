@@ -1,4 +1,4 @@
-package com.skeeper.minicode.core.helpers;
+package com.skeeper.minicode.utils.helpers;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

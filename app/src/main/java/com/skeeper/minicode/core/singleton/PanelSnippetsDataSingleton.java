@@ -5,7 +5,7 @@ import android.util.Pair;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.skeeper.minicode.core.helpers.SerializablePair;
+import com.skeeper.minicode.utils.helpers.SerializablePair;
 import com.skeeper.minicode.domain.models.KeySymbolItemModel;
 
 import java.io.*;

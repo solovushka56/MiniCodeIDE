@@ -12,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityProjectCloneBinding;
-import com.skeeper.minicode.core.helpers.ProjectRectColorBinding;
+import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 

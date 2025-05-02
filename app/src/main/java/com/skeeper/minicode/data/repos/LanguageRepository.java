@@ -15,6 +15,7 @@ public class LanguageRepository implements ILanguageRepository {
 
     private final LangModel langModel;
     private final ProgrammingLang langType;
+//    private final LangSyntaxMapper; //todo
 
     public LanguageRepository(Context context, ProgrammingLang langType) {
         this.langModel = LangSyntaxParser.parse(context, getRawFromLangType(langType));

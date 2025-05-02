@@ -34,8 +34,8 @@ import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.adapters.KeySymbolAdapter;
 import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
-import com.skeeper.minicode.core.helpers.UndoRedoManager;
-import com.skeeper.minicode.core.helpers.VibrationManager;
+import com.skeeper.minicode.utils.helpers.UndoRedoManager;
+import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.KeySymbolItemModel;
@@ -45,7 +45,6 @@ import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditorViewModel;
 import com.skeeper.minicode.utils.FileUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
