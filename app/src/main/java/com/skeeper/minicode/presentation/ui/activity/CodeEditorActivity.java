@@ -296,41 +296,12 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";
         syntaxPatternsMap.put(Pattern.compile(methodCallRegex), methodColor);
 
-//        syntaxPatternsMap.put(Pattern.compile("(?<=\\w)\\s*([()])"), bracketColor);
+
 
         codeView.setSyntaxPatternsMap(syntaxPatternsMap);
         codeView.reHighlightSyntax();
 
 
-
-//        Map<Pattern, Integer> syntaxPatternsMap = new HashMap<>();
-//
-//        int keywordColor = Color.parseColor("#4B70F5");
-//        int methodColor = Color.parseColor("#DCDCAA");
-//        int pinkedColor = Color.parseColor("#C270D6");
-//        int strColor = Color.parseColor("#00BCB2");
-//        int greenColor = Color.parseColor("#00BCB2");
-//
-//        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
-//                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
-//                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
-//                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
-//                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
-//                + "true|false|null)\\b";
-//
-//
-//        syntaxPatternsMap.put(Pattern.compile("\"(.*?)\""), Color.parseColor("#CE9178"));
-//        syntaxPatternsMap.put(Pattern.compile(keywordsRegex), keywordColor);
-//        syntaxPatternsMap.put(
-//                Pattern.compile("(?<![\"'])\\b([A-Z][a-zA-Z]*)\\b(?![\"'])"),
-//                greenColor
-//        );
-//        syntaxPatternsMap.put(Pattern.compile("\\.(\\w+)\\(\\)"), methodColor);
-//        syntaxPatternsMap.put(Pattern.compile("\\b(\\w+)\\("), methodColor);
-//        syntaxPatternsMap.put(Pattern.compile("\\("), pinkedColor);
-//        syntaxPatternsMap.put(Pattern.compile("\\)"), pinkedColor);
-//
-//        codeView.setSyntaxPatternsMap(syntaxPatternsMap);
     }
     private void addKeywordsTokens(CodeView codeView) {
         String regex_classname;
@@ -467,27 +438,11 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     @Override
     public void onFileClick(FileItem fileItem) {
-    //        var codeEditorFragment = new CodeEditorFragment(fileItem);
-//        setFragment(codeEditorFragment);
-//        codeView = codeEditorFragment.codeView;
         if (!fileItem.isDirectory())
         {
             FileUtils.readFileText(fileItem.getDirectory(), (text, success) -> {
                 if (success) codeView.setText(text);
             });
-//            codeView.setText(FileUtils.readFileText(fileItem.getDirectory(), null)); // было
-
-//            FileUtils.readFileText(fileItem.getDirectory(), new FileUtils.ReadFileCallback() {
-//                @Override
-//                public void onSuccess(String content) {
-//                    codeView.setText(content);
-//                }
-//
-//                @Override
-//                public void onError(Exception e) {
-//                    Toast.makeText(CodeEditorActivity.this, "Errorrr", Toast.LENGTH_SHORT).show();
-//                }
-//            });
         }
         undoRedoManager = new UndoRedoManager(codeView);
     }

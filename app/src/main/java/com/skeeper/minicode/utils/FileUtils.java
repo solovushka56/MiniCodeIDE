@@ -151,8 +151,6 @@ public class FileUtils {
     }
 
 
-
-
     private static void notifySuccess(File file, FileCallback callback) {
         mainHandler.post(() -> callback.onFinish(file, true));
     }
