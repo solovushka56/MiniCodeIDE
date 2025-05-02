@@ -45,6 +45,7 @@ import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditorViewModel;
 import com.skeeper.minicode.utils.FileUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -471,18 +472,22 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 //        codeView = codeEditorFragment.codeView;
         if (!fileItem.isDirectory())
         {
-//            codeView.setText(FileUtils.readFileText(fileItem.getDirectory(), null)); // было
-            FileUtils.readFileText(fileItem.getDirectory(), new FileUtils.ReadFileCallback() {
-                @Override
-                public void onSuccess(String content) {
-                    codeView.setText(content);
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Toast.makeText(CodeEditorActivity.this, "Errorrr", Toast.LENGTH_SHORT).show();
-                }
+            FileUtils.readFileText(fileItem.getDirectory(), (text, success) -> {
+                if (success) codeView.setText(text);
             });
+//            codeView.setText(FileUtils.readFileText(fileItem.getDirectory(), null)); // было
+
+//            FileUtils.readFileText(fileItem.getDirectory(), new FileUtils.ReadFileCallback() {
+//                @Override
+//                public void onSuccess(String content) {
+//                    codeView.setText(content);
+//                }
+//
+//                @Override
+//                public void onError(Exception e) {
+//                    Toast.makeText(CodeEditorActivity.this, "Errorrr", Toast.LENGTH_SHORT).show();
+//                }
+//            });
         }
         undoRedoManager = new UndoRedoManager(codeView);
     }

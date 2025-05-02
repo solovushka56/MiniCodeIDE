@@ -1,8 +1,11 @@
 package com.skeeper.minicode.utils;
 
-import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+
+import com.skeeper.minicode.domain.contracts.other.callbacks.FileCallback;
+import com.skeeper.minicode.domain.contracts.other.callbacks.ReadFileCallback;
+import com.skeeper.minicode.domain.contracts.other.callbacks.WriteFileCallback;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,7 +17,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -45,10 +47,7 @@ public class FileUtils {
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    public interface FileCallback {
-        void onSuccess(File file);
-        void onError(Exception e);
-    }
+
 
     public static void createFile(File file, FileCallback callback) {
         executor.execute(() -> {
@@ -66,11 +65,10 @@ public class FileUtils {
 
                 notifySuccess(file, callback);
             } catch (Exception e) {
-                notifyError(e, callback);
+                notifyError(callback);
             }
         });
     }
-
     public static void deleteFile(File file, FileCallback callback) {
         executor.execute(() -> {
             try {
@@ -79,11 +77,10 @@ public class FileUtils {
                 deleteRecursive(file);
                 notifySuccess(file, callback);
             } catch (Exception e) {
-                notifyError(e, callback);
+                notifyError(callback);
             }
         });
     }
-
     public static void renameFile(File source, String newName, FileCallback callback) {
         executor.execute(() -> {
             try {
@@ -95,11 +92,10 @@ public class FileUtils {
                 }
                 notifySuccess(target, callback);
             } catch (Exception e) {
-                notifyError(e, callback);
+                notifyError(callback);
             }
         });
     }
-
     public static void moveFile(File source, File targetDir, FileCallback callback) {
         executor.execute(() -> {
             try {
@@ -111,10 +107,12 @@ public class FileUtils {
                 }
                 notifySuccess(target, callback);
             } catch (Exception e) {
-                notifyError(e, callback);
+                notifyError(callback);
             }
         });
     }
+
+
 
     private static void deleteRecursive(File fileOrDir) {
         if (fileOrDir.isDirectory()) {
@@ -127,8 +125,6 @@ public class FileUtils {
         }
         fileOrDir.delete();
     }
-
-
     private static void copyFile(File source, File dest) throws IOException {
         try (InputStream in = new FileInputStream(source);
              OutputStream out = new FileOutputStream(dest)) {
@@ -139,7 +135,6 @@ public class FileUtils {
             }
         }
     }
-
     private static void performMoveOperation(File source, File target) throws IOException {
         if (source.isDirectory()) {
             if (!target.mkdirs()) throw new IOException();
@@ -155,23 +150,16 @@ public class FileUtils {
         deleteRecursive(source);
     }
 
+
+
+
     private static void notifySuccess(File file, FileCallback callback) {
-        mainHandler.post(() -> callback.onSuccess(file));
+        mainHandler.post(() -> callback.onFinish(file, true));
+    }
+    private static void notifyError(FileCallback callback) {
+        mainHandler.post(() -> callback.onFinish(null, false));
     }
 
-    private static void notifyError(Exception e, FileCallback callback) {
-        mainHandler.post(() -> callback.onError(e));
-    }
-
-    public interface ReadFileCallback {
-        void onSuccess(String content);
-        void onError(Exception e);
-    }
-
-    public interface WriteFileCallback {
-        void onSuccess();
-        void onError(Exception e);
-    }
 
     public static void readFileText(File file, ReadFileCallback callback) {
         executor.execute(() -> {
@@ -191,13 +179,12 @@ public class FileUtils {
                     content.setLength(content.length() - 1);
                 }
 
-                notifyReadSuccess(content.toString(), callback);
+                onReadSuccessNotify(content.toString(), callback);
             } catch (Exception e) {
-                notifyReadError(e, callback);
+                onReadErrorNotify(callback);
             }
         });
     }
-
     public static void writeFileText(File file, String text, WriteFileCallback callback) {
         executor.execute(() -> {
             try {
@@ -209,12 +196,13 @@ public class FileUtils {
                     writer.write(text);
                 }
 
-                notifyWriteSuccess(callback);
+                onWriteSuccessNotify(callback);
             } catch (Exception e) {
-                notifyWriteError(e, callback);
+                onWriteErrorNotify(callback);
             }
         });
     }
+
 
     private static void createFileSync(File file) throws IOException {
         File parent = file.getParentFile();
@@ -226,19 +214,18 @@ public class FileUtils {
         }
     }
 
-    private static void notifyReadSuccess(String content, ReadFileCallback callback) {
-        mainHandler.post(() -> callback.onSuccess(content));
+
+    private static void onReadSuccessNotify(String content, ReadFileCallback callback) {
+        mainHandler.post(() -> callback.onFinish(content, true));
+    }
+    private static void onReadErrorNotify(ReadFileCallback callback) {
+        mainHandler.post(() -> callback.onFinish("", false));
     }
 
-    private static void notifyReadError(Exception e, ReadFileCallback callback) {
-        mainHandler.post(() -> callback.onError(e));
+    private static void onWriteSuccessNotify(WriteFileCallback callback) {
+        mainHandler.post(() -> callback.onFinish(true));
     }
-
-    private static void notifyWriteSuccess(WriteFileCallback callback) {
-        mainHandler.post(callback::onSuccess);
-    }
-
-    private static void notifyWriteError(Exception e, WriteFileCallback callback) {
-        mainHandler.post(() -> callback.onError(e));
+    private static void onWriteErrorNotify(WriteFileCallback callback) {
+        mainHandler.post(() -> callback.onFinish(false));
     }
 }
