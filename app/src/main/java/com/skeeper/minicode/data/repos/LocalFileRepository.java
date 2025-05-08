@@ -40,6 +40,11 @@ public class LocalFileRepository implements IFileRepository {
 
 
     @Override
+    public File getFile() {
+        return file;
+    }
+
+    @Override
     public void createFile(File file, FileCallback callback) {
         FileUtils.createFile(file, callback);
     }

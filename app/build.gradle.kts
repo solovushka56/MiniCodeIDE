@@ -45,13 +45,10 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-//    implementation("com.google.android.material:material:1.9.0") // для кнопки
 
     implementation("com.google.code.gson:gson:2.11.0")
-
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("io.github.amrdeveloper:codeview:1.3.9")
-
-//    implementation ("com.jakewharton.threetenabp:threetenabp:1.4.6")
 
     // JGIT bottom
     // https://central.sonatype.dev/artifact/org.eclipse.jgit/org.eclipse.jgit/

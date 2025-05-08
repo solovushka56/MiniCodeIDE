@@ -43,7 +43,6 @@ import com.skeeper.minicode.core.singleton.CodeDataSingleton;
 import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditorViewModel;
-import com.skeeper.minicode.utils.FileUtils;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -77,7 +76,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         binding = ActivityCodeEditorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        vm = new ViewModelProvider(this).get(CodeEditorViewModel.class);
+
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -86,9 +85,12 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         });
         getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
 
+
+
         keySymbolModels = PanelSnippetsDataSingleton.loadList(
                 this,
-                "keySymbolsData.json");;
+                "keySymbolsData.json");
+
 
 
 
@@ -134,15 +136,14 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 ProjectManager.getProjectDir(this, projectName));
         binding.leftDrawer.addView(fileSystemView);
 
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.violet));
-//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                boolean isLight = true;
-//                getWindow().getDecorView().setSystemUiVisibility(
-//                        isLight ? View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR : 0
-//                );
-//            }
-//        }
+
+        vm = new ViewModelProvider(this).get(CodeEditorViewModel.class);
+        vm.getPreloadedFileText().observe(this, (preloadedText) -> {
+            codeView.setText(preloadedText);
+            undoRedoManager = new UndoRedoManager(codeView); // reload undo redo
+            // todo make saving history when change files
+            // todo remove observer
+        });
 
     }
 
@@ -437,13 +438,17 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     @Override
     public void onFileClick(FileItem fileItem) {
+        if (vm.getEditingFile().getValue() == fileItem) return;
         if (!fileItem.isDirectory())
         {
-            FileUtils.readFileText(fileItem.getDirectory(), (text, success) -> {
-                if (success) codeView.setText(text);
-            });
+            vm.getEditingFile().setValue(fileItem);
+            vm.onFileInit(fileItem);
+
+//            FileUtils.readFileText(fileItem.getDirectory(), (text, success) -> { // было
+//                if (success) codeView.setText(text);
+//
+//            });
         }
-        undoRedoManager = new UndoRedoManager(codeView);
     }
 
     @Override
