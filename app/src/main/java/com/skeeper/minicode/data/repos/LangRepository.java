@@ -4,27 +4,24 @@ import android.content.Context;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.data.mappers.LangSyntaxParser;
-import com.skeeper.minicode.domain.ProgrammingLang;
-import com.skeeper.minicode.domain.contracts.repos.ILanguageRepository;
+import com.skeeper.minicode.domain.enums.LangType;
+import com.skeeper.minicode.domain.contracts.repos.ILangRepository;
 import com.skeeper.minicode.domain.models.LangModel;
 
-import java.util.Collections;
-import java.util.List;
-
-public class LanguageRepository implements ILanguageRepository {
+public class LangRepository implements ILangRepository {
 
     private final LangModel langModel;
-    private final ProgrammingLang langType;
+    private final LangType langType;
 //    private final LangSyntaxMapper; //todo
 
-    public LanguageRepository(Context context, ProgrammingLang langType) {
+    public LangRepository(Context context, LangType langType) {
         this.langModel = LangSyntaxParser.parse(context, getRawFromLangType(langType));
         this.langType = langType;
     }
 
 
     @Override
-    public ProgrammingLang getLangType() {
+    public LangType getLangType() {
         return langType;
     }
     @Override
@@ -36,7 +33,7 @@ public class LanguageRepository implements ILanguageRepository {
 
 
 
-    private int getRawFromLangType(ProgrammingLang type) {
+    private int getRawFromLangType(LangType type) {
         switch (type)
         {
             case JAVA:

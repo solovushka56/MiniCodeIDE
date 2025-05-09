@@ -8,13 +8,8 @@
     tools:context=".presentation.ui.activity.TestActivity">
 
 
-    <com.amrdeveloper.codeview.CodeView
-        android:id="@+id/codeViewMain1"
+    <FrameLayout
+        android:id="@+id/codeframe"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        android:layout_height="match_parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

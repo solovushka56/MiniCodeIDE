@@ -1,11 +1,11 @@
 package com.skeeper.minicode.domain.usecases;
 
-import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
+import com.skeeper.minicode.domain.contracts.repos.ICallbackFileRepository;
 
 public class GetFileTextUseCase {
-    IFileRepository fileRepository;
+    ICallbackFileRepository fileRepository;
 
-    public GetFileTextUseCase(IFileRepository fileRepository) {
+    public GetFileTextUseCase(ICallbackFileRepository fileRepository) {
         this.fileRepository = fileRepository;
 //        fileRepository.read
     }

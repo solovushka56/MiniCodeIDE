@@ -16,7 +16,7 @@ import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 
-public class ProjectOpenView extends AppCompatActivity {
+public class ProjectOpenActivity extends AppCompatActivity {
 
     private ActivityProjectOpenViewBinding binding;
 
@@ -41,7 +41,7 @@ public class ProjectOpenView extends AppCompatActivity {
 
 
         binding.projectOpenButton.setOnClickListener(v -> {
-            var intent = new Intent(ProjectOpenView.this, CodeEditorActivity.class);
+            var intent = new Intent(ProjectOpenActivity.this, CodeEditorActivity.class);
 //            intent.putExtra("projectRef", "/src/0/name"); //todo
             intent.putExtra("projectName", boundModel.getProjectName());
             startActivity(intent);
@@ -49,7 +49,7 @@ public class ProjectOpenView extends AppCompatActivity {
 
         binding.buttonPanelRemove.setOnClickListener(v -> {
             ProjectManager.deleteProject(this, boundModel.getProjectName());
-            startActivity(new Intent(ProjectOpenView.this, MenuActivity.class));
+            startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
         });
         binding.buttonPanelEditName.setOnClickListener( v -> {
             Toast.makeText(this, "In development...", Toast.LENGTH_SHORT).show();

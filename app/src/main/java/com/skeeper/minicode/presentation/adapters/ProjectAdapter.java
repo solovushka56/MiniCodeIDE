@@ -15,7 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.skeeper.minicode.presentation.ui.activity.ProjectOpenView;
+import com.skeeper.minicode.presentation.ui.activity.ProjectOpenActivity;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.utils.helpers.animations.QuartInterpolations;
 import com.skeeper.minicode.utils.helpers.animations.ViewScaleComponent;
@@ -87,7 +87,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
     private void bindProjectOnClickListener(@NonNull ProjectViewHolder holder, ProjectModel currentModel) {
 
-        var intent = new Intent(holder.parentRectView.getContext(), ProjectOpenView.class);
+        var intent = new Intent(holder.parentRectView.getContext(), ProjectOpenActivity.class);
 
         ActivityOptions options = ActivityOptions.makeSceneTransitionAnimation(
                 (Activity) context,

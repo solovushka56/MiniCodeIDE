@@ -99,7 +99,7 @@ public class MenuActivity extends AppCompatActivity {
         fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
         fragmentTransaction.replace(R.id.mainFragmentLayout, newFragment);
 
-//        fragmentTransaction.addToBackStack(null); // закомментил, чтобы не отлеживалась история фрагментов
+//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 

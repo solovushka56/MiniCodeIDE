@@ -35,7 +35,7 @@
             android:name=".presentation.ui.activity.ProjectCreateActivity"
             android:exported="false" />
         <activity
-            android:name=".presentation.ui.activity.ProjectOpenView"
+            android:name=".presentation.ui.activity.ProjectOpenActivity"
             android:exported="false" />
         <activity
             android:name=".presentation.ui.activity.TestActivity"

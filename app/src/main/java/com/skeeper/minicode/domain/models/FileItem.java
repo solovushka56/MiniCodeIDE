@@ -1,5 +1,7 @@
 package com.skeeper.minicode.domain.models;
 
+import com.skeeper.minicode.domain.enums.LangType;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,6 @@ public class FileItem {
     public boolean isExpanded() { return isExpanded; }
     public void setExpanded(boolean expanded) { isExpanded = expanded; }
 
-    
+    public LangType lang;
 
 }

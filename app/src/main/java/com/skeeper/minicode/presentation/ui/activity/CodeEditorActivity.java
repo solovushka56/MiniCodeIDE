@@ -24,11 +24,14 @@ import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
+import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileSystemView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.adapters.KeySymbolAdapter;
@@ -42,7 +45,7 @@ import com.skeeper.minicode.domain.models.KeySymbolItemModel;
 import com.skeeper.minicode.core.singleton.CodeDataSingleton;
 import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.presentation.viewmodels.CodeEditorViewModel;
+import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 
 import java.io.IOException;
 import java.util.LinkedHashMap;
@@ -67,7 +70,8 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     UndoRedoManager undoRedoManager;
     private List<KeySymbolItemModel> keySymbolModels;
 
-    private CodeEditorViewModel vm;
+    private CodeEditViewModel vm;
+    private CodeEditorFragment currentCodeFragment = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,28 +80,25 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         binding = ActivityCodeEditorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
         getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
-
-
+        projectName = getIntent().getStringExtra("projectName");
 
         keySymbolModels = PanelSnippetsDataSingleton.loadList(
                 this,
                 "keySymbolsData.json");
 
-
-
+        currentCodeFragment = new CodeEditorFragment();
+        setFragment(currentCodeFragment);
 
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
-        codeView = binding.codeViewMain;
-        initCodeView(codeView);
+//        codeView = binding.codeViewMain;
+//        initCodeView(codeView);
         codeDataSingleton.setCurrentCodeView(codeView);
 
         binding.backButton.setOnClickListener(v -> {
@@ -137,52 +138,51 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         binding.leftDrawer.addView(fileSystemView);
 
 
-        vm = new ViewModelProvider(this).get(CodeEditorViewModel.class);
-        vm.getPreloadedFileText().observe(this, (preloadedText) -> {
-            codeView.setText(preloadedText);
-            undoRedoManager = new UndoRedoManager(codeView); // reload undo redo
-            // todo make saving history when change files
-            // todo remove observer
-        });
+        vm = new ViewModelProvider(this).get(CodeEditViewModel.class);
+
+//        vm.getPreloadedFileText().observe(this, (preloadedText) -> {
+//            codeView.setText(preloadedText);
+//            undoRedoManager = new UndoRedoManager(codeView); // reload undo redo
+//            // todo make saving history when change files
+//            // todo remove observer
+//        });
+
 
     }
 
 
-    private void initCodeView(CodeView view) {
+    private void initCodeView(CodeView codeview) {
         addHighlightPatterns();
-        view.setEnableAutoIndentation(true);
-        view.setIndentationStarts(Set.of('{'));
-        view.setIndentationEnds(Set.of('}'));
-        view.setEnableLineNumber(false);
-        view.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
-        view.setLineNumberTextSize(31f);
-        view.setTextSize(16);
-        view.setUpdateDelayTime(0);
-        view.setTabLength(4);
-        view.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
+        codeview.setEnableAutoIndentation(true);
+        codeview.setIndentationStarts(Set.of('{'));
+        codeview.setIndentationEnds(Set.of('}'));
+        codeview.setEnableLineNumber(false);
+        codeview.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
+        codeview.setLineNumberTextSize(31f);
+        codeview.setTextSize(16);
+        codeview.setUpdateDelayTime(0);
+        codeview.setTabLength(4);
+        codeview.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
         setupKeyboardListener();
-        undoRedoManager = new UndoRedoManager(view);
         setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
-        setupTextWatcher(view);
-        loadFileText();
-
+//        loadFileText();
+        undoRedoManager = new UndoRedoManager(codeview);
+        setupTextWatcher(codeview);
     }
+
     public void setFragment(Fragment newFragment) {
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//        fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
-//        fragmentTransaction.replace(R.id.mainCodeFragmentLayout, newFragment);
-//
-//        fragmentTransaction.addToBackStack(null);
-//        fragmentTransaction.commit();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
+        fragmentTransaction.replace(binding.codeViewFrame.getId(), newFragment);
+        fragmentTransaction.commit();
     }
 
     private void loadFileText() {
-        projectName = getIntent().getStringExtra("projectName");
         if (projectName == null) return;
 
         try {
-            codeView.append(ProjectManager.readFile(this, projectName, "main.java"));
+            codeView.setText(ProjectManager.readFile(this, projectName, "main.java"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -416,6 +416,9 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         }
 
     }
+
+
+
     private void setKeySymbolsRecycler() {
         var recyclerView = binding.symbolsPanel;
         var adapter = new KeySymbolAdapter(this, keySymbolModels);
@@ -436,19 +439,29 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         }
     }
 
+
+
     @Override
     public void onFileClick(FileItem fileItem) {
-        if (vm.getEditingFile().getValue() == fileItem) return;
-        if (!fileItem.isDirectory())
-        {
-            vm.getEditingFile().setValue(fileItem);
-            vm.onFileInit(fileItem);
-
-//            FileUtils.readFileText(fileItem.getDirectory(), (text, success) -> { // было
-//                if (success) codeView.setText(text);
+//        if (vm.getEditingFile().getValue() == fileItem) return;
+//        if (vm.getEditingFile().getValue().isDirectory()) return;
 //
-//            });
-        }
+//        vm.getEditingFile().setValue(fileItem);
+
+
+
+
+//        if (vm.getEditingFile().getValue() == fileItem) return;
+//        if (!fileItem.isDirectory())
+//        {
+//            vm.getEditingFile().setValue(fileItem);
+//            vm.onFileInit(fileItem);
+//
+////            FileUtils.readFileText(fileItem.getDirectory(), (text, success) -> { // было
+////                if (success) codeView.setText(text);
+////
+////            });
+//        }
     }
 
     @Override

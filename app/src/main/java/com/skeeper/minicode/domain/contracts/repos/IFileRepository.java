@@ -8,11 +8,10 @@ import java.io.File;
 
 public interface IFileRepository {
     File getFile();
-    void createFile(File file, FileCallback callback);
-    void deleteFile(File file, FileCallback callback);
-    void renameFile(File source, String newName, FileCallback callback);
-    void moveFile(File source, File targetDir, FileCallback callback);
-
-    void readFileText(File file, ReadFileCallback callback);
-    void writeFileText(File file, String text, WriteFileCallback callback);
+    void createFile(File file);
+    void deleteFile(File file);
+    void renameFile(File source, String newName);
+    void moveFile(File source, File targetDir);
+    String readFileText(File file);
+    void writeFileText(File file, String text);
 }
