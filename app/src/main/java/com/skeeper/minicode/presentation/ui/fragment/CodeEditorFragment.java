@@ -12,14 +12,20 @@ import androidx.lifecycle.ViewModelProvider;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.amrdeveloper.codeview.CodeView;
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.data.repos.LangRepository;
 import com.skeeper.minicode.databinding.FragmentCodeEditorBinding;
+import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.HighlightColorModel;
+import com.skeeper.minicode.domain.usecases.LangRegexUseCase;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
+import com.skeeper.minicode.utils.ExtensionUtils;
+import com.skeeper.minicode.utils.FileUtils;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -57,21 +63,37 @@ public class CodeEditorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         codeView = binding.codeViewMain;
-        initCodeView(codeView);
         vm = new ViewModelProvider(this).get(CodeEditViewModel.class);
+
+        initCodeView(codeView);
 
 
         boolean fromGit = false; // todo (if file editing once)
-        if (fromGit)
-            vm.initVM(boundFileItem, FileOpenMode.FROM_GIT);
-        else if (boundFileItem != null)
-            vm.initVM(boundFileItem, FileOpenMode.LOCAL);
-        else vm.initVM(boundFileItem, FileOpenMode.NEW);
+
+
+        LangRepository langRepository = new LangRepository(requireContext(), ExtensionType.JAVA);
+        var regexUseCase = new LangRegexUseCase(langRepository);
+        codeView.setSyntaxPatternsMap(regexUseCase.execute());
+        codeView.reHighlightSyntax();
+        
+//        codeView.setText(String.valueOf(langRepository.getLangModel().getAttributes()));
+
+//        if (fromGit)
+//            vm.initVM(boundFileItem, FileOpenMode.FROM_GIT, langRepository.getLangModel());
+//        else if (boundFileItem != null)
+//            vm.initVM(boundFileItem, FileOpenMode.LOCAL, langRepository.getLangModel());
+//        else vm.initVM(boundFileItem, FileOpenMode.NEW, langRepository.getLangModel());
+//
 
 
 
-
-
+    }
+    private void setupHighlight() {
+        var langRepo = new LangRepository(requireContext(),
+                ExtensionUtils.getFileExtensionType(boundFileItem.getName()));
+        LangRegexUseCase langRegexUseCase = new LangRegexUseCase(langRepo);
+        codeView.setSyntaxPatternsMap(langRegexUseCase.execute());
+        codeView.reHighlightSyntax();
     }
 
     @Override
@@ -82,7 +104,7 @@ public class CodeEditorFragment extends Fragment {
 
 
     private void initCodeView(CodeView codeview) {
-        addHighlightPatterns();
+//        addHighlightPatterns();
         codeview.setEnableAutoIndentation(true);
         codeview.setIndentationStarts(Set.of('{'));
         codeview.setIndentationEnds(Set.of('}'));
@@ -93,7 +115,7 @@ public class CodeEditorFragment extends Fragment {
         codeview.setUpdateDelayTime(0);
         codeview.setTabLength(4);
         codeview.setLineNumberTypeface(ResourcesCompat.getFont(requireContext(), R.font.cascadia_code));
-
+//        setupHighlight();
 //        loadFileText();
 
     }

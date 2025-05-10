@@ -1,6 +1,4 @@
 {
-  "languages": {
-    "java": {
       "keywords": [
         "abstract", "assert", "boolean", "break", "byte", "case", "catch",
         "char", "class", "const", "continue", "default", "do", "double",
@@ -24,11 +22,14 @@
         "String", "Object", "Integer", "Double", "Boolean", "Number",
         "Void", "Character", "Byte", "Short", "Long", "Float"
       ],
+
       "other_constructions": [
         "try-catch-finally", "throw/throws", "synchronized",
         "instanceof", "new", "package", "import", "instanceof",
         "assert", "lambda", "method reference", "annotation"
+      ],
+      "attributes": [
+        "@Override"
       ]
-    }
-  }
 }
+

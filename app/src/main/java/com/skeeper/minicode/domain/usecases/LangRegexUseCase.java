@@ -24,10 +24,6 @@ public class LangRegexUseCase {
         HighlightColorModel highlightModel = new HighlightColorModel();
         LangModel langModel = repository.getLangModel();
 
-
-//        keywordsRegex = buildListRegex(langModel.getKeywords());
-//        syntaxPatternsMap.put(Pattern.compile(keywordsRegex), highlightModel.keywordColor);
-
         String stringRegex = "\"(?:\\\\.|[^\"\\\\])*\"";
         syntaxPatternsMap.put(Pattern.compile(stringRegex), highlightModel.stringColor);
 
@@ -35,20 +31,14 @@ public class LangRegexUseCase {
         syntaxPatternsMap.put(Pattern.compile(charRegex), highlightModel.stringColor);
 
 
-        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
-                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
-                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
-                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
-                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
-                + "true|false|null)\\b";
+        String keywordsRegex = buildListRegex(langModel.getKeywords());
         syntaxPatternsMap.put(Pattern.compile(keywordsRegex), highlightModel.keywordColor);
 
-        String typeRegex = "\\b(String|Integer|Double|Boolean|Float|Long|Short|Byte|" +
-                "Character|Void|Object|Exception|Class|Number|System|Math)\\b";
+        String typeRegex = buildListRegex(langModel.getObjectTypes());
         syntaxPatternsMap.put(Pattern.compile(typeRegex), highlightModel.typeColor);
 
         String classDeclarationRegex = "(?<=\\bclass\\s)[A-Za-z0-9_]+";
-        syntaxPatternsMap.put(Pattern.compile(classDeclarationRegex), highlightModel.keywordColor);
+        syntaxPatternsMap.put(Pattern.compile(classDeclarationRegex), highlightModel.classColor);
 
         String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";
         syntaxPatternsMap.put(Pattern.compile(methodCallRegex), highlightModel.methodColor);

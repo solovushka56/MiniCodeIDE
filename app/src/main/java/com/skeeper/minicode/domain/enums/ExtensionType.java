@@ -1,8 +1,10 @@
 package com.skeeper.minicode.domain.enums;
 
-public enum LangType {
+public enum ExtensionType {
     JAVA,
     PYTHON,
-    TEXT,
-    OTHER
+    CSHARP,
+    OTHER,
+    TEXT
+
 }

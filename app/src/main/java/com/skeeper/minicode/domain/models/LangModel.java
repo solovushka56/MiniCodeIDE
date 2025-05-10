@@ -5,12 +5,12 @@ import java.util.List;
 public class LangModel {
     List<String> keywords;
     List<String> operators;
-    List<String> objectTypes;
     List<String> primitiveTypes;
+    List<String> objectTypes;
     List<String> attributes;
-    String constructionBodyDefinition;
-    String defaultCodeTemplate; // todo
-    String defaultClassTemplate; // todo
+//    String constructionBodyDefinition;
+//    String defaultCodeTemplate; // todo
+//    String defaultClassTemplate; // todo
 
     public LangModel(List<String> keywords, List<String> operators,
                      List<String> objectTypes, List<String> primitiveTypes,
@@ -21,7 +21,7 @@ public class LangModel {
         this.objectTypes = objectTypes;
         this.primitiveTypes = primitiveTypes;
         this.attributes = attributes;
-        this.constructionBodyDefinition = constructionBodyDefinition;
+//        this.constructionBodyDefinition = constructionBodyDefinition;
     }
 
     public List<String> getKeywords() {
@@ -44,7 +44,7 @@ public class LangModel {
         return attributes;
     }
 
-    public String getConstructionBodyDefinition() {
-        return constructionBodyDefinition;
-    }
+//    public String getConstructionBodyDefinition() {
+//        return constructionBodyDefinition;
+//    }
 }
