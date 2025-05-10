@@ -32,11 +32,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
-import com.skeeper.minicode.presentation.ui.other.FileSystemView;
+import com.skeeper.minicode.presentation.ui.other.FileTreeView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.adapters.KeySymbolAdapter;
 import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
+import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
+import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
@@ -48,6 +50,7 @@ import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +73,10 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     UndoRedoManager undoRedoManager;
     private List<KeySymbolItemModel> keySymbolModels;
 
-    private CodeEditViewModel vm;
+    private FilesViewModel filesViewModel;
+    private CodeEditViewModel codeEditViewModel;
     private CodeEditorFragment currentCodeFragment = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,8 +97,12 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 this,
                 "keySymbolsData.json");
 
+
+
         currentCodeFragment = new CodeEditorFragment();
         setFragment(currentCodeFragment);
+
+
 
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
@@ -106,7 +115,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         });
         binding.openFolderButton.setOnClickListener(v -> {
             hideKeyboard();
-            codeView.clearFocus();
+            getCurrentCodeView().clearFocus();
             binding.drawerLayout.openDrawer(GravityCompat.START);
 
 //            Toast.makeText(this, "in development...", Toast.LENGTH_SHORT).show();
@@ -132,13 +141,23 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         setKeySymbolsRecycler();
 
 
-        FileSystemView fileSystemView = new FileSystemView(this);
+
+
+        // filesystem setup
+        FileTreeView fileSystemView = new FileTreeView(this);
         fileSystemView.init(this, binding.leftDrawer,
                 ProjectManager.getProjectDir(this, projectName));
         binding.leftDrawer.addView(fileSystemView);
 
+        filesViewModel = new ViewModelProvider(
+                this, new FileViewModelFactory(ProjectManager
+                .getProjectDir(this, projectName)))
+                .get(FilesViewModel.class);
+        filesViewModel.getFileRepositoryList().observe(this, (fileItems) -> {
 
-        vm = new ViewModelProvider(this).get(CodeEditViewModel.class);
+            fileSystemView.updateFileItems(this, fileItems);
+        });
+
 
 //        vm.getPreloadedFileText().observe(this, (preloadedText) -> {
 //            codeView.setText(preloadedText);
@@ -148,8 +167,16 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 //        });
 
 
+
+
     }
 
+    private CodeView getCurrentCodeView() {
+        return currentCodeFragment.codeView;
+    }
+    private void setupFileTreeSystem() {
+
+    }
 
     private void initCodeView(CodeView codeview) {
         addHighlightPatterns();
@@ -168,6 +195,9 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 //        loadFileText();
         undoRedoManager = new UndoRedoManager(codeview);
         setupTextWatcher(codeview);
+
+
+
     }
 
     public void setFragment(Fragment newFragment) {

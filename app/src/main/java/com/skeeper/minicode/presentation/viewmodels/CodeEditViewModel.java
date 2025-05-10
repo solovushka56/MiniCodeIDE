@@ -22,10 +22,10 @@ import java.util.regex.Pattern;
 
 public class CodeEditViewModel extends ViewModel {
 
-    private MutableLiveData<FileItem> editingFile;
-    private MutableLiveData<String> preloadedFileText;
+    private final MutableLiveData<FileItem> editingFile = new MutableLiveData<>();
+    private final MutableLiveData<String> preloadedFileText = new MutableLiveData<>();
+
     private IFileRepository fileRepository; // git or local
-    private MutableLiveData<Map<Pattern, Integer>> highlightMap;
 
     private LangRegexUseCase langRegexUseCase;
     private GetFileTextUseCase getFileUseCase;
@@ -48,10 +48,6 @@ public class CodeEditViewModel extends ViewModel {
 
     }
 
-
-    public MutableLiveData<Map<Pattern, Integer>> getHighlightMap() {
-        return highlightMap;
-    }
 
     public MutableLiveData<FileItem> getEditingFile() {
         return editingFile;

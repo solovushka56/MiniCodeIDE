@@ -75,7 +75,11 @@ public class CodeEditorFragment extends Fragment {
         var regexUseCase = new LangRegexUseCase(langRepository);
         codeView.setSyntaxPatternsMap(regexUseCase.execute());
         codeView.reHighlightSyntax();
-        
+
+
+
+
+
 //        codeView.setText(String.valueOf(langRepository.getLangModel().getAttributes()));
 
 //        if (fromGit)
