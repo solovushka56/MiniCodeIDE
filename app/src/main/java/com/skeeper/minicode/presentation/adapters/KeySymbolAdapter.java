@@ -12,6 +12,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.domain.models.KeySymbolItemModel;
 import com.skeeper.minicode.core.singleton.CodeDataSingleton;
@@ -21,11 +22,12 @@ import java.util.List;
 public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeySymbolViewHolder>  {
     Context context;
     List<KeySymbolItemModel> models;
+    IKeyPressedListener listener;
 
-
-    public KeySymbolAdapter(Context context, List<KeySymbolItemModel> keySymbols) {
+    public KeySymbolAdapter(Context context, List<KeySymbolItemModel> keySymbols, IKeyPressedListener listener) {
         this.context = context;
         this.models = keySymbols;
+        this.listener = listener;
     }
 
     @NonNull
@@ -46,14 +48,9 @@ public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeyS
 
 
         holder.rect.setOnClickListener(v -> {
-            var currentCodeView = CodeDataSingleton.getInstance().currentCodeView;
             VibrationManager.vibrate(40L, currentButton.getContext());
-            if (currentCodeView != null) {
-                int cursorPosition = currentCodeView.getSelectionEnd();
-                Editable editable = currentCodeView.getText();
-                editable.insert(cursorPosition, currentModel.getSymbolValue());
-                currentCodeView.setSelection(cursorPosition + currentModel.getSymbolValue().length());
-            }
+            listener.onKeyPressed(currentModel);
+
         });
     }
 

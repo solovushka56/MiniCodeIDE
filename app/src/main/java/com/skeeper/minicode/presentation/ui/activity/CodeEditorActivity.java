@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.WindowManager;
@@ -31,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
+import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileTreeView;
 import com.skeeper.minicode.R;
@@ -57,7 +59,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class CodeEditorActivity extends AppCompatActivity implements IFileTreeListener {
+public class CodeEditorActivity extends AppCompatActivity implements IFileTreeListener, IKeyPressedListener {
 
     private ActivityCodeEditorBinding binding;
 
@@ -94,8 +96,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         projectName = getIntent().getStringExtra("projectName");
 
         keySymbolModels = PanelSnippetsDataSingleton.loadList(
-                this,
-                "keySymbolsData.json");
+                this, "keySymbolsData.json");
 
 
 
@@ -138,8 +139,9 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
 
         });
-        setKeySymbolsRecycler();
 
+        setKeySymbolsRecycler();
+        setupKeyboardListener();
 
 
 
@@ -153,10 +155,8 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 this, new FileViewModelFactory(ProjectManager
                 .getProjectDir(this, projectName)))
                 .get(FilesViewModel.class);
-        filesViewModel.getFileRepositoryList().observe(this, (fileItems) -> {
-
-            fileSystemView.updateFileItems(this, fileItems);
-        });
+        filesViewModel.getFileRepositoryList().observe(this, (fileItems) ->
+                fileSystemView.updateFileItems(this, fileItems));
 
 
 //        vm.getPreloadedFileText().observe(this, (preloadedText) -> {
@@ -179,24 +179,11 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     }
 
     private void initCodeView(CodeView codeview) {
-        addHighlightPatterns();
-        codeview.setEnableAutoIndentation(true);
-        codeview.setIndentationStarts(Set.of('{'));
-        codeview.setIndentationEnds(Set.of('}'));
-        codeview.setEnableLineNumber(false);
-        codeview.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
-        codeview.setLineNumberTextSize(31f);
-        codeview.setTextSize(16);
-        codeview.setUpdateDelayTime(0);
-        codeview.setTabLength(4);
-        codeview.setLineNumberTypeface(ResourcesCompat.getFont(this, R.font.cascadia_code));
-        setupKeyboardListener();
+//        setupKeyboardListener();
         setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
 //        loadFileText();
         undoRedoManager = new UndoRedoManager(codeview);
         setupTextWatcher(codeview);
-
-
 
     }
 
@@ -250,22 +237,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         binding.buttonUndo.setEnabled(undoRedoManager.canUndo());
         binding.buttonRedo.setEnabled(undoRedoManager.canRedo());
     }
-    private void addAutocomplete() {
-//        String[] languageKeywords = keywords;
-//        var adapter = new ArrayAdapter<String>(
-//                this, R.layout.activity_code_editor, binding.codeViewMain.getId(), languageKeywords);
-//        codeView.setAdapter(adapter);
-//    }
-//    private void setKeySymbolsRecycler() {
-//        var recyclerView = binding.symbolsPanel;
-//        var adapter = new KeySymbolAdapter(this, keySymbolModels);
-//
-//        recyclerView.setLayoutManager(new LinearLayoutManager(
-//                this, RecyclerView.HORIZONTAL, false));
-//
-//        recyclerView.setAdapter(adapter);
 
-    }
     private void setupKeyboardListener() {
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             Rect rect = new Rect();
@@ -333,95 +305,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
 
     }
-    private void addKeywordsTokens(CodeView codeView) {
-        String regex_classname;
-        String regex_only_before_brackets;
-        String regex_only_after_point_and_before_round_brackets;
-
-//
-//        String typesRegex = "\\b(boolean|byte|char|short|int|long|float|double|void|"
-//                + "Boolean|Byte|Character|Short|Integer|Long|Float|Double|String|Object|Class)\\b";
-//
-//        String stringsRegex = "\"(\\\\\"|[^\"])*\"|'(\\\\'|[^'])*'";
-//
-//        String numbersRegex = "\\b(0b[01_]+|0x[0-9a-fA-F_]+|0[0-7_]*|\\d[\\d_]*(\\.\\d[\\d_]*)?([eE][+-]?\\d[\\d_]*)?[fFdDlL]?)\\b";
-//
-//        String commentsRegex = "//.*|/\\*(.|\\R)*?\\*/|/\\*\\*(.|\\R)*?\\*/";
-//
-//        String annotationsRegex = "@[\\w$]+(\\([^)]*\\))?";
-//
-//        String classDeclarationRegex = "\\b(class|interface|enum|record)\\s+([A-Z$][\\w$]*)";
-//
-//        String methodDeclarationRegex = "\\b([A-Za-z_$][\\w$]*\\s+)+([A-Za-z_$][\\w$]*)\\s*\\([^)]*\\)\\s*\\{";
-//
-        int keywordColor = Color.parseColor("#4B70F5");
-        int methodColor = Color.parseColor("#DCDCAA");
-        int pinkedColor = Color.parseColor("#C270D6");
-        int strColor = Color.parseColor("#00BCB2");
-        int greenColor = Color.parseColor("#00BCB2");
-
-        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
-                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
-                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
-                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
-                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
-                + "true|false|null)\\b";
-
-        String methodCallRegex = "\\b([A-Za-z_$][\\w$]*)\\s*\\([^)]*\\)";
-
-
-        codeView.addSyntaxPattern(Pattern.compile(keywordsRegex), keywordColor);
-
-
-        // to classes
-        codeView.addSyntaxPattern(
-                Pattern.compile("\\b[A-Z][a-zA-Z]*\\b"),
-                Color.parseColor("#00BCB2"));
-
-        // to strings
-        codeView.addSyntaxPattern(
-                Pattern.compile("\"(.*?)\""),
-                Color.parseColor("#CE9178"));
-
-        // to methods calling
-        codeView.addSyntaxPattern(
-                Pattern.compile("\\.(\\w+)\\(\\)"),
-                Color.parseColor("#DCDCAA"));
-
-
-//         to methods
-//        codeView.addSyntaxPattern(
-//                Pattern.compile("\\b(\\w+)\\s*\\(\\)"),
-//                Color.parseColor("#DCDCAA")
-//        );
-        // to .method()
-
-        String METHOD_REGEX =
-                "(?xi)" +
-                        "(?:@\\w+(?:\\(.*?\\))?\\s+)*" +
-                        "\\b((public|protected|private|static|final|" +
-                        "synchronized|abstract|volatile|native|strictfp|default)\\b\\s+)*" +
-                        "(<[^>]+>\\s+)?" +
-                        "([\\w.<>\\[\\],\\s]+?)\\s+" +
-                        "(\\w+)\\s*\\(";
-
-
-//        codeView.patt
-        codeView.addSyntaxPattern(
-                Pattern.compile("\\b(\\w+)\\("),
-                Color.parseColor("#DCDCAA")
-        );
-        // to "("
-        codeView.addSyntaxPattern(
-                Pattern.compile("\\("),
-                Color.parseColor("#C270D6")
-        );
-        // to ")"
-        codeView.addSyntaxPattern(
-                Pattern.compile("\\)"),
-                Color.parseColor("#C270D6")
-        );
-    }
     public void onSymbolClick(View view) {
         Button btn = (Button) view;
         EditText editText = codeView;
@@ -451,7 +334,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     private void setKeySymbolsRecycler() {
         var recyclerView = binding.symbolsPanel;
-        var adapter = new KeySymbolAdapter(this, keySymbolModels);
+        var adapter = new KeySymbolAdapter(this, keySymbolModels, this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 this, RecyclerView.HORIZONTAL, false));
@@ -507,5 +390,21 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     @Override
     public void onFileAdd(FileItem fileItem) {
 
+    }
+
+
+    //on key symbol panel key pressed
+    @Override
+    public void onKeyPressed(KeySymbolItemModel keySymbolItemModel) {
+        var currentCodeView = getCurrentCodeView();
+        if (currentCodeView == null) {
+            Log.e("INIT_E", "key symbol key not inited");
+            return;
+        }
+//        Toast.makeText(this, "alal", Toast.LENGTH_SHORT).show();
+        int cursorPosition = currentCodeView.getSelectionEnd();
+        Editable editable = currentCodeView.getText();
+        editable.insert(cursorPosition, keySymbolItemModel.getSymbolValue());
+        currentCodeView.setSelection(cursorPosition + keySymbolItemModel.getSymbolValue().length());
     }
 }
