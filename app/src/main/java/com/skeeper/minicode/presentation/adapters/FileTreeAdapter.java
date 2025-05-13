@@ -125,7 +125,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
         }
         else {
             holder.arrow.setVisibility(View.INVISIBLE);
-            holder.itemView.setOnClickListener(null);
+            holder.itemView.setOnClickListener(v -> toggleItem(position, holder));
         }
     }
 

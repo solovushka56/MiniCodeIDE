@@ -36,20 +36,15 @@ import java.util.regex.Pattern;
 public class CodeEditorFragment extends Fragment {
 
     public FragmentCodeEditorBinding binding;
-    public CodeEditViewModel vm;
     public FileItem boundFileItem = null;
     public CodeView codeView = null;
 
-    public HighlightColorModel highlightModel;
 
-
-
-
+    public CodeEditorFragment() {}
     public CodeEditorFragment(FileItem fileItem) {
         this.boundFileItem = fileItem;
     }
-    public CodeEditorFragment() {
-    }
+
 
 
     @Override
@@ -63,7 +58,6 @@ public class CodeEditorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         codeView = binding.codeViewMain;
-        vm = new ViewModelProvider(this).get(CodeEditViewModel.class);
 
         initCodeView(codeView);
 

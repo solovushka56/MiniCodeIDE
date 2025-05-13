@@ -14,37 +14,36 @@ public class LocalFileRepository implements IFileRepository {
 
     @Override
     public File getFile() {
-       return file;
+        return file;
     }
 
     @Override
-    public void createFile(File file) {
+    public void createFile() {
         FileUtils.createFile(file);
     }
 
     @Override
-    public void deleteFile(File file) {
+    public void deleteFile() {
         FileUtils.deleteFile(file);
     }
 
     @Override
-    public void renameFile(File source, String newName) {
-        FileUtils.renameFile(source, newName);
+    public void renameFile(String newName) {
+        FileUtils.renameFile(file, newName);
     }
 
     @Override
-    public void moveFile(File source, File targetDir) {
-        FileUtils.moveFile(source, targetDir);
+    public void moveFile(File targetDir) {
+        FileUtils.moveFile(file, targetDir);
     }
 
     @Override
-    public String readFileText(File file) {
+    public String readFileText() {
         return FileUtils.readFileText(file);
     }
 
     @Override
-    public void writeFileText(File file, String text) {
+    public void writeFileText(String text) {
         FileUtils.writeFileText(file, text);
-
     }
 }

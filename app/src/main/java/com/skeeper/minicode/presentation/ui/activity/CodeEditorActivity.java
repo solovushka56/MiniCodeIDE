@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
+import com.skeeper.minicode.data.repos.LocalFileRepository;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileTreeView;
@@ -41,6 +42,7 @@ import com.skeeper.minicode.data.KeywordsTemplate;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
 import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
+import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
@@ -50,6 +52,8 @@ import com.skeeper.minicode.core.singleton.CodeDataSingleton;
 import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
+
+import org.eclipse.jgit.internal.storage.file.FileRepository;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -104,11 +108,8 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         setFragment(currentCodeFragment);
 
 
-
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
-//        codeView = binding.codeViewMain;
-//        initCodeView(codeView);
         codeDataSingleton.setCurrentCodeView(codeView);
 
         binding.backButton.setOnClickListener(v -> {
@@ -129,16 +130,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         binding.recreateButton.setOnClickListener( v-> {
             recreate();
         });
-        binding.saveButton.setOnClickListener(v -> {
-            String code = codeView.getText().toString();
-            try {
-                ProjectManager.saveFile(this, projectName, "main.java", code);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Toast.makeText(this, "Saved!", Toast.LENGTH_SHORT).show();
-
-        });
 
         setKeySymbolsRecycler();
         setupKeyboardListener();
@@ -158,14 +149,11 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         filesViewModel.getFileRepositoryList().observe(this, (fileItems) ->
                 fileSystemView.updateFileItems(this, fileItems));
 
-
-//        vm.getPreloadedFileText().observe(this, (preloadedText) -> {
-//            codeView.setText(preloadedText);
-//            undoRedoManager = new UndoRedoManager(codeView); // reload undo redo
-//            // todo make saving history when change files
-//            // todo remove observer
-//        });
-
+        filesViewModel.getSelectedFile().observe(this, fileItem -> {
+//            currentCodeFragment = new CodeEditorFragment();
+//            setFragment(currentCodeFragment);
+            getCurrentCodeView().setText(FileUtils.readFileText(fileItem.getDirectory()));
+        });
 
 
 
@@ -195,15 +183,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         fragmentTransaction.commit();
     }
 
-    private void loadFileText() {
-        if (projectName == null) return;
-
-        try {
-            codeView.setText(ProjectManager.readFile(this, projectName, "main.java"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private void setupButtonListeners(ImageButton btnUndo, ImageButton btnRedo) {
         btnUndo.setOnClickListener(v -> {
@@ -356,30 +335,20 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     @Override
     public void onFileClick(FileItem fileItem) {
-//        if (vm.getEditingFile().getValue() == fileItem) return;
-//        if (vm.getEditingFile().getValue().isDirectory()) return;
-//
-//        vm.getEditingFile().setValue(fileItem);
+        if (filesViewModel.getSelectedFile().getValue() == fileItem) return;
 
+        if (filesViewModel.getSelectedFile().getValue() != null) {
+            filesViewModel.writeFileText(getCurrentCodeView().getText().toString()); // save
+        }
 
+        filesViewModel.getSelectedFile().setValue(fileItem);
 
-
-//        if (vm.getEditingFile().getValue() == fileItem) return;
-//        if (!fileItem.isDirectory())
-//        {
-//            vm.getEditingFile().setValue(fileItem);
-//            vm.onFileInit(fileItem);
-//
-////            FileUtils.readFileText(fileItem.getDirectory(), (text, success) -> { // было
-////                if (success) codeView.setText(text);
-////
-////            });
-//        }
     }
+
+
 
     @Override
     public void onFolderClick(FileItem fileItem) {
-
     }
 
     @Override
@@ -395,7 +364,15 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     //on key symbol panel key pressed
     @Override
-    public void onKeyPressed(KeySymbolItemModel keySymbolItemModel) {
+    public void onKeyPressed(KeySymbolItemModel pressedKey) {
+        var currentCodeView = getCurrentCodeView();
+        if (currentCodeView == null) {
+            Log.e("INIT_E", "codeview is null");
+            return;
+        }
+        writeKeySymbol(pressedKey);
+    }
+    private void writeKeySymbol(KeySymbolItemModel keySymbolItemModel) {
         var currentCodeView = getCurrentCodeView();
         if (currentCodeView == null) {
             Log.e("INIT_E", "key symbol key not inited");

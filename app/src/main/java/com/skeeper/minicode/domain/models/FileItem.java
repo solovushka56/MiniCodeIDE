@@ -30,6 +30,6 @@ public class FileItem {
     public boolean isExpanded() { return isExpanded; }
     public void setExpanded(boolean expanded) { isExpanded = expanded; }
 
-    public ExtensionType lang;
+//    public ExtensionType lang;
 
 }
