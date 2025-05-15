@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.databinding.ActivityMainBinding;
 import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.domain.models.KeySymbolItemModel;
@@ -31,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
 
+    @Inject
+    ProjectManager projectManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
+//        Toast.makeText(this, String.valueOf(projectManager.fileDirProvider),
+//                Toast.LENGTH_LONG).show();
 
-
-//        SharedPreferences sharedPreferences = getSharedPreferences(
-//                "com.skeeper.minicode",
-//                Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
 
         File keySymbolConfigFile = new File(getFilesDir(), "keySymbolsData.json");
         if (!keySymbolConfigFile.exists()) {

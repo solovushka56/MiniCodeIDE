@@ -25,6 +25,9 @@ import com.skeeper.minicode.presentation.ui.fragment.TutorialsFragment;
 import com.skeeper.minicode.databinding.ActivityMenuBinding;
 import com.skeeper.minicode.utils.helpers.animations.BackInterpolations;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MenuActivity extends AppCompatActivity {
 
 

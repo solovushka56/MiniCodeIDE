@@ -1,11 +1,13 @@
 package com.skeeper.minicode.core.singleton;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
+import com.skeeper.minicode.domain.contracts.other.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.models.ProjectModel;
 
 import java.io.BufferedReader;
@@ -19,22 +21,28 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+@Singleton
 public class ProjectManager {
 
-    private static ProjectManager instance = null;
-    private ProjectManager() {}
-    public static ProjectManager getInstance() {
-        if (instance == null) instance = new ProjectManager();
-        return instance;
-    }
+    public final IFileDirectoryProvider fileDirProvider;
 
+
+//    @Inject
+//    public ProjectManager(IFileDirectoryProvider fileDirectoryProvider) {
+//        this.fileDirProvider = fileDirectoryProvider;
+//    }
+    @Inject
+    public ProjectManager(IFileDirectoryProvider fileDirectoryProvider) {
+        this.fileDirProvider = fileDirectoryProvider;
+    }
 
     private static final String projectsStoreFolder = "projects";
 
     private static final String ideFilesDirectoryName = ".minicode";
     private static final String ideProjectConfigFilename = "project_config.json"; // in ideFilesDirectoryName
-
-
 
 
     public static List<ProjectModel> loadAllProjectModels(Context context) {
@@ -141,8 +149,6 @@ public class ProjectManager {
     }
 
 
-
-
     public static void saveFile(Context context, String projectName,
                                 String fileName, String content) throws IOException {
         File projectDir = getProjectDir(context, projectName);
@@ -211,6 +217,7 @@ public class ProjectManager {
     }
     private static File getProjectsStoreFolder(Context context) {
         File folder = new File(context.getFilesDir(), projectsStoreFolder);
+//        Log.d("BOBO", String.valueOf(fileDirProvider));
         if (!folder.exists()) {
             boolean success = folder.mkdirs();
         }

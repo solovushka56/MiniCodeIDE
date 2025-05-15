@@ -8,14 +8,16 @@ import java.io.File;
 
 import javax.inject.Inject;
 
+import dagger.Provides;
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
 public class FileDirectoryProvider implements IFileDirectoryProvider {
     private final Context context;
 
     @Inject
-    public FileDirectoryProvider(Context context) {
+    public FileDirectoryProvider(@ApplicationContext Context context) {
         this.context = context;
     }
-
 
     @Override
     public File getFilesDir() {

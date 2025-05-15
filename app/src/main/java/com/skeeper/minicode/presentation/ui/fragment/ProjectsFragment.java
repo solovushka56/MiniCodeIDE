@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,15 +21,18 @@ import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.ui.activity.ProjectCloneActivity;
 import com.skeeper.minicode.presentation.ui.activity.ProjectCreateActivity;
+import com.skeeper.minicode.presentation.viewmodels.ProjectsListViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+//@AndroidEntryPoint
 public class ProjectsFragment extends Fragment {
 
     FragmentProjectsBinding binding;
-
+    ProjectsListViewModel projectsListViewModel;
 
     public List<ProjectModel> models = new ArrayList<>();
 
@@ -36,8 +40,8 @@ public class ProjectsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        projectsListViewModel = new ViewModelProvider(
+                this).get(ProjectsListViewModel.class);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -81,28 +85,9 @@ public class ProjectsFragment extends Fragment {
 
 
     private void addProjectsData(List<ProjectModel> models) {
-        // todo: сделать здесь чтение существующих проектов из директории
         for (ProjectModel model : ProjectManager.loadAllProjectModels(getContext())) {
             models.add(model);
         }
-
-
-
-//        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-//        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-//        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
-//
-//        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-//        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-//        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
-//
-//        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-//        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-//        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
-//
-//        models.add(new ProjectModel(1, "tutorial", "/0/sil/bindssd/intsaf/boor"));
-//        models.add(new ProjectModel(2, "startup", "/0/saf/boor"));
-//        models.add(new ProjectModel(3, "startup2", "/0/sil/binintsaf/boor"));
 
     }
     private void setProjectsRecycler() {
@@ -113,7 +98,6 @@ public class ProjectsFragment extends Fragment {
                 getContext(), RecyclerView.VERTICAL, false));
 
         recyclerView.setAdapter(adapter);
-
 
     }
     @Override
