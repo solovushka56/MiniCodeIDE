@@ -3,16 +3,12 @@ package com.skeeper.minicode.presentation.viewmodels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.mappers.FileTreeMapper;
-import com.skeeper.minicode.data.repos.LocalFileRepository;
 import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.domain.models.FileItem;
-import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.utils.FileUtils;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FilesViewModel extends ViewModel implements IFileRepository {

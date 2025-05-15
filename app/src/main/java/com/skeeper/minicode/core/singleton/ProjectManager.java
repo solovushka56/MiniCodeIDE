@@ -60,15 +60,6 @@ public class ProjectManager {
     public static ProjectModel loadProjectModel(Context context, String projectName) {
         File configDir = getProjectConfigDir(context, projectName);
         try {
-//            FileInputStream stream = context.openFileInput(configDir.getName());
-//            InputStreamReader inputReader = new InputStreamReader(stream);
-//            BufferedReader bufferedReader = new BufferedReader(inputReader);
-//            StringBuilder stringBuilder = new StringBuilder();
-//            String line;
-//            while ((line = bufferedReader.readLine()) != null) {
-//                stringBuilder.append(line);
-//            }
-
             StringBuilder content = new StringBuilder();
 
             try (BufferedReader reader = new BufferedReader(new FileReader(configDir))) {

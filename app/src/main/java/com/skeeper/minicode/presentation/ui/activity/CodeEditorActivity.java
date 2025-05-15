@@ -15,11 +15,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
@@ -32,7 +30,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
-import com.skeeper.minicode.data.repos.LocalFileRepository;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileTreeView;
@@ -53,14 +50,9 @@ import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 
-import org.eclipse.jgit.internal.storage.file.FileRepository;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 public class CodeEditorActivity extends AppCompatActivity implements IFileTreeListener, IKeyPressedListener {

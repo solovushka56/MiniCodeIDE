@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityMainBinding;
+import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.domain.models.KeySymbolItemModel;
 import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
 
@@ -21,6 +22,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
@@ -29,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         EdgeToEdge.enable(this);
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());

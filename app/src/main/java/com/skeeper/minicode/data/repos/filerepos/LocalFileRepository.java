@@ -1,4 +1,4 @@
-package com.skeeper.minicode.data.repos;
+package com.skeeper.minicode.data.repos.filerepos;
 
 import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.utils.FileUtils;

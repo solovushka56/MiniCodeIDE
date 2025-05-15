@@ -3,10 +3,8 @@ package com.skeeper.minicode.presentation.viewmodels;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.skeeper.minicode.data.repos.LangRepository;
-import com.skeeper.minicode.data.repos.LocalFileRepository;
+import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
 import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
-import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.HighlightColorModel;
@@ -14,9 +12,6 @@ import com.skeeper.minicode.domain.models.LangModel;
 import com.skeeper.minicode.domain.usecases.GetFileTextUseCase;
 import com.skeeper.minicode.domain.usecases.LangRegexUseCase;
 import com.skeeper.minicode.utils.ExtensionUtils;
-
-import java.util.Map;
-import java.util.regex.Pattern;
 
 // for fragments mb
 

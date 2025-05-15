@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -26,8 +27,10 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+//        sourceCompatibility = JavaVersion.VERSION_1_8
+//        targetCompatibility = JavaVersion.VERSION_1_8
     }
     buildFeatures {
         viewBinding = true
@@ -35,7 +38,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
@@ -46,13 +48,25 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
+
+    // di
+    implementation("com.google.dagger:hilt-android:2.48")
+    annotationProcessor("com.google.dagger:hilt-android-compiler:2.48")
+
+
     implementation("com.google.code.gson:gson:2.11.0")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("io.github.amrdeveloper:codeview:1.3.9")
 
+    // net
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.1")
+
+
+
     // JGIT bottom
-    // https://central.sonatype.dev/artifact/org.eclipse.jgit/org.eclipse.jgit/
-    implementation("org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r")
+    implementation("org.eclipse.jgit:org.eclipse.jgit:5.12.0.202106070339-r")
     // SSH support for JGit based on Apache MINA sshd
 //    implementation("org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.4.0.202211300538-r")
 //    // GPG support for JGit based on BouncyCastle (commit signing)
