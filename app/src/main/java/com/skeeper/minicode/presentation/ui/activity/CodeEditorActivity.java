@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -85,7 +86,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
 
     // bound files and fragments
-    private Map<FileItem, Fragment> cachedFragments = new HashMap<>();
+    private Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
 
 
     @Override
@@ -108,8 +109,9 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 this, "keySymbolsData.json");
 
 
-
-        currentCodeFragment = new CodeEditorFragment();
+//        setNewCodeEditorFragment(
+//                filesViewModel.getFileRepositoryList().getValue().get(0));
+        currentCodeFragment = new CodeEditorFragment(binding.buttonUndo, binding.buttonRedo);
         setFragment(currentCodeFragment);
 
 
@@ -139,6 +141,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         setKeySymbolsRecycler();
         setupKeyboardListener();
 
+//        setupButtonListeners(getCurrentUndoRedoManager(), binding.buttonUndo, binding.buttonRedo);
 
 
         // filesystem setup
@@ -167,13 +170,19 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     public void setNewCodeEditorFragment(FileItem fileItem) // todo handle files removing (delete associated fragments)
     {
         if (cachedFragments.get(fileItem) == null) {
-            currentCodeFragment = new CodeEditorFragment(fileItem);
-            setFragment(currentCodeFragment);
+            currentCodeFragment = new CodeEditorFragment(fileItem, binding.buttonUndo, binding.buttonRedo);
             cachedFragments.put(fileItem, currentCodeFragment);
+//            Toast.makeText(this, "NEW fr setted", Toast.LENGTH_SHORT).show();
         }
         else {
-            setFragment(cachedFragments.get(fileItem));
+            currentCodeFragment = cachedFragments.get(fileItem);
+//            Toast.makeText(this, "OLD fr setted", Toast.LENGTH_SHORT).show();
         }
+        setFragment(currentCodeFragment);
+//        setupButtonListeners(undoRedoManager, binding.buttonUndo, binding.buttonRedo);
+//        setupTextWatcher(getCurrentCodeView());
+
+
     }
     public void setFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -187,22 +196,28 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     private CodeView getCurrentCodeView() {
         return currentCodeFragment.codeView;
     }
+    private UndoRedoManager getCurrentUndoRedoManager() {
+        return currentCodeFragment.undoRedoManager;
+    }
+
 
     private void setupFileTreeSystem() {
 
     }
 
-    private void initCodeView(CodeView codeview) {
-//        setupKeyboardListener();
-        setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
-//        loadFileText();
-        undoRedoManager = new UndoRedoManager(codeview);
-        setupTextWatcher(codeview);
+//    private void initCodeView(CodeView codeview) {
+////        setupKeyboardListener();
+//        setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
+////        loadFileText();
+//        undoRedoManager = new UndoRedoManager(codeview);
+//        setupTextWatcher(codeview);
+//
+//    }
 
-    }
 
 
-    private void setupButtonListeners(ImageButton btnUndo, ImageButton btnRedo) {
+    private void setupButtonListeners(UndoRedoManager undoRedoManager, ImageButton btnUndo, ImageButton btnRedo) {
+
         btnUndo.setOnClickListener(v -> {
             if (!undoRedoManager.canUndo()) return;
             VibrationManager.vibrate(30L, this);
@@ -231,8 +246,8 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         });
     }
     private void updateButtonStates() {
-        binding.buttonUndo.setEnabled(undoRedoManager.canUndo());
-        binding.buttonRedo.setEnabled(undoRedoManager.canRedo());
+        binding.buttonUndo.setEnabled(getCurrentUndoRedoManager().canUndo());
+        binding.buttonRedo.setEnabled(getCurrentUndoRedoManager().canRedo());
     }
 
     private void setupKeyboardListener() {
@@ -312,6 +327,11 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     @Override
     public void onFileClick(FileItem fileItem) {
+        Toast.makeText(this, fileItem.getName(), Toast.LENGTH_SHORT).show();
+//        cachedFragments.remove(fileItem);
+        setNewCodeEditorFragment(fileItem);
+
+
 //        if (filesViewModel.getSelectedFile().getValue() == fileItem) return;
 //
 //        if (filesViewModel.getSelectedFile().getValue() != null) {

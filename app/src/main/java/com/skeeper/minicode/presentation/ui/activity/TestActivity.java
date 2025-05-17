@@ -29,7 +29,7 @@ public class TestActivity extends AppCompatActivity {
         binding = ActivityTestBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setFragment(new CodeEditorFragment());
+//        setFragment(new CodeEditorFragment());
 
 
     }

@@ -117,15 +117,16 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
 
         if (item.isDirectory()) {
             holder.arrow.setVisibility(View.VISIBLE);
-            holder.arrow.setRotation(item.isExpanded() ? 90 : 0);
-            holder.itemView.setOnClickListener(v -> {
-                toggleItem(position, holder);
-
-            });
-        }
-        else {
-            holder.arrow.setVisibility(View.INVISIBLE);
+            float targetRotation = item.isExpanded() ? 90 : 0;
+            if (holder.arrow.getRotation() != targetRotation) {
+                ObjectAnimator animator = ObjectAnimator.ofFloat(holder.arrow, "rotation", targetRotation);
+                animator.setDuration(200);
+                animator.start();
+            }
             holder.itemView.setOnClickListener(v -> toggleItem(position, holder));
+        } else {
+            holder.arrow.setVisibility(View.INVISIBLE);
+            holder.itemView.setOnClickListener(v -> listener.onFileClick(item));
         }
     }
 
