@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface IProjectRepository {
     ProjectModel getProject();
-    boolean createProject();
-    boolean saveProject();
-    boolean removeProject();
+    void createProject();
+    void saveProject();
+    void removeProject();
 }

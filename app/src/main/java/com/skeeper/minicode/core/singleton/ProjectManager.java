@@ -30,10 +30,6 @@ public class ProjectManager {
     public final IFileDirectoryProvider fileDirProvider;
 
 
-//    @Inject
-//    public ProjectManager(IFileDirectoryProvider fileDirectoryProvider) {
-//        this.fileDirProvider = fileDirectoryProvider;
-//    }
     @Inject
     public ProjectManager(IFileDirectoryProvider fileDirectoryProvider) {
         this.fileDirProvider = fileDirectoryProvider;
@@ -45,8 +41,8 @@ public class ProjectManager {
     private static final String ideProjectConfigFilename = "project_config.json"; // in ideFilesDirectoryName
 
 
-    public static List<ProjectModel> loadAllProjectModels(Context context) {
-        var innerFiles = getProjectsStoreFolder(context).listFiles();
+    public List<ProjectModel> loadAllProjectModels() {
+        var innerFiles = getProjectsStoreFolder().listFiles();
         if (innerFiles == null) return new ArrayList<>();
 
         List<String> allProjectNames = Arrays
@@ -58,15 +54,15 @@ public class ProjectManager {
 
         List<ProjectModel> models = new ArrayList<>();
         for (String projectName : allProjectNames) {
-            models.add(loadProjectModel(context, projectName));
+            models.add(loadProjectModel(projectName));
         }
         return models;
     }
 
 
     @Nullable
-    public static ProjectModel loadProjectModel(Context context, String projectName) {
-        File configDir = getProjectConfigDir(context, projectName);
+    public ProjectModel loadProjectModel(String projectName) {
+        File configDir = getProjectConfigDir(projectName);
         try {
             StringBuilder content = new StringBuilder();
 
@@ -92,8 +88,8 @@ public class ProjectManager {
 
 
 
-    public static boolean createProject(Context context, ProjectModel model, boolean overwrite) {
-        File projectDir = getProjectDir(context, model.getProjectName());
+    public boolean createProject(ProjectModel model, boolean overwrite) {
+        File projectDir = getProjectDir(model.getProjectName());
         if (projectDir.exists()) {
             if (overwrite) {
                 if (!deleteRecursive(projectDir)) {
@@ -106,10 +102,9 @@ public class ProjectManager {
         }
         if (!projectDir.mkdirs()) return false;
         try {
-            generateProjectIdeFiles(context, projectDir, model);
+            generateProjectIdeFiles(projectDir, model);
         }
         catch (IOException e) {
-            Toast.makeText(context, "failed to generate ide files", Toast.LENGTH_SHORT).show();
             throw new RuntimeException(e);
         }
 
@@ -118,7 +113,7 @@ public class ProjectManager {
 
 
     /// add ide configs and settings of the project to special folder
-    private static void generateProjectIdeFiles(Context context, File projectDir, ProjectModel model) throws IOException {
+    private void generateProjectIdeFiles(File projectDir, ProjectModel model) throws IOException {
         model.setProjectPath(projectDir.getAbsolutePath());
         File ideFilesPath = new File(projectDir, ideFilesDirectoryName);
 
@@ -127,20 +122,20 @@ public class ProjectManager {
         Gson gson = new Gson();
         String content = gson.toJson(model);
 
-        saveFile(context, ideFilesPath, ideProjectConfigFilename, content);
+        saveFile(ideFilesPath, ideProjectConfigFilename, content);
     }
 
 
 
 
-    public static boolean deleteProject(Context context, String projectName) {
-        File projectDir = getProjectDir(context, projectName);
+    public boolean deleteProject(String projectName) {
+        File projectDir = getProjectDir(projectName);
         return deleteRecursive(projectDir);
     }
 
-    public static boolean renameProject(Context context, String oldName, String newName) {
-        File oldDir = getProjectDir(context, oldName);
-        File newDir = getProjectDir(context, newName);
+    public boolean renameProject(String oldName, String newName) {
+        File oldDir = getProjectDir(oldName);
+        File newDir = getProjectDir(newName);
 
         if (oldDir.exists() && !newDir.exists()) {
             return oldDir.renameTo(newDir);
@@ -149,9 +144,9 @@ public class ProjectManager {
     }
 
 
-    public static void saveFile(Context context, String projectName,
+    public void saveFile(String projectName,
                                 String fileName, String content) throws IOException {
-        File projectDir = getProjectDir(context, projectName);
+        File projectDir = getProjectDir(projectName);
         if (!projectDir.exists() && !projectDir.mkdirs()) {
             throw new IOException("failed to create proj dir");
         }
@@ -160,7 +155,7 @@ public class ProjectManager {
             writer.write(content);
         }
     }
-    public static void saveFile(Context context, File projectDir,
+    public void saveFile(File projectDir,
                                 String fileName, String content) throws IOException {
         if (!projectDir.exists() && !projectDir.mkdirs()) {
             throw new IOException("failed to create proj dir");
@@ -174,32 +169,17 @@ public class ProjectManager {
 
 
 
-    public static String readFile(Context context, String projectName,
-                                  String fileName) throws IOException {
-        File file = new File(getProjectDir(context, projectName), fileName);
-        StringBuilder content = new StringBuilder();
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-        }
-        return content.toString().trim();
+    public boolean projectExists(String projectName) {
+        return getProjectDir(projectName).exists();
     }
 
 
-    public static boolean projectExists(Context context, String projectName) {
-        return getProjectDir(context, projectName).exists();
-    }
-
-
-    private static File getProjectConfigDir(Context context, String projectName) {
-        File configFolder = getProjectConfigFolder(context, projectName);
+    private File getProjectConfigDir(String projectName) {
+        File configFolder = getProjectConfigFolder(projectName);
         return new File(configFolder, ideProjectConfigFilename);
     }
-    private static File getProjectConfigFolder(Context context, String projectName) {
-        File projectDir = getProjectDir(context, projectName);
+    private File getProjectConfigFolder(String projectName) {
+        File projectDir = getProjectDir(projectName);
         return new File(projectDir, ideFilesDirectoryName);
     }
 
@@ -207,7 +187,7 @@ public class ProjectManager {
 
 
 
-    private static boolean deleteRecursive(File fileOrDirectory) {
+    private boolean deleteRecursive(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory()) {
             for (File child : fileOrDirectory.listFiles()) {
                 deleteRecursive(child);
@@ -215,16 +195,16 @@ public class ProjectManager {
         }
         return fileOrDirectory.delete();
     }
-    private static File getProjectsStoreFolder(Context context) {
-        File folder = new File(context.getFilesDir(), projectsStoreFolder);
-//        Log.d("BOBO", String.valueOf(fileDirProvider));
+    public File getProjectsStoreFolder() {
+
+        File folder = new File(fileDirProvider.getFilesDir(), projectsStoreFolder);
         if (!folder.exists()) {
             boolean success = folder.mkdirs();
         }
         return folder;
     }
-    public static File getProjectDir(Context context, String projectName) {
-        return new File(getProjectsStoreFolder(context), projectName);
+    public File getProjectDir(String projectName) {
+        return new File(getProjectsStoreFolder(), projectName);
     }
 
 

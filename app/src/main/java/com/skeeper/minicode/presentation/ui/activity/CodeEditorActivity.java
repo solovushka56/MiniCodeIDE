@@ -50,30 +50,43 @@ import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 
+import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class CodeEditorActivity extends AppCompatActivity implements IFileTreeListener, IKeyPressedListener {
 
     private ActivityCodeEditorBinding binding;
 
+
+    @Inject
+    ProjectManager projectManager;
+
     private final CodeDataSingleton codeDataSingleton = CodeDataSingleton.getInstance();
-    private CodeView codeView;
 
     private View rootView;
     private RecyclerView bottomPanel;
     private final int minKeyboardHeight = 100;
-    private final String[] keywords = KeywordsTemplate.keywords;
     private String projectName = null;
 
-    UndoRedoManager undoRedoManager;
+    private UndoRedoManager undoRedoManager;
     private List<KeySymbolItemModel> keySymbolModels;
-
     private FilesViewModel filesViewModel;
-    private CodeEditViewModel codeEditViewModel;
+
     private CodeEditorFragment currentCodeFragment = null;
+
+
+    // bound files and fragments
+    private Map<FileItem, Fragment> cachedFragments = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +115,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
-        codeDataSingleton.setCurrentCodeView(codeView);
+        codeDataSingleton.setCurrentCodeView(getCurrentCodeView());
 
         binding.backButton.setOnClickListener(v -> {
             finish();
@@ -131,29 +144,50 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         // filesystem setup
         FileTreeView fileSystemView = new FileTreeView(this);
         fileSystemView.init(this, binding.leftDrawer,
-                ProjectManager.getProjectDir(this, projectName));
+                projectManager.getProjectDir(projectName));
         binding.leftDrawer.addView(fileSystemView);
 
+
         filesViewModel = new ViewModelProvider(
-                this, new FileViewModelFactory(ProjectManager
-                .getProjectDir(this, projectName)))
+                this, new FileViewModelFactory(projectManager
+                .getProjectDir(projectName)))
                 .get(FilesViewModel.class);
         filesViewModel.getFileRepositoryList().observe(this, (fileItems) ->
                 fileSystemView.updateFileItems(this, fileItems));
 
-        filesViewModel.getSelectedFile().observe(this, fileItem -> {
-//            currentCodeFragment = new CodeEditorFragment();
-//            setFragment(currentCodeFragment);
-            getCurrentCodeView().setText(FileUtils.readFileText(fileItem.getDirectory()));
-        });
+//        filesViewModel.getSelectedFile().observe(this, fileItem -> {
+//            getCurrentCodeView().setText(FileUtils.readFileText(fileItem.getDirectory()));
+//        });
 
 
 
     }
+
+
+    public void setNewCodeEditorFragment(FileItem fileItem) // todo handle files removing (delete associated fragments)
+    {
+        if (cachedFragments.get(fileItem) == null) {
+            currentCodeFragment = new CodeEditorFragment(fileItem);
+            setFragment(currentCodeFragment);
+            cachedFragments.put(fileItem, currentCodeFragment);
+        }
+        else {
+            setFragment(cachedFragments.get(fileItem));
+        }
+    }
+    public void setFragment(Fragment newFragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
+        fragmentTransaction.replace(binding.codeViewFrame.getId(), newFragment);
+        fragmentTransaction.commit();
+    }
+
 
     private CodeView getCurrentCodeView() {
         return currentCodeFragment.codeView;
     }
+
     private void setupFileTreeSystem() {
 
     }
@@ -165,14 +199,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         undoRedoManager = new UndoRedoManager(codeview);
         setupTextWatcher(codeview);
 
-    }
-
-    public void setFragment(Fragment newFragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
-        fragmentTransaction.replace(binding.codeViewFrame.getId(), newFragment);
-        fragmentTransaction.commit();
     }
 
 
@@ -234,51 +260,10 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 getResources().getDisplayMetrics()
         );
     }
-    private void addHighlightPatterns() {
-        int keywordColor = Color.parseColor("#4B70F5");
-        int typeColor = Color.parseColor("#4EC9B0");
-        int classColor = Color.parseColor("#4EC9B0");
-        int methodColor = Color.parseColor("#DCDCAA");
-        int bracketColor = Color.parseColor("#569CD6");
-        int stringColor = Color.parseColor("#CE9178");
 
-        Map<Pattern, Integer> syntaxPatternsMap = new LinkedHashMap<>();
-
-        String stringRegex = "\"(?:\\\\.|[^\"\\\\])*\"";
-        syntaxPatternsMap.put(Pattern.compile(stringRegex), stringColor);
-
-        String charRegex = "'(?:\\\\.|[^'\\\\])*'";
-        syntaxPatternsMap.put(Pattern.compile(charRegex), stringColor);
-
-
-        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
-                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
-                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
-                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
-                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
-                + "true|false|null)\\b";
-        syntaxPatternsMap.put(Pattern.compile(keywordsRegex), keywordColor);
-
-        String typeRegex = "\\b(String|Integer|Double|Boolean|Float|Long|Short|Byte|" +
-                "Character|Void|Object|Exception|Class|Number|System|Math)\\b";
-        syntaxPatternsMap.put(Pattern.compile(typeRegex), typeColor);
-
-        String classDeclarationRegex = "(?<=\\bclass\\s)[A-Za-z0-9_]+";
-        syntaxPatternsMap.put(Pattern.compile(classDeclarationRegex), classColor);
-
-        String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";
-        syntaxPatternsMap.put(Pattern.compile(methodCallRegex), methodColor);
-
-
-
-        codeView.setSyntaxPatternsMap(syntaxPatternsMap);
-        codeView.reHighlightSyntax();
-
-
-    }
     public void onSymbolClick(View view) {
         Button btn = (Button) view;
-        EditText editText = codeView;
+        EditText editText = getCurrentCodeView();
         int start = Math.max(editText.getSelectionStart(), 0);
         int end = Math.max(editText.getSelectionEnd(), 0);
         editText.getText().replace(Math.min(start, end), Math.max(start, end),
@@ -327,13 +312,13 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     @Override
     public void onFileClick(FileItem fileItem) {
-        if (filesViewModel.getSelectedFile().getValue() == fileItem) return;
-
-        if (filesViewModel.getSelectedFile().getValue() != null) {
-            filesViewModel.writeFileText(getCurrentCodeView().getText().toString()); // save
-        }
-
-        filesViewModel.getSelectedFile().setValue(fileItem);
+//        if (filesViewModel.getSelectedFile().getValue() == fileItem) return;
+//
+//        if (filesViewModel.getSelectedFile().getValue() != null) {
+//            filesViewModel.writeFileText(getCurrentCodeView().getText().toString()); // save
+//        }
+//
+//        filesViewModel.getSelectedFile().setValue(fileItem);
 
     }
 

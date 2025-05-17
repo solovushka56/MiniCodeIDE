@@ -20,11 +20,18 @@ import com.skeeper.minicode.core.singleton.ProjectManager;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ProjectCreateActivity extends AppCompatActivity {
 
 
     ActivityProjectCreateBinding binding;
+
+    @Inject ProjectManager projectManager;
+
 
     private final String currentDateTime = DateTimeHelper.getCurrentTime();
 
@@ -54,7 +61,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
                 Toast.makeText(this, "Enter project name!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            if (ProjectManager.projectExists(this, projName)) {
+            if (projectManager.projectExists(projName)) {
                 Toast.makeText(
                         this,
                         R.string.project_already_exists_exception,
@@ -75,10 +82,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
             );
 //            Toast.makeText(this, currentDateTime, Toast.LENGTH_SHORT).show();
 
-            ProjectManager.createProject(this, model, false);
+            projectManager.createProject(model, false);
             try {
-                ProjectManager.saveFile(
-                        this,
+                projectManager.saveFile(
                         model.getProjectName(),
                         "main.java",
                         "public class Main {\n" +

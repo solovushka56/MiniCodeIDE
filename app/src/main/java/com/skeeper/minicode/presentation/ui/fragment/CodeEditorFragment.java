@@ -26,6 +26,7 @@ import com.skeeper.minicode.domain.usecases.LangRegexUseCase;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 import com.skeeper.minicode.utils.ExtensionUtils;
 import com.skeeper.minicode.utils.FileUtils;
+import com.skeeper.minicode.utils.helpers.UndoRedoManager;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -39,7 +40,7 @@ public class CodeEditorFragment extends Fragment {
     public FileItem boundFileItem = null;
     public CodeView codeView = null;
 
-
+    public UndoRedoManager undoRedoManager;
     public CodeEditorFragment() {}
     public CodeEditorFragment(FileItem fileItem) {
         this.boundFileItem = fileItem;
@@ -58,20 +59,16 @@ public class CodeEditorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         codeView = binding.codeViewMain;
-
+        undoRedoManager = new UndoRedoManager(codeView);
         initCodeView(codeView);
-
 
         boolean fromGit = false; // todo (if file editing once)
 
-
+        // init highlight
         LangRepository langRepository = new LangRepository(requireContext(), ExtensionType.JAVA);
         var regexUseCase = new LangRegexUseCase(langRepository);
         codeView.setSyntaxPatternsMap(regexUseCase.execute());
         codeView.reHighlightSyntax();
-
-
-
 
 
 //        codeView.setText(String.valueOf(langRepository.getLangModel().getAttributes()));
@@ -86,13 +83,7 @@ public class CodeEditorFragment extends Fragment {
 
 
     }
-    private void setupHighlight() {
-        var langRepo = new LangRepository(requireContext(),
-                ExtensionUtils.getFileExtensionType(boundFileItem.getName()));
-        LangRegexUseCase langRegexUseCase = new LangRegexUseCase(langRepo);
-        codeView.setSyntaxPatternsMap(langRegexUseCase.execute());
-        codeView.reHighlightSyntax();
-    }
+
 
     @Override
     public void onDestroyView() {
@@ -102,7 +93,6 @@ public class CodeEditorFragment extends Fragment {
 
 
     private void initCodeView(CodeView codeview) {
-//        addHighlightPatterns();
         codeview.setEnableAutoIndentation(true);
         codeview.setIndentationStarts(Set.of('{'));
         codeview.setIndentationEnds(Set.of('}'));
@@ -113,57 +103,7 @@ public class CodeEditorFragment extends Fragment {
         codeview.setUpdateDelayTime(0);
         codeview.setTabLength(4);
         codeview.setLineNumberTypeface(ResourcesCompat.getFont(requireContext(), R.font.cascadia_code));
-//        setupHighlight();
-//        loadFileText();
-
     }
-
-    private void addHighlightPatterns() {
-        int keywordColor = Color.parseColor("#4B70F5");
-        int typeColor = Color.parseColor("#4EC9B0");
-        int classColor = Color.parseColor("#4EC9B0");
-        int methodColor = Color.parseColor("#DCDCAA");
-        int bracketColor = Color.parseColor("#569CD6");
-        int stringColor = Color.parseColor("#CE9178");
-
-        Map<Pattern, Integer> syntaxPatternsMap = new LinkedHashMap<>();
-
-        String stringRegex = "\"(?:\\\\.|[^\"\\\\])*\"";
-        syntaxPatternsMap.put(Pattern.compile(stringRegex), stringColor);
-
-        String charRegex = "'(?:\\\\.|[^'\\\\])*'";
-        syntaxPatternsMap.put(Pattern.compile(charRegex), stringColor);
-
-
-        String keywordsRegex = "\\b(abstract|assert|boolean|break|byte|case|catch|char|class|const|"
-                + "continue|default|do|double|else|enum|extends|final|finally|float|for|goto|if|"
-                + "implements|import|instanceof|int|interface|long|native|new|package|private|"
-                + "protected|public|return|short|static|strictfp|super|switch|synchronized|this|"
-                + "throw|throws|transient|try|void|volatile|while|var|record|sealed|non-sealed|permits|"
-                + "true|false|null)\\b";
-        syntaxPatternsMap.put(Pattern.compile(keywordsRegex), keywordColor);
-
-        String typeRegex = "\\b(String|Integer|Double|Boolean|Float|Long|Short|Byte|" +
-                "Character|Void|Object|Exception|Class|Number|System|Math)\\b";
-        syntaxPatternsMap.put(Pattern.compile(typeRegex), typeColor);
-
-        String classDeclarationRegex = "(?<=\\bclass\\s)[A-Za-z0-9_]+";
-        syntaxPatternsMap.put(Pattern.compile(classDeclarationRegex), classColor);
-
-        String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";
-        syntaxPatternsMap.put(Pattern.compile(methodCallRegex), methodColor);
-
-
-
-        codeView.setSyntaxPatternsMap(syntaxPatternsMap);
-        codeView.reHighlightSyntax();
-
-
-    }
-
-
-
-
 
 
 

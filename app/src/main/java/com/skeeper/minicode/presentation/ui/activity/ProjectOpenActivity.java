@@ -3,6 +3,7 @@ package com.skeeper.minicode.presentation.ui.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -16,18 +17,28 @@ import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ProjectOpenActivity extends AppCompatActivity {
+
+    @Inject ProjectManager projectManager;
 
     private ActivityProjectOpenViewBinding binding;
 
 //    ProjectItemView projectItemView = null;
     ProjectModel boundModel = null;
     String time;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
+
 
         binding = ActivityProjectOpenViewBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -42,13 +53,12 @@ public class ProjectOpenActivity extends AppCompatActivity {
 
         binding.projectOpenButton.setOnClickListener(v -> {
             var intent = new Intent(ProjectOpenActivity.this, CodeEditorActivity.class);
-//            intent.putExtra("projectRef", "/src/0/name"); //todo
             intent.putExtra("projectName", boundModel.getProjectName());
             startActivity(intent);
         });
 
         binding.buttonPanelRemove.setOnClickListener(v -> {
-            ProjectManager.deleteProject(this, boundModel.getProjectName());
+            projectManager.deleteProject(boundModel.getProjectName());
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
         });
         binding.buttonPanelEditName.setOnClickListener( v -> {
@@ -57,6 +67,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
     }
 
     private void initByModel() {
+
         boundModel = (ProjectModel) getIntent().getParcelableExtra("projectModel");
         String projectFilepath = boundModel.getProjectPath();
         String projectName = boundModel.getProjectName();

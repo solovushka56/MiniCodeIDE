@@ -26,15 +26,20 @@ import com.skeeper.minicode.presentation.viewmodels.ProjectsListViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 public class ProjectsFragment extends Fragment {
 
     FragmentProjectsBinding binding;
     ProjectsListViewModel projectsListViewModel;
 
     public List<ProjectModel> models = new ArrayList<>();
+
+    @Inject
+    ProjectManager projectManager;
 
 
     @Override
@@ -61,19 +66,16 @@ public class ProjectsFragment extends Fragment {
         setProjectsRecycler();
 
         binding.createProjectButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), ProjectCreateActivity.class);
+            Intent intent = new Intent(requireActivity(), ProjectCreateActivity.class);
             intent.putExtra("fromGit", false);
             startActivity(intent);
         });
 
         binding.cloneFromGitButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), ProjectCloneActivity.class);
+            Intent intent = new Intent(requireActivity(), ProjectCloneActivity.class);
             intent.putExtra("fromGit", true);
             startActivity(intent);
         });
-
-
-
 
 
     }
@@ -81,21 +83,18 @@ public class ProjectsFragment extends Fragment {
 
 
 
-
-
-
     private void addProjectsData(List<ProjectModel> models) {
-        for (ProjectModel model : ProjectManager.loadAllProjectModels(getContext())) {
+        for (ProjectModel model : projectManager.loadAllProjectModels()) {
             models.add(model);
         }
 
     }
     private void setProjectsRecycler() {
         var recyclerView = binding.projectsRecyclerView;
-        var adapter = new ProjectAdapter(getContext(), models);
+        var adapter = new ProjectAdapter(requireActivity(), models);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(
-                getContext(), RecyclerView.VERTICAL, false));
+                requireActivity(), RecyclerView.VERTICAL, false));
 
         recyclerView.setAdapter(adapter);
 

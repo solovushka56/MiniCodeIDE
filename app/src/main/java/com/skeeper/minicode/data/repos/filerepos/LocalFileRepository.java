@@ -1,12 +1,18 @@
 package com.skeeper.minicode.data.repos.filerepos;
 
+import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.utils.FileUtils;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
 public class LocalFileRepository implements IFileRepository {
     private final File file;
+
+    @Inject
+    ProjectManager projectManager;// implement todo
 
     public LocalFileRepository(File file) {
         this.file = file;

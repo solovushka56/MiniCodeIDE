@@ -18,6 +18,7 @@ public class FilesViewModel extends ViewModel implements IFileRepository {
     private final MutableLiveData<List<FileItem>> fileRepositoryList = new MutableLiveData<>();
     private final MutableLiveData<FileItem> selectedFile = new MutableLiveData<>();
 
+
     public FilesViewModel(File rootDirectory) {
         this.rootDirectory = rootDirectory;
         FileTreeMapper fileTreeMapper = new FileTreeMapper();

@@ -47,12 +47,7 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
-
-//        Toast.makeText(this, String.valueOf(projectManager.fileDirProvider),
-//                Toast.LENGTH_LONG).show();
-
 
         File keySymbolConfigFile = new File(getFilesDir(), "keySymbolsData.json");
         if (!keySymbolConfigFile.exists()) {

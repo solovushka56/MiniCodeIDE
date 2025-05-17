@@ -6,11 +6,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,7 +28,7 @@ import java.util.List;
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder> {
 
     Context context;
-    List<ProjectModel> projects; // сюда подаём модели, они инициализируются дальше
+    List<ProjectModel> projects;
 
 
     public ProjectAdapter(Context context, List<ProjectModel> projects) {
@@ -41,13 +43,11 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     public ProjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         var view = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.project_item, parent, false);
-        // context - стр view, где будет всё отображаться
         return new ProjectViewHolder(view);
     }
 
-    // вызывается каждый раз, даже когда мы пролистываем список и он начинает отображаться
     @Override
-    public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) { // подст полей/значений
+    public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) {
         holder.projectNameView.setText(projects.get(position).getProjectName());
         holder.filepathView.setText(projects.get(position).getProjectPath());
 
@@ -59,7 +59,14 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
             ViewScaleComponent.scaleView(holder.parentRectView, 110, 0.7f, 0.7f,
                     () -> ViewScaleComponent.scaleView(holder.parentRectView, 150, 1f, 1f, () -> {
-                                bindProjectOnClickListener(holder, currentModel);
+                        try{
+                            bindProjectOnClickListener(holder, currentModel);
+                        }
+                        catch (Exception e) {
+                            Log.e("OPEN_EXC", e.getMessage());
+                            Toast.makeText(context, "Failed to open!", Toast.LENGTH_SHORT).show();
+                        }
+
                             },
                             input -> QuartInterpolations.quartIn(input)),
                     input -> QuartInterpolations.quartOut(input)

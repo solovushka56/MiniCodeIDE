@@ -39,7 +39,7 @@
 
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/gutUsernameInput"
+                android:id="@+id/gitUsernameInput"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -48,7 +48,7 @@
                 app:endIconDrawable="@drawable/editor">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/gutUsernameTextEdit"
+                    android:id="@+id/gitUsernameTextEdit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_rect_common"
