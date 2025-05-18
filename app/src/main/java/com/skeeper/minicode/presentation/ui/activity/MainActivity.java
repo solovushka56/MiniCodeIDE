@@ -66,11 +66,8 @@ public class MainActivity extends AppCompatActivity {
 
         binding.startButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-
-//            Intent intent = new Intent(MainActivity.this, TestActivity.class);
             startActivity(intent);
-//            var bundle = ActivityOptions.makeSceneTransitionAnimation(this).toBundle();
-//            overridePendingTransition(R.anim.slide_up, R.anim.fade_out);
+
         });
         binding.sourceCodeButton.setOnClickListener(v -> {
             String url = "https://github.com/solovushka56/MiniCodeIDE";
@@ -83,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             else {
                 Toast.makeText(
                         MainActivity.this,
-                        "Браузер не найден",
+                        "Not found",
                         Toast.LENGTH_SHORT).show();
             }
         });

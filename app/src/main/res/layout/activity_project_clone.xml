@@ -66,32 +66,77 @@
 
 
 
-
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/projectUrlInput"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Enter project url"
-                app:endIconDrawable="@drawable/editor"
-                android:layout_marginBottom="15dp"
+                android:orientation="horizontal"
                 >
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/projectUrlEditText"
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_weight="1"
+                    android:id="@+id/projectUrlInput"
+                    android:gravity="center_vertical"
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/button_rect_common"
-                    android:backgroundTint="@color/blue_grey"
-                    android:fontFamily="@font/cascadia_code"
-                    android:imeOptions="actionDone"
-                    android:inputType="textCapSentences|textAutoCorrect"
-                    android:maxLength="50"
-                    android:maxLines="1"
-                    android:textColor="@color/white" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:hint="Enter project url"
+                    app:endIconDrawable="@drawable/editor">
 
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/projectUrlEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+
+                        android:background="@drawable/button_rect_common"
+                        android:backgroundTint="@color/blue_grey"
+                        android:fontFamily="@font/cascadia_code"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapSentences|textAutoCorrect"
+                        android:maxLength="50"
+                        android:maxLines="1"
+
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="0.2"
+                    android:clickable="true"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/buttonPaste"
+                        android:layout_width="40dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+
+                        android:padding="5dp"
+                        android:scaleType="centerInside"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:layout_marginTop="5dp"
+                        android:background="@drawable/ripple_shape"
+                        android:backgroundTint="@color/violet_light"
+                        android:clickable="true"
+                        android:contentDescription="null"
+
+                        app:srcCompat="@drawable/ic_paste"
+                        />
+
+                    <TextView
+                        android:layout_marginTop="-24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="Paste"
+                        android:visibility="gone"
+                        android:textColor="@color/blue_light" />
+                </LinearLayout>
+            </LinearLayout>
 
 
         </LinearLayout>

@@ -26,7 +26,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
     private final List<FileItem> allItems;
     private final SparseBooleanArray expandedStates = new SparseBooleanArray();
     private IFileTreeListener listener;
-
+    private static final int FILE_TREE_TAB_PIXELS = 30;
 
     public FileTreeAdapter(List<FileItem> items, IFileTreeListener changesListener) {
         this.allItems = items;
@@ -109,7 +109,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
         FileItem item = visibleItems.get(position);
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) holder.itemView.getLayoutParams();
-        params.leftMargin = item.getLevel() * 45;
+        params.leftMargin = item.getLevel() * FILE_TREE_TAB_PIXELS;
         holder.itemView.setLayoutParams(params);
 
         holder.name.setText(item.getName());

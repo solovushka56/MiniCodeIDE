@@ -1,9 +1,10 @@
 package com.skeeper.minicode.presentation.ui.activity;
 
-import android.os.AsyncTask;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -15,22 +16,24 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityProjectCloneBinding;
-import com.skeeper.minicode.presentation.viewmodels.ProjectCloneViewModel;
-import com.skeeper.minicode.presentation.viewmodels.factory.ProjectCloneViewModelFactory;
-import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
-import com.skeeper.minicode.domain.models.ProjectModel;
+import com.skeeper.minicode.presentation.viewmodels.GitViewModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
-
-import org.eclipse.jgit.api.CloneCommand;
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
 
 import java.io.File;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class ProjectCloneActivity extends AppCompatActivity {
     ActivityProjectCloneBinding binding;
 
-    ProjectCloneViewModel cloneViewModel;
+    GitViewModel gitViewModel;
+
+    @Inject
+    ProjectManager projectManager;
+
 
     File projectDir = null;
     @Override
@@ -45,79 +48,62 @@ public class ProjectCloneActivity extends AppCompatActivity {
             return insets;
         });
 
-        cloneViewModel = new ViewModelProvider(this).get(ProjectCloneViewModel.class);
-
-//        new Thread(() -> {
-//            CloneCommand clone = Git.cloneRepository()
-//                    .setURI("https://github.com/solovushka56/MiniCodeIDE.git")
-//                    .setDirectory(getFilesDir());
-//            try (Git git = clone.call()) {
-//
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                Log.e("GIT EXC", e.getMessage());
-//            }
-//
-//
-//        }).start();
-
+        gitViewModel = new ViewModelProvider(this).get(GitViewModel.class);
+        gitViewModel.getCloningState().observe(this, state -> {
+            switch (state) {
+                case START -> Toast.makeText(this, "Start cloning...", Toast.LENGTH_LONG).show();
+                case FAILED ->
+                        Toast.makeText(this, "Failed to Clone! :_(", Toast.LENGTH_SHORT).show();
+                case END -> {
+                    Toast.makeText(this, "Cloning end!", Toast.LENGTH_LONG).show();
+                    onRepoCloned();
+                }
+            }
+        });
 
         binding.buttonCreate.setOnClickListener(v -> {
-            String projectName = binding.projectNameEditText.getText().toString();
-            String repoUrl = binding.projectUrlEditText.getText().toString();
+            String projectName = binding.projectNameEditText.getText().toString().replaceAll("\\s", "");
+            String repoUrl = binding.projectUrlEditText.getText().toString().replaceAll("\\s", "");
 
-//            if (ProjectManager.projectExists(this, projectName)) {
-//                Toast.makeText(
-//                        this,
-//                        "Project with this name already exists!",
-//                        Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//            if (repoUrl.isEmpty()) {
-//                Toast.makeText(this, "Fill in the missing fields!", Toast.LENGTH_SHORT).show();
-//                return;
-//            }
-//
-//            new Thread(() -> {
-//                CloneCommand clone = Git.cloneRepository()
-//                        .setURI("https://github.com/solovushka56/MiniCodeIDE.git")
-//                        .setDirectory(ProjectManager.getProjectDir(this, "lol"));
-//                try (Git git = clone.call()) {
-//
-//                } catch (GitAPIException e) {
-//                    e.printStackTrace();
-//                }
-//
-//
-//            }).start();
-//        });
+
+            if (repoUrl.isEmpty() || projectName.isEmpty()) {
+                Toast.makeText(this, "Fill in the missing fields!", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (projectManager.projectExists(projectName)) {
+                Toast.makeText(
+                        this,
+                        "Project with this name already exists!",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            gitViewModel.cloneProject(repoUrl, projectName);
+        });
+
+
+        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        binding.buttonPaste.setOnClickListener(v -> {
+            if (clipboardManager != null && clipboardManager.hasPrimaryClip()) {
+                CharSequence pasteData = clipboardManager.getPrimaryClip().getItemAt(0).getText();
+                if (pasteData != null) {
+                    EditText editText = binding.projectUrlEditText;
+                    editText.setText(pasteData);
+                } else {
+                    Toast.makeText(this, "Буфер обмена пуст", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(this, "Нет данных в буфере", Toast.LENGTH_SHORT).show();
+            }
+
         });
     }
 
 
-//    private void cloneProjectFromGit(String repoUrl) {
-//
-//        String projName = "lol";//ProjectCloneViewModel.getRepoName(repoUrl);
-//
-//        var rectPalette = new ProjectRectColorBinding();
-//        ProjectModel model = new ProjectModel(0,
-//                projName,
-//                "cloned from git",
-//                "projFilepath",
-//                new String[] {"cloned"},
-//                rectPalette.getMainRectColor(),
-//                rectPalette.getInnerRectColor(),
-//                "today"
-//        );
-//
-//        if (!ProjectManager.createProject(this, model, false)) return;
-//        projectDir = ProjectManager.getProjectDir(this, projName);
-//
-//
-//
-//    }
-
-
-
-
+    public void onRepoCloned() {
+        Intent intent = new Intent(ProjectCloneActivity.this, MenuActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+        finish();
+    }
 }

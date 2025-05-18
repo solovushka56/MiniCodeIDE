@@ -113,7 +113,7 @@ public class ProjectManager {
 
 
     /// add ide configs and settings of the project to special folder
-    private void generateProjectIdeFiles(File projectDir, ProjectModel model) throws IOException {
+    public void generateProjectIdeFiles(File projectDir, ProjectModel model) throws IOException {
         model.setProjectPath(projectDir.getAbsolutePath());
         File ideFilesPath = new File(projectDir, ideFilesDirectoryName);
 

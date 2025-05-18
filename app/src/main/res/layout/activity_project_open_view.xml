@@ -145,7 +145,7 @@
                     android:id="@+id/projectDescriptonText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginBottom="0dp"
                     android:text="No description."
                     />
 
@@ -172,19 +172,38 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/projectOpenButton"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="25dp"
-        android:text="Open project"
-        android:fontFamily="@font/cascadia_code"
-        app:backgroundTint="@null"
-        android:background="@drawable/ripple_shape"
-        android:backgroundTint="@color/violet_light"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:gravity="center"
+        android:layout_margin="25dp">
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/commitAndPushButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_shape"
+            android:backgroundTint="@color/violet_light"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Commit and Push"
+            android:layout_marginRight="10dp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/projectOpenButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_shape"
+            android:backgroundTint="@color/violet_light"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Open project"
+
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -109,11 +109,8 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 this, "keySymbolsData.json");
 
 
-//        setNewCodeEditorFragment(
-//                filesViewModel.getFileRepositoryList().getValue().get(0));
         currentCodeFragment = new CodeEditorFragment(binding.buttonUndo, binding.buttonRedo);
         setFragment(currentCodeFragment);
-
 
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
@@ -126,8 +123,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             hideKeyboard();
             getCurrentCodeView().clearFocus();
             binding.drawerLayout.openDrawer(GravityCompat.START);
-
-//            Toast.makeText(this, "in development...", Toast.LENGTH_SHORT).show();
         });
         binding.optionsButton.setOnClickListener(v -> {
             startActivity(new Intent(
@@ -158,12 +153,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         filesViewModel.getFileRepositoryList().observe(this, (fileItems) ->
                 fileSystemView.updateFileItems(this, fileItems));
 
-//        filesViewModel.getSelectedFile().observe(this, fileItem -> {
-//            getCurrentCodeView().setText(FileUtils.readFileText(fileItem.getDirectory()));
-//        });
-
-
-
     }
 
 
@@ -172,11 +161,9 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         if (cachedFragments.get(fileItem) == null) {
             currentCodeFragment = new CodeEditorFragment(fileItem, binding.buttonUndo, binding.buttonRedo);
             cachedFragments.put(fileItem, currentCodeFragment);
-//            Toast.makeText(this, "NEW fr setted", Toast.LENGTH_SHORT).show();
         }
         else {
             currentCodeFragment = cachedFragments.get(fileItem);
-//            Toast.makeText(this, "OLD fr setted", Toast.LENGTH_SHORT).show();
         }
         setFragment(currentCodeFragment);
 //        setupButtonListeners(undoRedoManager, binding.buttonUndo, binding.buttonRedo);
@@ -328,17 +315,9 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     @Override
     public void onFileClick(FileItem fileItem) {
         Toast.makeText(this, fileItem.getName(), Toast.LENGTH_SHORT).show();
-//        cachedFragments.remove(fileItem);
+
         setNewCodeEditorFragment(fileItem);
-
-
-//        if (filesViewModel.getSelectedFile().getValue() == fileItem) return;
-//
-//        if (filesViewModel.getSelectedFile().getValue() != null) {
-//            filesViewModel.writeFileText(getCurrentCodeView().getText().toString()); // save
-//        }
-//
-//        filesViewModel.getSelectedFile().setValue(fileItem);
+        binding.drawerLayout.closeDrawer(GravityCompat.START);
 
     }
 

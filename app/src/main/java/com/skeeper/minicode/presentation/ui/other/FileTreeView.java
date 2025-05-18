@@ -46,15 +46,6 @@ public class FileTreeView extends RelativeLayout {
             return insets;
         });
 
-//        List<FileItem> fileStructure = new ArrayList<>();
-//        FileItem root = new FileItem(null,"Root", true, 0);
-//        root.getChildren().add(new FileItem(null,"File1.txt", false, 1));
-//        root.getChildren().add(new FileItem(null, "File2.txt", false, 1));
-//        FileItem folder = new FileItem(null,"Documents", true, 1);
-//        folder.getChildren().add(new FileItem(null,"Doc1.pdf", false, 2));
-//        root.getChildren().add(folder);
-//        fileStructure.add(root);
-
         filesRecyclerView = view.findViewById(R.id.recycler_view);
         filesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.directory = directory;

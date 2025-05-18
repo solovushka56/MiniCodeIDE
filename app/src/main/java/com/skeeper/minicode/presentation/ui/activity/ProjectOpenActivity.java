@@ -54,27 +54,36 @@ public class ProjectOpenActivity extends AppCompatActivity {
         binding.projectOpenButton.setOnClickListener(v -> {
             var intent = new Intent(ProjectOpenActivity.this, CodeEditorActivity.class);
             intent.putExtra("projectName", boundModel.getProjectName());
+            Log.e("TRANSITION", "to code editor");
             startActivity(intent);
         });
 
         binding.buttonPanelRemove.setOnClickListener(v -> {
             projectManager.deleteProject(boundModel.getProjectName());
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
+            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
         binding.buttonPanelEditName.setOnClickListener( v -> {
             Toast.makeText(this, "In development...", Toast.LENGTH_SHORT).show();
         });
+
+        binding.commitAndPushButton.setOnClickListener(v -> {
+            var intent = new Intent(ProjectOpenActivity.this, ProjectPushActivity.class);
+//            intent.putExtra("PROJECT_MODEL", boundModel);
+            intent.putExtra("PROJECT_NAME", boundModel.getProjectName());
+            startActivity(intent);
+        });
+
+
     }
 
     private void initByModel() {
-
         boundModel = (ProjectModel) getIntent().getParcelableExtra("projectModel");
         String projectFilepath = boundModel.getProjectPath();
         String projectName = boundModel.getProjectName();
         String mainRectColor = boundModel.getMainRectColorHex();
         String innerRectColor = boundModel.getInnerRectColorHex();
         String creationDateTime = boundModel.getCreationDateTime();
-//        Toast.makeText(this, creationDateTime, Toast.LENGTH_SHORT).show();
         binding.projectCard.setMainRectColor(Color.parseColor(mainRectColor));
         binding.projectCard.setInnerRectColor(Color.parseColor(innerRectColor));
         binding.projectCard.setProjectName(projectName);
@@ -83,7 +92,6 @@ public class ProjectOpenActivity extends AppCompatActivity {
         if (!boundModel.getProjectDescription().isEmpty()){
             binding.projectDescriptonText.setText(boundModel.getProjectDescription());
         }
-//        binding.textCreationDate.setText(creationDateTime);
     }
 
 }

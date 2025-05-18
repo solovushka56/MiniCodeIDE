@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.activity.ProjectPushActivity"
+    android:background="@color/blue_dark">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_weight="50"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="25dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="25dp"
+                    android:fontFamily="@font/cascadia_code"
+                    android:text="Commit and Push"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="25dp" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:hint="Commit name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/commitEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_rect_common"
+                        android:backgroundTint="@color/blue_grey"
+                        android:fontFamily="@font/cascadia_code"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapSentences|textAutoCorrect"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:hint="Commit message">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/commitMessageEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:background="@drawable/button_rect_common"
+                        android:backgroundTint="@color/blue_grey"
+                        android:fontFamily="@font/cascadia_code"
+                        android:imeOptions="actionDone"
+                        android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+                        android:maxLength="1000"
+                        android:maxLines="20"
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.divider.MaterialDivider
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+
+                    android:layout_marginBottom="20dp"
+                    app:dividerColor="@color/blue_grey" />
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="15dp"
+                    android:hint="Push URI">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/pushUriEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_rect_common"
+                        android:backgroundTint="@color/blue_grey"
+                        android:fontFamily="@font/cascadia_code"
+                        android:imeOptions="actionDone"
+                        android:inputType="textUri|textCapSentences"
+                        android:maxLength="50"
+                        android:maxLines="1"
+                        android:textColor="@color/white" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+
+        </ScrollView>
+
+        <Button
+            android:layout_weight="1"
+            android:id="@+id/buttonPushAndCommit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="25dp"
+            android:background="@drawable/ripple_shape"
+            android:backgroundTint="@color/violet_light"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:fontFamily="@font/cascadia_code"
+            android:padding="15dp"
+            android:src="@drawable/save_icon"
+            android:text="Commit and Push"
+            app:backgroundTint="@null" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
