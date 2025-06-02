@@ -71,8 +71,7 @@ public class MainActivity extends AppCompatActivity {
         });
         binding.sourceCodeButton.setOnClickListener(v -> {
             String url = "https://github.com/solovushka56/MiniCodeIDE";
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(url));
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);
@@ -84,8 +83,5 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
-        
-//        Intent intent = new Intent(MainActivity.this, TestActivity.class);
-//        startActivity(intent);
     }
 }

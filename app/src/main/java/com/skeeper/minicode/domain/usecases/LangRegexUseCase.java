@@ -1,5 +1,7 @@
 package com.skeeper.minicode.domain.usecases;
 
+import android.graphics.Color;
+
 import com.skeeper.minicode.domain.contracts.repos.ILangRepository;
 import com.skeeper.minicode.domain.models.HighlightColorModel;
 import com.skeeper.minicode.domain.models.LangModel;
@@ -42,6 +44,12 @@ public class LangRegexUseCase {
 
         String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";
         syntaxPatternsMap.put(Pattern.compile(methodCallRegex), highlightModel.methodColor);
+
+        String annotationRegex = "@[A-Za-z][\\w.]*";
+        syntaxPatternsMap.put(Pattern.compile(annotationRegex), Color.parseColor("#DCDCAA"));
+
+        String commentRegex = "//.*";
+        syntaxPatternsMap.put(Pattern.compile(commentRegex), Color.parseColor("#7A7E85"));
 
         return syntaxPatternsMap;
     }

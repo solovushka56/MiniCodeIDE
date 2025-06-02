@@ -10,6 +10,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -65,28 +66,21 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class CodeEditorActivity extends AppCompatActivity implements IFileTreeListener, IKeyPressedListener {
 
-    private ActivityCodeEditorBinding binding;
-
-
     @Inject
     ProjectManager projectManager;
 
     private final CodeDataSingleton codeDataSingleton = CodeDataSingleton.getInstance();
-
+    private ActivityCodeEditorBinding binding;
     private View rootView;
     private RecyclerView bottomPanel;
     private final int minKeyboardHeight = 100;
     private String projectName = null;
-
-    private UndoRedoManager undoRedoManager;
     private List<KeySymbolItemModel> keySymbolModels;
     private FilesViewModel filesViewModel;
-
     private CodeEditorFragment currentCodeFragment = null;
 
-
     // bound files and fragments
-    private Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
+    private final Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
 
 
     @Override
@@ -132,10 +126,12 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         binding.recreateButton.setOnClickListener( v-> {
             recreate();
         });
-
+        binding.saveButton.setOnClickListener(v -> {
+            currentCodeFragment.saveFile(getCurrentCodeView().getText().toString());
+            Toast.makeText(this, "File Saved!", Toast.LENGTH_SHORT).show();
+        });
         setKeySymbolsRecycler();
         setupKeyboardListener();
-
 //        setupButtonListeners(getCurrentUndoRedoManager(), binding.buttonUndo, binding.buttonRedo);
 
 
@@ -156,7 +152,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     }
 
 
-    public void setNewCodeEditorFragment(FileItem fileItem) // todo handle files removing (delete associated fragments)
+    public void setNewCodeEditorFragment(FileItem fileItem)
     {
         if (cachedFragments.get(fileItem) == null) {
             currentCodeFragment = new CodeEditorFragment(fileItem, binding.buttonUndo, binding.buttonRedo);
@@ -166,11 +162,9 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             currentCodeFragment = cachedFragments.get(fileItem);
         }
         setFragment(currentCodeFragment);
-//        setupButtonListeners(undoRedoManager, binding.buttonUndo, binding.buttonRedo);
-//        setupTextWatcher(getCurrentCodeView());
-
 
     }
+
     public void setFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -178,29 +172,12 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         fragmentTransaction.replace(binding.codeViewFrame.getId(), newFragment);
         fragmentTransaction.commit();
     }
-
-
     private CodeView getCurrentCodeView() {
         return currentCodeFragment.codeView;
     }
     private UndoRedoManager getCurrentUndoRedoManager() {
         return currentCodeFragment.undoRedoManager;
     }
-
-
-    private void setupFileTreeSystem() {
-
-    }
-
-//    private void initCodeView(CodeView codeview) {
-////        setupKeyboardListener();
-//        setupButtonListeners(binding.buttonUndo, binding.buttonRedo);
-////        loadFileText();
-//        undoRedoManager = new UndoRedoManager(codeview);
-//        setupTextWatcher(codeview);
-//
-//    }
-
 
 
     private void setupButtonListeners(UndoRedoManager undoRedoManager, ImageButton btnUndo, ImageButton btnRedo) {
@@ -238,6 +215,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     }
 
     private void setupKeyboardListener() {
+
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             Rect rect = new Rect();
             rootView.getWindowVisibleDisplayFrame(rect);
@@ -249,11 +227,25 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 int fillerTab = 40;
                 bottomPanel.getLayoutParams().height = keyboardHeight + fillerTab;
                 bottomPanel.setVisibility(View.VISIBLE);
+
             } else {
                 bottomPanel.setVisibility(View.GONE);
             }
             bottomPanel.requestLayout();
+
+//            if (bottomPanel.getVisibility() == View.VISIBLE)
+//            {
+//                binding.codeEditorLinearLayout
+//                        .getLayoutParams().height = screenHeight -
+//                        bottomPanel.getHeight() -
+//                        binding.topBar.getHeight();
+//            }
+//            else if (bottomPanel.getVisibility() == View.GONE)
+//            {
+//                binding.codeEditorLinearLayout.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+//            }
         });
+
     }
     private int convertDpToPx(int dp) {
         return (int) TypedValue.applyDimension(
@@ -289,7 +281,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     }
 
 
-
     private void setKeySymbolsRecycler() {
         var recyclerView = binding.symbolsPanel;
         var adapter = new KeySymbolAdapter(this, keySymbolModels, this);
@@ -314,8 +305,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     @Override
     public void onFileClick(FileItem fileItem) {
-        Toast.makeText(this, fileItem.getName(), Toast.LENGTH_SHORT).show();
-
         setNewCodeEditorFragment(fileItem);
         binding.drawerLayout.closeDrawer(GravityCompat.START);
 
@@ -354,7 +343,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             Log.e("INIT_E", "key symbol key not inited");
             return;
         }
-//        Toast.makeText(this, "alal", Toast.LENGTH_SHORT).show();
         int cursorPosition = currentCodeView.getSelectionEnd();
         Editable editable = currentCodeView.getText();
         editable.insert(cursorPosition, keySymbolItemModel.getSymbolValue());

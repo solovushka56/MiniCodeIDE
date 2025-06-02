@@ -1,5 +1,6 @@
 package com.skeeper.minicode.presentation.viewmodels;
 
+import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -26,21 +27,23 @@ public class CodeEditViewModel extends ViewModel {
     private GetFileTextUseCase getFileUseCase;
     private HighlightColorModel highlightModel;
 
-
-    public void initVM(FileItem file,
-                       FileOpenMode fileMode, LangModel langModel)
-    {
-        editingFile.setValue(file);
-        switch (fileMode) {
-            //add other
-            case NEW:
-                fileRepository = new LocalFileRepository(file.getDirectory());
-                //fileRepository = new LocalFileRepository(File.createTempFile("ff", "txt"));
-            case LOCAL:
-                fileRepository = new LocalFileRepository(file.getDirectory());
+    public CodeEditViewModel(@Nullable FileItem fileItem, FileOpenMode fileOpenMode) {
+        if (fileItem != null) {
+            fileRepository = new LocalFileRepository(fileItem.getDirectory());
+            editingFile.setValue(fileItem);
+            switch (fileOpenMode) {
+                case NEW:
+                    fileRepository = new LocalFileRepository(fileItem.getDirectory());
+                case LOCAL:
+                    fileRepository = new LocalFileRepository(fileItem.getDirectory());
+            }
+            var extensionType = ExtensionUtils.getFileExtensionType(fileItem.getName());
         }
-        var extensionType = ExtensionUtils.getFileExtensionType(file.getName());
+    }
 
+    public void saveFile(String fileText) {
+        if (editingFile == null) return;
+        fileRepository.writeFileText(fileText);
     }
 
 

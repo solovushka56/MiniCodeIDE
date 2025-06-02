@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,16 @@ import android.widget.Toast;
 import com.amrdeveloper.codeview.CodeView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.data.repos.LangRepository;
+import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
 import com.skeeper.minicode.databinding.FragmentCodeEditorBinding;
+import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.HighlightColorModel;
 import com.skeeper.minicode.domain.usecases.LangRegexUseCase;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
+import com.skeeper.minicode.presentation.viewmodels.factory.CodeEditViewModelFactory;
 import com.skeeper.minicode.utils.ExtensionUtils;
 import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
@@ -45,16 +49,17 @@ public class CodeEditorFragment extends Fragment {
     public FragmentCodeEditorBinding binding;
     public FileItem boundFileItem = null;
     public CodeView codeView = null;
-
-
     public CodeEditViewModel codeEditViewModel; //
     public UndoRedoManager undoRedoManager;
+
 
     public CodeEditorFragment(FileItem fileItem, ImageButton buttonUndo, ImageButton buttonRedo) {
         this.boundFileItem = fileItem;
         this.buttonUndo = buttonUndo;
         this.buttonRedo = buttonRedo;
+
     }
+
     public CodeEditorFragment(ImageButton buttonUndo, ImageButton buttonRedo) {
         this.buttonUndo = buttonUndo;
         this.buttonRedo = buttonRedo;
@@ -64,23 +69,24 @@ public class CodeEditorFragment extends Fragment {
     ImageButton buttonRedo;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentCodeEditorBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
-
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
         codeView = binding.codeViewMain;
-        undoRedoManager = new UndoRedoManager(codeView);
         initCodeView(codeView);
-        codeEditViewModel = new ViewModelProvider(this).get(CodeEditViewModel.class);
-        boolean fromGit = false; // todo (if file editing once)
+
+        undoRedoManager = new UndoRedoManager(codeView);
+        setupButtonListeners(undoRedoManager, buttonUndo, buttonRedo);
+        setupTextWatcher(codeView);
+//        codeEditViewModel = new ViewModelProvider(this, new CodeEditViewModelFactory(
+//                boundFileItem, FileOpenMode.LOCAL)).get(CodeEditViewModel.class);
 
         // init highlight
         LangRepository langRepository = new LangRepository(requireContext(), ExtensionType.JAVA);
@@ -91,8 +97,7 @@ public class CodeEditorFragment extends Fragment {
 
         if (boundFileItem != null)
             codeView.setText(FileUtils.readFileText(boundFileItem.getDirectory()));
-
-//        codeView.setText(String.valueOf(langRepository.getLangModel().getAttributes()));
+        //        codeView.setText(String.valueOf(langRepository.getLangModel().getAttributes()));
 
 //        if (fromGit)
 //            vm.initVM(boundFileItem, FileOpenMode.FROM_GIT, langRepository.getLangModel());
@@ -102,8 +107,8 @@ public class CodeEditorFragment extends Fragment {
 //
 
 
-
     }
+
 
     private void setupButtonListeners(UndoRedoManager undoRedoManager, ImageButton btnUndo, ImageButton btnRedo) {
 
@@ -120,7 +125,6 @@ public class CodeEditorFragment extends Fragment {
             updateButtonStates();
         });
     }
-
 
     private void setupTextWatcher(EditText editText) {
         editText.addTextChangedListener(new TextWatcher() {
@@ -143,17 +147,14 @@ public class CodeEditorFragment extends Fragment {
         buttonRedo.setEnabled(undoRedoManager.canRedo());
     }
 
-
-
-
-
-
     private void initCodeView(CodeView codeview) {
+        codeview.setEnableHighlightCurrentLine(true);
         codeview.setEnableAutoIndentation(true);
         codeview.setIndentationStarts(Set.of('{'));
         codeview.setIndentationEnds(Set.of('}'));
         codeview.setEnableLineNumber(false);
-        codeview.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
+        codeview.setLineNumberTextColor(
+                Color.parseColor("#3DC2EC"));
         codeview.setLineNumberTextSize(31f);
         codeview.setTextSize(16);
         codeview.setUpdateDelayTime(0);
@@ -161,9 +162,21 @@ public class CodeEditorFragment extends Fragment {
         codeview.setLineNumberTypeface(ResourcesCompat.getFont(requireContext(), R.font.cascadia_code));
     }
 
+
+    // when fragment changes or leaving we save file
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
+        saveFile(codeView.getText().toString());
+
     }
+
+    public void saveFile(String fileText) {
+        if (boundFileItem == null) return;
+        Log.e("MSG1", "saving file");
+        FileUtils.writeFileText(boundFileItem.getDirectory(), fileText);
+//        codeEditViewModel.saveFile(fileText);
+    }
+
 }

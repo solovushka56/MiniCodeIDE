@@ -9,6 +9,7 @@ import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.domain.contracts.other.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.enums.RepoCloningState;
 import com.skeeper.minicode.domain.models.ProjectModel;
+import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
 import org.eclipse.jgit.api.CloneCommand;
@@ -19,13 +20,18 @@ import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.CredentialsProvider;
+import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-
+import java.nio.file.Files;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -106,63 +112,6 @@ public class GitViewModel extends ViewModel {
     }
 
 
-    public void commitAndPushProject(String projectName, String pushUrl, String commitName, String commitMessage) {
-        try {
-//            Git git = Git.open(projectManager.getProjectDir(projectName));
-//
-//            // add remote repo:
-//            RemoteAddCommand remoteAddCommand = git.remoteAdd();
-//            remoteAddCommand.setName("origin");
-//            remoteAddCommand.setUri(new URIish(pushUrl));
-//            // you can add more settings here if needed
-//            remoteAddCommand.call();
-//
-//            // push to remote:
-//            PushCommand pushCommand = git.push();
-//            pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(
-//                    "solovushka56", ""));
-//            // you can add more settings here if needed
-//            pushCommand.call();
-//            Git git = Git.open(projectManager.getProjectDir(projectName));
-//
-//            git.add().addFilepattern(".").call();
-//
-//            git.commit()
-//                    .setMessage("Commit from Android app")
-//                    .call();
-//
-//
-//            CredentialsProvider credentialsProvider = new UsernamePasswordCredentialsProvider(
-//                    "solovushka56", "");
-//
-//            PushCommand pushCommand = git.push()
-//                    .setRemote(pushUrl)
-//                    .setCredentialsProvider(credentialsProvider)
-//                    .setForce(true);
-//
-//            pushCommand.call();
-//            git.close();
-/// ///////////////////////////////////////////////////////////////
-//            PushCommand pushCommand = git.push();
-//            pushCommand.setRemote(pushUrl)
-//                    .setCredentialsProvider(
-//                            new UsernamePasswordCredentialsProvider("solovushka56", ""));
-//
-//            pushCommand.call();
-//            Git git = Git.open(projectManager.getProjectDir(projectModel.getProjectName()));
-//            git.add().addFilepattern(".").call();
-//            git.commit().setMessage("noice commit").call();
-//            git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(
-//                            "solovushka56",
-//                            ""))
-//                    .call();
-
-        } catch (Exception e) {
-            Log.e("LOL1", e.getMessage() != null ? e.getMessage() : "null exc");
-            throw new RuntimeException(e);
-        }
-
-    }
 
     public void onRepoCloned() {
         var rectPalette = new ProjectRectColorBinding();
@@ -189,8 +138,54 @@ public class GitViewModel extends ViewModel {
         projectPath = projectDir.getAbsolutePath();
         return projectDir;
     }
+    public void commitAndPushProject(
+            String projectName,
+            String pushUrl,
+            String commitName,
+            String commitMessage)
+    {
+        try (Git git = Git.open(projectManager.getProjectDir(projectName))) {
+//            try (Git git = Git.open(projectManager.getProjectDir(projectName))) {
+//                git.add().addFilepattern(".").call();
+//                git.commit().setMessage(commitName).call();
+//                git.push()
+//                        .setRemote(pushUrl)
+//                        .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
+//                                "",
+//                                ""))
+//                        .call();
+//            }
+            createCommit(git, commitMessage);
+            Iterable<PushResult> results = git.push()
+                    .setRemote(pushUrl)
+                    .setCredentialsProvider(new UsernamePasswordCredentialsProvider(
+                            "", ""))
+                    .call();
+            for (PushResult r : results) {
+                for(RemoteRefUpdate update : r.getRemoteUpdates()) {
+                    if(update.getStatus() != RemoteRefUpdate.Status.OK && update.getStatus() != RemoteRefUpdate.Status.UP_TO_DATE) {
+                        String errorMessage = "Push failed: "+ update.getStatus();
+                        Log.e("JGIT_PUSH", errorMessage);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            Log.e("JGIT_PUSH", e.getMessage() != null ? e.getMessage() : "failed");
+        }
 
+    }
 
+    private void createCommit(Git git, String commitMessage) throws IOException, GitAPIException {
+
+        // run the add
+        git.add()
+                .addFilepattern(".")
+                .call();
+
+        RevCommit revCommit = git.commit()
+                .setMessage(commitMessage)
+                .call();
+    }
 
     public static String getRepoName(String repoUrl) {
 

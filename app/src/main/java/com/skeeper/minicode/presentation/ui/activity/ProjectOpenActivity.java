@@ -61,7 +61,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
         binding.buttonPanelRemove.setOnClickListener(v -> {
             projectManager.deleteProject(boundModel.getProjectName());
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
-            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
         binding.buttonPanelEditName.setOnClickListener( v -> {
             Toast.makeText(this, "In development...", Toast.LENGTH_SHORT).show();

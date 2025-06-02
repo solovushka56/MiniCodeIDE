@@ -105,7 +105,7 @@
 
 
     <LinearLayout
-        android:id="@+id/sourceCodeButton"
+
         android:layout_margin="25dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -114,6 +114,8 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <ImageButton
+            android:clickable="true"
+            android:id="@+id/sourceCodeButton"
             style="@style/CustomImageButtonActive"
             android:layout_gravity="center"
             android:layout_margin="1dp"

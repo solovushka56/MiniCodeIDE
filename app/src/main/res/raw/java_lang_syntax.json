@@ -20,7 +20,8 @@
       ],
       "objectTypes": [
         "String", "Object", "Integer", "Double", "Boolean", "Number",
-        "Void", "Character", "Byte", "Short", "Long", "Float"
+        "Void", "Character", "Byte", "Short", "Long", "Float", "StringBuilder", "System"
+
       ],
 
       "other_constructions": [
