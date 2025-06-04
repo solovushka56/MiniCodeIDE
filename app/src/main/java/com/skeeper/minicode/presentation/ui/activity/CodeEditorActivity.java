@@ -1,8 +1,10 @@
 package com.skeeper.minicode.presentation.ui.activity;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
@@ -10,12 +12,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -36,28 +38,22 @@ import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileTreeView;
 import com.skeeper.minicode.R;
-import com.skeeper.minicode.presentation.adapters.KeySymbolAdapter;
-import com.skeeper.minicode.data.KeywordsTemplate;
+import com.skeeper.minicode.presentation.adapters.SnippetsAdapter;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
 import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
-import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
-import com.skeeper.minicode.domain.models.KeySymbolItemModel;
-import com.skeeper.minicode.core.singleton.CodeDataSingleton;
-import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
-import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
+import com.skeeper.minicode.domain.models.SnippetModel;
 
-import java.io.File;
+import com.skeeper.minicode.core.singleton.SnippetsManager;
+import com.skeeper.minicode.core.singleton.ProjectManager;
+
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
@@ -69,19 +65,16 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     @Inject
     ProjectManager projectManager;
 
-    private final CodeDataSingleton codeDataSingleton = CodeDataSingleton.getInstance();
     private ActivityCodeEditorBinding binding;
     private View rootView;
     private RecyclerView bottomPanel;
     private final int minKeyboardHeight = 100;
     private String projectName = null;
-    private List<KeySymbolItemModel> keySymbolModels;
+    private List<SnippetModel> keySymbolModels;
     private FilesViewModel filesViewModel;
     private CodeEditorFragment currentCodeFragment = null;
 
-    // bound files and fragments
     private final Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,23 +92,25 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
         projectName = getIntent().getStringExtra("projectName");
 
-        keySymbolModels = PanelSnippetsDataSingleton.loadList(
+        keySymbolModels = SnippetsManager.loadList(
                 this, "keySymbolsData.json");
 
+//        currentCodeFragment = new CodeEditorFragment(binding.buttonUndo, binding.buttonRedo);
+//        setCodeFragment(currentCodeFragment);
 
-        currentCodeFragment = new CodeEditorFragment(binding.buttonUndo, binding.buttonRedo);
-        setFragment(currentCodeFragment);
+
 
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
-        codeDataSingleton.setCurrentCodeView(getCurrentCodeView());
+
 
         binding.backButton.setOnClickListener(v -> {
             finish();
         });
         binding.openFolderButton.setOnClickListener(v -> {
             hideKeyboard();
-            getCurrentCodeView().clearFocus();
+            if (currentCodeFragment != null)
+                getCurrentCodeView().clearFocus();
             binding.drawerLayout.openDrawer(GravityCompat.START);
         });
         binding.optionsButton.setOnClickListener(v -> {
@@ -135,12 +130,13 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 //        setupButtonListeners(getCurrentUndoRedoManager(), binding.buttonUndo, binding.buttonRedo);
 
 
-        // filesystem setup
+        // filesys setup
         FileTreeView fileSystemView = new FileTreeView(this);
         fileSystemView.init(this, binding.leftDrawer,
                 projectManager.getProjectDir(projectName));
         binding.leftDrawer.addView(fileSystemView);
-
+        TextView projNameView = findViewById(R.id.projectNameTextView);
+        projNameView.setText(projectName);
 
         filesViewModel = new ViewModelProvider(
                 this, new FileViewModelFactory(projectManager
@@ -161,20 +157,22 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         else {
             currentCodeFragment = cachedFragments.get(fileItem);
         }
-        setFragment(currentCodeFragment);
+        setCodeFragment(currentCodeFragment);
 
     }
 
-    public void setFragment(Fragment newFragment) {
+    public void setCodeFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
         fragmentTransaction.replace(binding.codeViewFrame.getId(), newFragment);
         fragmentTransaction.commit();
     }
+
     private CodeView getCurrentCodeView() {
         return currentCodeFragment.codeView;
     }
+
     private UndoRedoManager getCurrentUndoRedoManager() {
         return currentCodeFragment.undoRedoManager;
     }
@@ -226,7 +224,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             if (keyboardHeight > convertDpToPx(minKeyboardHeight)) {
                 int fillerTab = 40;
                 bottomPanel.getLayoutParams().height = keyboardHeight + fillerTab;
-                bottomPanel.setVisibility(View.VISIBLE);
+                bottomPanel.setVisibility(VISIBLE);
 
             } else {
                 bottomPanel.setVisibility(View.GONE);
@@ -272,7 +270,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
         if (isKeyboardVisible) {
             binding.symbolsPanel.setY(screenHeight - keyboardHeight + 25);
-            binding.symbolsPanel.setVisibility(View.VISIBLE);
+            binding.symbolsPanel.setVisibility(VISIBLE);
         }
         else {
             binding.symbolsPanel.setVisibility(View.GONE);
@@ -283,7 +281,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     private void setKeySymbolsRecycler() {
         var recyclerView = binding.symbolsPanel;
-        var adapter = new KeySymbolAdapter(this, keySymbolModels, this);
+        var adapter = new SnippetsAdapter(this, keySymbolModels, this);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 this, RecyclerView.HORIZONTAL, false));
@@ -308,12 +306,55 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         setNewCodeEditorFragment(fileItem);
         binding.drawerLayout.closeDrawer(GravityCompat.START);
 
+        if (binding.fileTipView.getVisibility() == VISIBLE)
+            binding.fileTipView.setVisibility(INVISIBLE);
+
+
     }
 
 
 
     @Override
     public void onFolderClick(FileItem fileItem) {
+    }
+
+    @Override
+    public void onFileRename(FileItem fileItem) {
+
+    }
+
+    @Override
+    public void onFolderLongClick(FileItem fileItem) {
+//
+//        View popupView = LayoutInflater.from(this)
+//                .inflate(R.layout.popup_create_file, null);
+//
+//        PopupWindow popupWindow = new PopupWindow(
+//                popupView,
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                ViewGroup.LayoutParams.WRAP_CONTENT,
+//                true
+//        );
+//
+//        Button closeBtn = popupView.findViewById(R.id.popupButtonConfirm);
+//        closeBtn.setOnClickListener(v -> popupWindow.dismiss());
+//
+//        popupWindow.setTouchInterceptor((v, event) -> {
+//            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+//                popupWindow.dismiss();
+//                return true;
+//            }
+//            return false;
+//        });
+//
+//        popupWindow.showAsDropDown(binding.main, 0, 0, Gravity.CENTER);
+
+    }
+
+    @Override
+    public void onFileLongClick(FileItem fileItem) {
+        Toast.makeText(this, "long file click", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -329,7 +370,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     //on key symbol panel key pressed
     @Override
-    public void onKeyPressed(KeySymbolItemModel pressedKey) {
+    public void onKeyPressed(SnippetModel pressedKey) {
         var currentCodeView = getCurrentCodeView();
         if (currentCodeView == null) {
             Log.e("INIT_E", "codeview is null");
@@ -337,7 +378,8 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         }
         writeKeySymbol(pressedKey);
     }
-    private void writeKeySymbol(KeySymbolItemModel keySymbolItemModel) {
+
+    private void writeKeySymbol(SnippetModel keySymbolItemModel) {
         var currentCodeView = getCurrentCodeView();
         if (currentCodeView == null) {
             Log.e("INIT_E", "key symbol key not inited");

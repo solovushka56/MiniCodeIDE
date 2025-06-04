@@ -1,7 +1,6 @@
 package com.skeeper.minicode.presentation.adapters;
 
 import android.content.Context;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
-import com.skeeper.minicode.domain.models.KeySymbolItemModel;
-import com.skeeper.minicode.core.singleton.CodeDataSingleton;
+import com.skeeper.minicode.domain.models.SnippetModel;
 
 import java.util.List;
 
-public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeySymbolViewHolder>  {
+public class SnippetsAdapter extends RecyclerView.Adapter<SnippetsAdapter.KeySymbolViewHolder>  {
     Context context;
-    List<KeySymbolItemModel> models;
+    List<SnippetModel> models;
     IKeyPressedListener listener;
 
-    public KeySymbolAdapter(Context context, List<KeySymbolItemModel> keySymbols, IKeyPressedListener listener) {
+    public SnippetsAdapter(Context context, List<SnippetModel> keySymbols, IKeyPressedListener listener) {
         this.context = context;
         this.models = keySymbols;
         this.listener = listener;
@@ -33,7 +31,7 @@ public class KeySymbolAdapter extends RecyclerView.Adapter<KeySymbolAdapter.KeyS
     @NonNull
     @Override
     public KeySymbolViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        var view = LayoutInflater.from(parent.getContext()).inflate(R.layout.key_symbol_button_item, parent, false);
+        var view = LayoutInflater.from(parent.getContext()).inflate(R.layout.snippet_button_item, parent, false);
         return new KeySymbolViewHolder(view);
     }
 

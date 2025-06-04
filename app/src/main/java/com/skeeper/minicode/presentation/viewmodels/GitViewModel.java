@@ -9,30 +9,22 @@ import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.domain.contracts.other.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.enums.RepoCloningState;
 import com.skeeper.minicode.domain.models.ProjectModel;
-import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.LsRemoteCommand;
-import org.eclipse.jgit.api.PushCommand;
-import org.eclipse.jgit.api.RemoteAddCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
-import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import java.nio.file.Files;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -125,7 +117,7 @@ public class GitViewModel extends ViewModel {
                 "today"
         );
         try {
-            projectManager.generateProjectIdeFiles(projectDir, model);
+            projectManager.generateMetadata(projectDir, model);
         } catch (IOException e) {
             throw new RuntimeException(e);
         };

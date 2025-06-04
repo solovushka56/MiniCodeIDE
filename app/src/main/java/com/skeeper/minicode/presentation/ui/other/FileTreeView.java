@@ -18,7 +18,6 @@ import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FileTreeView extends RelativeLayout {

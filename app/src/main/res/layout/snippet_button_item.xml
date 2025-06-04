@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:contentDescription="@string/app_name"
             android:fontFamily="@font/cascadia_code"
-            android:text="btn"
+            android:text="key"
             android:textColor="@color/white"
             app:backgroundTint="@null" />
     </androidx.cardview.widget.CardView>

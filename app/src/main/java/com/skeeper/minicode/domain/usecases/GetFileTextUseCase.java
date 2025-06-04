@@ -7,15 +7,12 @@ public class GetFileTextUseCase {
 
     public GetFileTextUseCase(ICallbackFileRepository fileRepository) {
         this.fileRepository = fileRepository;
-//        fileRepository.read
     }
     public String execute() {
-
         fileRepository.readFileText(fileRepository.getFile(), (text, success) -> {
             String resultText;
             if (success) {
                 resultText = text;
-
             }
             else {
                 resultText = "";

@@ -1,9 +1,5 @@
 package com.skeeper.minicode.core.singleton;
 
-import android.content.Context;
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
@@ -38,7 +34,7 @@ public class ProjectManager {
     private static final String projectsStoreFolder = "projects";
 
     private static final String ideFilesDirectoryName = ".minicode";
-    private static final String ideProjectConfigFilename = "project_config.json"; // in ideFilesDirectoryName
+    private static final String ideProjectConfigFilename = "project_config.json";
 
 
     public List<ProjectModel> loadAllProjectModels() {
@@ -102,7 +98,7 @@ public class ProjectManager {
         }
         if (!projectDir.mkdirs()) return false;
         try {
-            generateProjectIdeFiles(projectDir, model);
+            generateMetadata(projectDir, model);
         }
         catch (IOException e) {
             throw new RuntimeException(e);
@@ -112,8 +108,7 @@ public class ProjectManager {
     }
 
 
-    /// add ide configs and settings of the project to special folder
-    public void generateProjectIdeFiles(File projectDir, ProjectModel model) throws IOException {
+    public void generateMetadata(File projectDir, ProjectModel model) throws IOException {
         model.setProjectPath(projectDir.getAbsolutePath());
         File ideFilesPath = new File(projectDir, ideFilesDirectoryName);
 

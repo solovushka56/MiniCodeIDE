@@ -25,8 +25,8 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
     private List<FileItem> visibleItems;
     private final List<FileItem> allItems;
     private final SparseBooleanArray expandedStates = new SparseBooleanArray();
-    private IFileTreeListener listener;
-    private static final int FILE_TREE_TAB_PIXELS = 30;
+    private final IFileTreeListener listener;
+    private static final int FILE_TREE_TAB_PIXELS = 18;
 
     public FileTreeAdapter(List<FileItem> items, IFileTreeListener changesListener) {
         this.allItems = items;
@@ -124,9 +124,22 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
                 animator.start();
             }
             holder.itemView.setOnClickListener(v -> toggleItem(position, holder));
+
+            holder.itemView.setLongClickable(true);
+            holder.itemView.setOnLongClickListener(v -> {
+                listener.onFolderLongClick(item);
+                return true;
+            });
+
         } else {
             holder.arrow.setVisibility(View.INVISIBLE);
             holder.itemView.setOnClickListener(v -> listener.onFileClick(item));
+
+            holder.itemView.setLongClickable(true);
+            holder.itemView.setOnLongClickListener(v -> {
+                listener.onFileLongClick(item);
+                return true;
+            });
         }
     }
 
@@ -169,28 +182,6 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
             arrow = itemView.findViewById(R.id.arrow);
             panel = itemView.findViewById(R.id.panelBody);
         }
-    }
-
-
-
-
-
-
-
-    private void animateRotation(@NonNull ViewHolder holder, int position) {
-        FileItem item = visibleItems.get(position);
-        ViewPropertyAnimator animator = holder.arrow.animate();
-        animator.rotation(item.isExpanded() ? 90 : 0);
-        animator.setDuration(300).setInterpolator((t) -> {
-            t *= 2;
-            float overshootDefault = 1.75f;
-            if (t < 1) {
-                return 0.5f * (t * t * ((overshootDefault + 1) * t - overshootDefault));
-            } else {
-                t -= 2;
-                return 0.5f * (t * t * ((overshootDefault + 1) * t + overshootDefault) + 2);
-            }
-        }).start();
     }
 
 }

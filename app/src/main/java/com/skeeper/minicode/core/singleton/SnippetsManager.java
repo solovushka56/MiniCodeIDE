@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.skeeper.minicode.utils.helpers.SerializablePair;
-import com.skeeper.minicode.domain.models.KeySymbolItemModel;
+import com.skeeper.minicode.domain.models.SnippetModel;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -14,13 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class PanelSnippetsDataSingleton {
-    // snippet is key-value for code editor key symbols panel
 
-    private static PanelSnippetsDataSingleton instance = null;
-    private PanelSnippetsDataSingleton() {}
-    public static PanelSnippetsDataSingleton getInstance() {
-        if (instance == null) instance = new PanelSnippetsDataSingleton();
+public class SnippetsManager {
+
+    private static SnippetsManager instance = null;
+    private SnippetsManager() {}
+
+    public static SnippetsManager getInstance() {
+        if (instance == null) instance = new SnippetsManager();
         return instance;
     }
 
@@ -29,11 +30,11 @@ public class PanelSnippetsDataSingleton {
 
 
     public static void addSnippet(Context context, String key, String value) {
-        List<KeySymbolItemModel> list = loadList(context);
+        List<SnippetModel> list = loadList(context);
         boolean keyExists = list.stream()
                 .anyMatch(item -> item.getSymbolKey().equals(key));
         if (!keyExists) {
-            list.add(new KeySymbolItemModel(0, key, value));
+            list.add(new SnippetModel(key, value));
             saveList(context, list);
         }
     }
@@ -50,7 +51,7 @@ public class PanelSnippetsDataSingleton {
         }
     }
 
-    public static void saveList(Context context, List<KeySymbolItemModel> models) {
+    public static void saveList(Context context, List<SnippetModel> models) {
         List<SerializablePair> serializableList = convertToSerializable(toPairList(models));
         String json = gson.toJson(serializableList);
         try (FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
@@ -60,7 +61,7 @@ public class PanelSnippetsDataSingleton {
             e.printStackTrace();
         }
     }
-    public static List<KeySymbolItemModel> loadList(Context context) {
+    public static List<SnippetModel> loadList(Context context) {
         try (FileInputStream fis = context.openFileInput(FILENAME);
              InputStreamReader reader = new InputStreamReader(fis)) {
             Type type = new TypeToken<List<SerializablePair>>(){}.getType();
@@ -75,7 +76,7 @@ public class PanelSnippetsDataSingleton {
 
 
 
-    public static void saveList(Context context, String fileName, List<KeySymbolItemModel> models) {
+    public static void saveList(Context context, String fileName, List<SnippetModel> models) {
         List<SerializablePair> serializableList = convertToSerializable(toPairList(models));
         String json = gson.toJson(serializableList);
         try (FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
@@ -85,7 +86,8 @@ public class PanelSnippetsDataSingleton {
             e.printStackTrace();
         }
     }
-    public static List<KeySymbolItemModel> loadList(Context context, String fileName) {
+
+    public static List<SnippetModel> loadList(Context context, String fileName) {
         try (FileInputStream fis = context.openFileInput(fileName);
              InputStreamReader reader = new InputStreamReader(fis)) {
             Type type = new TypeToken<List<SerializablePair>>(){}.getType();
@@ -114,14 +116,15 @@ public class PanelSnippetsDataSingleton {
         return result;
     }
 
-    private static List<KeySymbolItemModel> toModelList(List<Pair<String, String>> list) {
-        List<KeySymbolItemModel> models = new ArrayList<>();
+    private static List<SnippetModel> toModelList(List<Pair<String, String>> list) {
+        List<SnippetModel> models = new ArrayList<>();
         for (var pair : list) {
-            models.add(new KeySymbolItemModel(list.indexOf(pair), pair.first, pair.second));
+            models.add(new SnippetModel(pair.first, pair.second));
         }
         return models;
     }
-    private static List<Pair<String, String>> toPairList(List<KeySymbolItemModel> modelList) {
+
+    private static List<Pair<String, String>> toPairList(List<SnippetModel> modelList) {
         List<Pair<String, String>> pairList = new ArrayList<>();
         for (var model : modelList) {
             pairList.add(new Pair<>(model.getSymbolKey(), model.getSymbolValue()));

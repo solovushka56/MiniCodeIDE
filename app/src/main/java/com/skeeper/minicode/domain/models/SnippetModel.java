@@ -1,23 +1,13 @@
 package com.skeeper.minicode.domain.models;
 
-public class KeySymbolItemModel {
+public class SnippetModel {
 
-    private int id;
     private String symbolKey;
     private String symbolValue;
 
-    public KeySymbolItemModel(int id, String symbolKey, String symbolValue) {
-        this.id = id;
+    public SnippetModel(String symbolKey, String symbolValue) {
         this.symbolKey = symbolKey;
         this.symbolValue = symbolValue;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getSymbolKey() {

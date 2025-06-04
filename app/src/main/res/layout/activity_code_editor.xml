@@ -2,14 +2,15 @@
 
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
+
+
     >
 
-    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/main"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -145,7 +146,51 @@
                         android:id="@+id/codeViewFrame"
                         android:layout_margin="15dp"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:id="@+id/fileTipView"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+
+                            >
+
+
+                            <ImageView
+                                android:layout_gravity="center"
+                                android:layout_width="65dp"
+                                android:layout_height="60dp"
+                                android:layout_margin="5dp"
+                                android:padding="10dp"
+                                android:background="@drawable/ripple_shape"
+                                android:backgroundTint="@color/violet"
+                                android:src="@drawable/folder_filled"
+                                app:rippleColor="#4F3DC2EC"
+                                app:tint="@color/soft_blue"
+
+                                />
+
+                            <TextView
+                                android:textColor="@color/soft_blue"
+                                android:textSize="16dp"
+                                android:layout_gravity="center"
+                                android:gravity="center"
+                                android:text="No file selected. Press folder button to open file menu"
+                                android:layout_width="250dp"
+                                android:layout_height="wrap_content"/>
+
+                            <View
+                                android:id="@+id/view"
+                                android:layout_width="match_parent"
+                                android:layout_height="170dp" />
+
+
+                        </LinearLayout>
+
+
+                    </FrameLayout>
 <!--                    <com.amrdeveloper.codeview.CodeView-->
 <!--                        android:id="@+id/codeViewMain"-->
 <!--                        android:layout_width="match_parent"-->

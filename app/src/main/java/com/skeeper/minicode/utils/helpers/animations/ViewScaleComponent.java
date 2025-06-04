@@ -15,7 +15,6 @@ public class ViewScaleComponent {
     public long scaleTimeMsec;
 
 
-    //    @Nullable public Runnable onFinishedAction;
     @Nullable
     public TimeInterpolator interpolator;
 
@@ -25,7 +24,6 @@ public class ViewScaleComponent {
         this.scaleX = scaleX;
         this.scaleY = scaleY;
         this.scaleTimeMsec = scaleTimeMsec;
-//        this.onFinishedAction = onFinishedAction;
         this.interpolator = interpolator;
     }
 

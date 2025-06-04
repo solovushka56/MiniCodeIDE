@@ -30,7 +30,7 @@ public class SettingItemView extends ConstraintLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        LayoutInflater.from(context).inflate(R.layout.settings_category_item, this, true);
+        LayoutInflater.from(context).inflate(R.layout.setting_item, this, true);
 
         textView = findViewById(R.id.settingName);
         imageView = findViewById(R.id.settingIcon);

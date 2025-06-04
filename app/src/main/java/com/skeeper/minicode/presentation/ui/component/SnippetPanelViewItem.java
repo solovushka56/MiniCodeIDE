@@ -9,12 +9,12 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.skeeper.minicode.R;
-import com.skeeper.minicode.domain.models.KeySymbolItemModel;
+import com.skeeper.minicode.domain.models.SnippetModel;
 
 public class SnippetPanelViewItem extends ConstraintLayout {
 
 
-    private KeySymbolItemModel boundModel;
+    private SnippetModel boundModel;
 
     TextView valueText;
     TextView keyText;
@@ -32,7 +32,7 @@ public class SnippetPanelViewItem extends ConstraintLayout {
     }
 
     private void init(Context context, AttributeSet attrs) {
-        LayoutInflater.from(context).inflate(R.layout.panel_snippet_item, this, true);
+        LayoutInflater.from(context).inflate(R.layout.snippet_panel_item, this, true);
 
         keyText = findViewById(R.id.keyName);
         valueText = findViewById(R.id.keyValue);
@@ -48,10 +48,10 @@ public class SnippetPanelViewItem extends ConstraintLayout {
     }
 
 
-    public KeySymbolItemModel getBoundModel() {
+    public SnippetModel getBoundModel() {
         return boundModel;
     }
-    public void setBoundModel(KeySymbolItemModel boundModel) {
+    public void setBoundModel(SnippetModel boundModel) {
         this.boundModel = boundModel;
     }
 

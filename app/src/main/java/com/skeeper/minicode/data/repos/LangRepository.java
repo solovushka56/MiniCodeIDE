@@ -34,15 +34,11 @@ public class LangRepository implements ILangRepository {
 
 
     private int getRawFromLangType(ExtensionType type) {
-        switch (type)
-        {
-            case JAVA:
-               return R.raw.java_lang_syntax;
-            case PYTHON:
-                return R.raw.py_lang_syntax;
-            default:
-                return -1;
-        }
+        return switch (type) {
+            case JAVA -> R.raw.java_lang_syntax;
+            case PYTHON -> R.raw.py_lang_syntax;
+            default -> -1;
+        };
 
     }
 

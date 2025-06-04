@@ -94,11 +94,9 @@ public class CodeEditorFragment extends Fragment {
         codeView.setSyntaxPatternsMap(regexUseCase.execute());
         codeView.reHighlightSyntax();
 
-
         if (boundFileItem != null)
             codeView.setText(FileUtils.readFileText(boundFileItem.getDirectory()));
-        //        codeView.setText(String.valueOf(langRepository.getLangModel().getAttributes()));
-
+//        codeView.setText(String.valueOf(langRepository.getLangModel().getAttributes()));
 //        if (fromGit)
 //            vm.initVM(boundFileItem, FileOpenMode.FROM_GIT, langRepository.getLangModel());
 //        else if (boundFileItem != null)
@@ -148,7 +146,7 @@ public class CodeEditorFragment extends Fragment {
     }
 
     private void initCodeView(CodeView codeview) {
-        codeview.setEnableHighlightCurrentLine(true);
+//        codeview.setEnableHighlightCurrentLine(true);
         codeview.setEnableAutoIndentation(true);
         codeview.setIndentationStarts(Set.of('{'));
         codeview.setIndentationEnds(Set.of('}'));

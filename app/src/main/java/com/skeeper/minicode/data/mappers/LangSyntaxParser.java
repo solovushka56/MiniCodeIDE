@@ -20,7 +20,7 @@ public class LangSyntaxParser {
             return gson.fromJson(reader, LangModel.class);
         }
         catch (Exception e) {
-            Log.e("PARSING", "жсон языка не парсится!1!");
+            Log.e("PARSING", "json dont parse in " + "LangSyntaxParser");
             return null;
         }
     }

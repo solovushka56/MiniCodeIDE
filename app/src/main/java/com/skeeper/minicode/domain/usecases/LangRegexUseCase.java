@@ -22,9 +22,12 @@ public class LangRegexUseCase {
     public Map<Pattern, Integer> execute() {
 
         Map<Pattern, Integer> syntaxPatternsMap = new LinkedHashMap<>();
-
         HighlightColorModel highlightModel = new HighlightColorModel();
         LangModel langModel = repository.getLangModel();
+
+        String commentRegex = "//.*";
+        syntaxPatternsMap.put(Pattern.compile(commentRegex), Color.parseColor("#7A7E85"));
+
 
         String stringRegex = "\"(?:\\\\.|[^\"\\\\])*\"";
         syntaxPatternsMap.put(Pattern.compile(stringRegex), highlightModel.stringColor);
@@ -48,8 +51,6 @@ public class LangRegexUseCase {
         String annotationRegex = "@[A-Za-z][\\w.]*";
         syntaxPatternsMap.put(Pattern.compile(annotationRegex), Color.parseColor("#DCDCAA"));
 
-        String commentRegex = "//.*";
-        syntaxPatternsMap.put(Pattern.compile(commentRegex), Color.parseColor("#7A7E85"));
 
         return syntaxPatternsMap;
     }

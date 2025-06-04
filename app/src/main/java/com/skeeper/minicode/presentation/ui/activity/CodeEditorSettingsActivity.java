@@ -23,8 +23,8 @@ import com.skeeper.minicode.presentation.ui.component.SnippetPanelViewItem;
 import com.skeeper.minicode.databinding.ActivityCodeEditorSettingsBinding;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.utils.helpers.animations.ViewAnimator;
-import com.skeeper.minicode.domain.models.KeySymbolItemModel;
-import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
+import com.skeeper.minicode.domain.models.SnippetModel;
+import com.skeeper.minicode.core.singleton.SnippetsManager;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
 
     ActivityCodeEditorSettingsBinding binding;
 
-    List<KeySymbolItemModel> snippetsList;
+    List<SnippetModel> snippetsList;
 
     private TextInputEditText keyInputView;
     private TextInputEditText valueInputView;
@@ -55,7 +55,7 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
         keyInputView = binding.keyTextEdit;
         valueInputView = binding.valueTextEdit;
 
-        snippetsList = PanelSnippetsDataSingleton.loadList(this);
+        snippetsList = SnippetsManager.loadList(this);
         for (var model : snippetsList) {
             createSnippetPanel(model);
         }
@@ -66,7 +66,7 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
                 Toast.makeText(this, "Enter key and value to add!", Toast.LENGTH_SHORT).show();
                 return;
             }
-            var newSnippetModel = new KeySymbolItemModel(0,
+            var newSnippetModel = new SnippetModel(
                     keyInputView.getText().toString(),
                     valueInputView.getText().toString());
 
@@ -79,13 +79,13 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
         });
 
         binding.buttonConfirm.setOnClickListener(v -> {
-            PanelSnippetsDataSingleton.saveList(this, snippetsList);
+            SnippetsManager.saveList(this, snippetsList);
             finish();
         });
 
     }
 
-    private void createSnippetPanel(KeySymbolItemModel boundModel) {
+    private void createSnippetPanel(SnippetModel boundModel) {
         var snippetPanel = new SnippetPanelViewItem(this);
         snippetPanel.setBoundModel(boundModel);
         snippetPanel.setKeyValue(boundModel.getSymbolKey(), boundModel.getSymbolValue());
@@ -132,7 +132,7 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
     }
 
     private void addKey() {
-        PanelSnippetsDataSingleton.loadList(this, "keySymbolsData.json");
+        SnippetsManager.loadList(this, "keySymbolsData.json");
 
     }
 

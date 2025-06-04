@@ -15,9 +15,8 @@ import androidx.core.view.WindowInsetsCompat;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.databinding.ActivityMainBinding;
-import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
-import com.skeeper.minicode.domain.models.KeySymbolItemModel;
-import com.skeeper.minicode.core.singleton.PanelSnippetsDataSingleton;
+import com.skeeper.minicode.domain.models.SnippetModel;
+import com.skeeper.minicode.core.singleton.SnippetsManager;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,17 +50,18 @@ public class MainActivity extends AppCompatActivity {
 
         File keySymbolConfigFile = new File(getFilesDir(), "keySymbolsData.json");
         if (!keySymbolConfigFile.exists()) {
-            PanelSnippetsDataSingleton.saveList(
+            SnippetsManager.saveList(
                     this, "keySymbolsData.json", new ArrayList<>(Arrays.asList(
 
-                    new KeySymbolItemModel(1, "tab", "    "),
-                    new KeySymbolItemModel(1, "{}", "{}"),
-                    new KeySymbolItemModel(1, "[]", "[]"),
-                    new KeySymbolItemModel(1, "()", "()"),
-                    new KeySymbolItemModel(1, ";", ";"),
-                    new KeySymbolItemModel(1, "pb", "public"),
-                    new KeySymbolItemModel(1, "pr", "private")
+                    new SnippetModel("tab", "    "),
+                    new SnippetModel("{}", "{}"),
+                    new SnippetModel("[]", "[]"),
+                    new SnippetModel("()", "()"),
+                    new SnippetModel(";", ";"),
+                    new SnippetModel("pb", "public"),
+                    new SnippetModel("pr", "private")
             )));
+
         }
 
         binding.startButton.setOnClickListener(v -> {
@@ -70,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
         });
         binding.sourceCodeButton.setOnClickListener(v -> {
-            String url = "https://github.com/solovushka56/MiniCodeIDE";
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            String sourceURI = "https://github.com/solovushka56/MiniCodeIDE";
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(sourceURI));
 
             if (intent.resolveActivity(getPackageManager()) != null) {
                 startActivity(intent);

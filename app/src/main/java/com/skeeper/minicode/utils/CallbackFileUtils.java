@@ -22,28 +22,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class CallbackFileUtils {
-
-//OLD
-//    public static String readFileText(Context context, File file) {
-//        StringBuilder stringBuilder = new StringBuilder();
-//
-//        try (FileInputStream fis = new FileInputStream(file); BufferedReader reader = new BufferedReader(new InputStreamReader(fis))) {
-//
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                stringBuilder.append(line).append("\n");
-//            }
-//
-//            if (stringBuilder.length() > 0) {
-//                stringBuilder.setLength(stringBuilder.length() - 1);
-//            }
-//
-//            return stringBuilder.toString();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-
     private static final ExecutorService executor = Executors.newSingleThreadExecutor();
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 

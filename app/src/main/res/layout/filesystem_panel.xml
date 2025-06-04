@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:id="@+id/filesystemPanel"
-    android:layout_width="400dp"
+    android:layout_width="270dp"
     android:layout_height="match_parent"
     android:layout_marginEnd="10dp"
     android:layout_gravity="start"
@@ -12,77 +12,53 @@
 
     >
 
-    <androidx.cardview.widget.CardView
-        android:backgroundTint="@color/violet"
-        android:layout_marginRight="12dp"
-        android:layout_marginLeft="8dp"
+    <LinearLayout
+
+        android:layout_marginStart="6dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:cardCornerRadius="20dp"
-        >
+        android:orientation="vertical">
 
+        <TextView
+            android:id="@+id/projectNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ProjectName"
+            android:textColor="@color/white"
+            android:paddingLeft="10dp"
+            android:layout_marginBottom="6dp"
+            android:textSize="18sp" />
 
-        <LinearLayout
-            android:layout_margin="12dp"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+
+            android:backgroundTint="@color/violet"
+            app:cardCornerRadius="20dp">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_margin="8dp"
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_gravity="center"
-                    android:id="@+id/projectNameTextView"
-                    android:textSize="20sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:textColor="@color/white"
-                    android:text="ProjectName" />
 
-                <ImageButton
-                    android:id="@+id/fileAddButton"
-                    android:scaleY="0.7"
-                    android:scaleX="0.7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:background="@drawable/ripple_shape"
-                    android:backgroundTint="@color/blue_grey"
-                    android:src="@drawable/file_plus"
-                    app:rippleColor="#4F3DC2EC" />
-
-                <ImageButton
-                    android:scaleY="0.8"
-                    android:scaleX="0.7"
-                    android:id="@+id/folderAddButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="44dp"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="5dp"
-                    android:background="@drawable/ripple_shape"
-                    android:backgroundTint="@color/blue_grey"
-                    android:src="@drawable/folder_plus"
-                    app:rippleColor="#4F3DC2EC" />
-
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="8dp" />
             </LinearLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp" />
-        </LinearLayout>
-
-    </androidx.cardview.widget.CardView>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
 
 </RelativeLayout>
