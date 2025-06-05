@@ -9,10 +9,7 @@ import java.io.File;
 import javax.inject.Inject;
 
 public class LocalFileRepository implements IFileRepository {
-    private final File file;
-
-    @Inject
-    ProjectManager projectManager;// implement todo
+    protected final File file;
 
     public LocalFileRepository(File file) {
         this.file = file;

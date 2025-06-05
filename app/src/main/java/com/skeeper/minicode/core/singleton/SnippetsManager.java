@@ -14,7 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Singleton;
 
+//todo remove
 public class SnippetsManager {
 
     private static SnippetsManager instance = null;
@@ -111,7 +113,7 @@ public class SnippetsManager {
     private static List<Pair<String, String>> convertFromSerializable(List<SerializablePair> list) {
         List<Pair<String, String>> result = new ArrayList<>();
         for (SerializablePair sp : list) {
-            result.add(new Pair<>(sp.key, sp.value));
+            result.add(new Pair<>(sp.getKey(), sp.getValue()));
         }
         return result;
     }

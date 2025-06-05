@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.domain.contracts.other.IFileDirectoryProvider;
+import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.enums.RepoCloningState;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;

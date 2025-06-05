@@ -2,10 +2,13 @@ package com.skeeper.minicode.data.di;
 
 import android.content.Context;
 
-import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.local.FileDirectoryProvider;
+import com.skeeper.minicode.data.local.ResourcesProvider;
+import com.skeeper.minicode.data.local.SharedPreferencesProvider;
 import com.skeeper.minicode.data.repos.UserRepository;
-import com.skeeper.minicode.domain.contracts.other.IFileDirectoryProvider;
+import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
+
+import java.io.File;
 
 import javax.inject.Singleton;
 
@@ -41,5 +44,24 @@ public abstract class DataModule {
         return new FileDirectoryProvider(context);
     }
 
+    @Provides
+    @Singleton
+    static SharedPreferencesProvider provideSharedPreferencesProvider(Context context) {
+        return new SharedPreferencesProvider(context);
+    }
+
+
+    @Provides
+    @Singleton
+    static ResourcesProvider provideResourcesProvider(Context context) {
+        return new ResourcesProvider(context);
+    }
+
+
+    @Provides
+    @Singleton
+    File provideStorageDir(@ApplicationContext Context context) {
+        return context.getFilesDir();
+    }
 
 }

@@ -1,8 +1,6 @@
-package com.skeeper.minicode.domain.contracts.other;
+package com.skeeper.minicode.domain.contracts.other.providers;
 
 import java.io.File;
-
-import dagger.Provides;
 
 public interface IFileDirectoryProvider {
     File getFilesDir();

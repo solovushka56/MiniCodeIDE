@@ -22,14 +22,52 @@ public class FileItem {
         this.isExpanded = false;
         this.directory = directory;
     }
-    public File getDirectory() { return directory; }
-    public boolean isDirectory() { return isDirectory; }
-    public String getName() { return name; }
-    public int getLevel() { return level; }
-    public List<FileItem> getChildren() { return children; }
-    public boolean isExpanded() { return isExpanded; }
-    public void setExpanded(boolean expanded) { isExpanded = expanded; }
 
-//    public ExtensionType lang;
+    public String getName() {
+        return name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isDirectory() {
+        return isDirectory;
+    }
+
+    public void setDirectory(boolean directory) {
+        isDirectory = directory;
+    }
+
+    public boolean isExpanded() {
+        return isExpanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+        isExpanded = expanded;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public List<FileItem> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<FileItem> children) {
+        this.children = children;
+    }
+
+    public File getDirectory() {
+        return directory;
+    }
+
+    public void setDirectory(File directory) {
+        this.directory = directory;
+    }
 }

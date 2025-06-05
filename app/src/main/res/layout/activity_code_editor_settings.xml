@@ -9,169 +9,178 @@
     android:background="@color/blue_dark"
     >
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <LinearLayout
+        android:id="@+id/mainLinearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="25dp"
+        android:layout_margin="20dp"
+        android:gravity="top"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/buttonConfirm"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:id="@+id/mainLinearLayout"
+        <TextView
+            android:id="@+id/header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/header"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Editor Settings"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="25dp" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/parentCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            app:cardBackgroundColor="@color/blue_grey"
+            app:cardCornerRadius="15dp"
+
+            >
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="25dp"
-                android:fontFamily="@font/cascadia_code"
-                android:text="Editor Settings"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="25dp" />
-
-
-            <androidx.cardview.widget.CardView
-                android:layout_marginBottom="15dp"
-                android:id="@+id/parentCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/blue_grey"
-                app:cardCornerRadius="15dp"
-
-                >
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_margin="15dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="15dp"
-                        android:gravity="center"
-                        android:orientation="horizontal">
+                        android:layout_marginRight="15dp"
+                        android:layout_weight="1.4"
 
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+                        android:hint="@string/enter_snippet_key"
+                        android:textColorHint="@color/blue_light"
+                        app:cursorColor="@color/blue_light"
+                        app:hintTextColor="@color/pale_blue">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/keyTextEdit"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginRight="15dp"
-                            android:layout_weight="1.4"
-                            android:hint="@string/enter_snippet_key"
-                            android:textColorHint="@color/light_blue_400">
+                            android:layout_height="match_parent"
+                            android:background="@drawable/button_rect_common"
+                            android:backgroundTint="@color/violet_light"
+                            android:fontFamily="@font/cascadia_code"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            android:maxLength="18"
+                            android:maxLines="1"
+                            android:textColor="@color/blue_light"
+                            android:textCursorDrawable="@color/blue_light"
 
-                            <com.google.android.material.textfield.TextInputEditText
-                                android:id="@+id/keyTextEdit"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/button_rect_common"
-                                android:backgroundTint="@color/violet_light"
-                                android:fontFamily="@font/cascadia_code"
-                                android:imeOptions="actionDone"
-                                android:inputType="textCapSentences|textAutoCorrect"
-                                android:maxLength="18"
-                                android:maxLines="1"
-                                android:textColor="@color/blue_light" />
-                        </com.google.android.material.textfield.TextInputLayout>
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
 
 
-                        <com.google.android.material.textfield.TextInputLayout
-                            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_weight="1"
-                            android:hint="@string/enter_snippet_value"
-                            android:textColorHint="@color/light_blue_400">
-
-                            <com.google.android.material.textfield.TextInputEditText
-
-                                android:id="@+id/valueTextEdit"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:background="@drawable/button_rect_common"
-                                android:backgroundTint="@color/violet_light"
-                                android:fontFamily="@font/cascadia_code"
-                                android:imeOptions="actionDone"
-                                android:inputType="textCapSentences|textAutoCorrect"
-                                android:maxLength="25"
-
-                                android:maxLines="1"
-                                android:textColor="@color/blue_light" />
-                        </com.google.android.material.textfield.TextInputLayout>
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_margin="15dp"
-                        android:gravity="center"
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:layout_marginBottom="18dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:hint="@string/enter_snippet_value"
+                        android:textColorHint="@color/blue_light"
+                        app:cursorColor="@color/blue_light"
+                        app:helperTextTextColor="@color/blue_light"
+                        app:hintTextColor="@color/pale_blue"
+
                         >
 
-
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_weight="1"
-                            android:id="@+id/addSnippetButton"
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/valueTextEdit"
                             android:layout_width="match_parent"
-                            android:layout_height="60dp"
-                            android:background="@drawable/ripple_shape"
-                            android:clickable="true"
-                            app:cardBackgroundColor="@color/green_light"
-                            app:cardCornerRadius="10dp"
-                            app:rippleColor="#D084E8CC"
-                            app:strokeColor="@color/transparent">
+                            android:layout_height="match_parent"
+                            android:background="@drawable/button_rect_common"
+                            android:backgroundTint="@color/violet_light"
+                            android:fontFamily="@font/cascadia_code"
+                            android:imeOptions="actionDone"
+                            android:inputType="textCapSentences|textAutoCorrect"
+                            android:maxLength="25"
+                            android:maxLines="1"
+                            android:textColor="@color/blue_light"
+                            android:textColorHint="@color/blue_light"
+                            android:textCursorDrawable="@color/blue_light" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="10dp"
-                                android:gravity="center"
-                                android:layout_gravity="center"
-                                android:orientation="horizontal"
-                                android:padding="2dp">
-
-                                <ImageView
-                                    android:layout_width="18dp"
-                                    android:layout_height="18dp"
-                                    android:layout_margin="10dp"
-                                    android:clickable="false"
-                                    android:src="@drawable/editor"
-                                    app:tint="@color/white" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginRight="8dp"
-                                    android:fontFamily="@font/cascadia_code"
-                                    android:gravity="center"
-                                    android:text="@string/add_new"
-                                    android:textColor="@color/white" />
-
-
-                            </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
-                    </LinearLayout>
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
-        </LinearLayout>
-    </ScrollView>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="15dp"
+                    android:layout_marginBottom="18dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/addSnippetButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/ripple_shape"
+                        android:clickable="true"
+                        app:cardBackgroundColor="@color/green_light"
+                        app:cardCornerRadius="10dp"
+                        app:rippleColor="#D084E8CC"
+                        app:strokeColor="@color/transparent">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="10dp"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:padding="2dp">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_margin="10dp"
+                                android:clickable="false"
+                                android:src="@drawable/editor"
+                                app:tint="@color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginRight="8dp"
+                                android:fontFamily="@font/cascadia_code"
+                                android:gravity="center"
+                                android:text="@string/create_new"
+                                android:textColor="@color/white" />
+
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 
     <Button
         android:layout_margin="25dp"

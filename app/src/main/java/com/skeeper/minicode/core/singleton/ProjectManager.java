@@ -3,7 +3,7 @@ package com.skeeper.minicode.core.singleton;
 import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
-import com.skeeper.minicode.domain.contracts.other.IFileDirectoryProvider;
+import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.models.ProjectModel;
 
 import java.io.BufferedReader;
@@ -23,18 +23,17 @@ import javax.inject.Singleton;
 @Singleton
 public class ProjectManager {
 
-    public final IFileDirectoryProvider fileDirProvider;
+    private static final String PROJECTS_STORE_FOLDER = "projects";
+    private static final String METADATA_DIR_NAME = ".minicode";
+    private static final String IDE_PROJECT_CONFIG_FILENAME = "project_config.json";
 
+    public final IFileDirectoryProvider fileDirProvider;
 
     @Inject
     public ProjectManager(IFileDirectoryProvider fileDirectoryProvider) {
         this.fileDirProvider = fileDirectoryProvider;
     }
 
-    private static final String projectsStoreFolder = "projects";
-
-    private static final String ideFilesDirectoryName = ".minicode";
-    private static final String ideProjectConfigFilename = "project_config.json";
 
 
     public List<ProjectModel> loadAllProjectModels() {
@@ -110,14 +109,14 @@ public class ProjectManager {
 
     public void generateMetadata(File projectDir, ProjectModel model) throws IOException {
         model.setProjectPath(projectDir.getAbsolutePath());
-        File ideFilesPath = new File(projectDir, ideFilesDirectoryName);
+        File ideFilesPath = new File(projectDir, METADATA_DIR_NAME);
 
         if (!ideFilesPath.exists()) ideFilesPath.mkdirs();
 
         Gson gson = new Gson();
         String content = gson.toJson(model);
 
-        saveFile(ideFilesPath, ideProjectConfigFilename, content);
+        saveFile(ideFilesPath, IDE_PROJECT_CONFIG_FILENAME, content);
     }
 
 
@@ -171,11 +170,11 @@ public class ProjectManager {
 
     private File getProjectConfigDir(String projectName) {
         File configFolder = getProjectConfigFolder(projectName);
-        return new File(configFolder, ideProjectConfigFilename);
+        return new File(configFolder, IDE_PROJECT_CONFIG_FILENAME);
     }
     private File getProjectConfigFolder(String projectName) {
         File projectDir = getProjectDir(projectName);
-        return new File(projectDir, ideFilesDirectoryName);
+        return new File(projectDir, METADATA_DIR_NAME);
     }
 
 
@@ -192,7 +191,7 @@ public class ProjectManager {
     }
     public File getProjectsStoreFolder() {
 
-        File folder = new File(fileDirProvider.getFilesDir(), projectsStoreFolder);
+        File folder = new File(fileDirProvider.getFilesDir(), PROJECTS_STORE_FOLDER);
         if (!folder.exists()) {
             boolean success = folder.mkdirs();
         }

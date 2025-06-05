@@ -50,17 +50,12 @@ dependencies {
 
 
     // security
-
     implementation("at.favre.lib:bcrypt:0.9.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha03")
 
     // di
     implementation("com.google.dagger:hilt-android:2.48")
     annotationProcessor("com.google.dagger:hilt-android-compiler:2.48")
-
-//    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03");
-//    annotationProcessor("androidx.hilt:hilt-compiler:1.0.0")
-
 
     // app
     implementation("com.google.code.gson:gson:2.11.0")
@@ -76,9 +71,9 @@ dependencies {
 
     // JGIT bottom
     implementation("org.eclipse.jgit:org.eclipse.jgit:5.12.0.202106070339-r")
-    // SSH support for JGit based on Apache MINA sshd
+    // SSH
 //    implementation("org.eclipse.jgit:org.eclipse.jgit.ssh.apache:6.4.0.202211300538-r")
-//    // GPG support for JGit based on BouncyCastle (commit signing)
+//    // GPG
 //    implementation("org.eclipse.jgit:org.eclipse.jgit.gpg.bc:6.4.0.202211300538-r")
 
 
