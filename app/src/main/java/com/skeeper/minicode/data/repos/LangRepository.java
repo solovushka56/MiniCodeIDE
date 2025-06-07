@@ -8,28 +8,15 @@ import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.contracts.repos.ILangRepository;
 import com.skeeper.minicode.domain.models.LangModel;
 
+import java.util.Map;
+
 public class LangRepository implements ILangRepository {
 
-    private final LangModel langModel;
-    private final ExtensionType langType;
-//    private final LangSyntaxMapper; //todo
 
-    public LangRepository(Context context, ExtensionType langType) {
-        this.langModel = LangSyntaxParser.parse(context, getRawFromLangType(langType));
-        this.langType = langType;
+    private Map<ExtensionType, LangModel> langMap;
+
+    public LangRepository() {
     }
-
-
-    @Override
-    public ExtensionType getLangType() {
-        return langType;
-    }
-    @Override
-    public LangModel getLangModel() {
-        return langModel;
-    }
-
-
 
 
 

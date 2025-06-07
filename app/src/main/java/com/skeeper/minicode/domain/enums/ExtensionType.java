@@ -4,6 +4,5 @@ public enum ExtensionType {
     JAVA,
     PYTHON,
     CSHARP,
-    OTHER,
-    TEXT
+    OTHER, /// if unrecognized or txt, not for highlight
 }

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/key_symbol_settings_rect"
+    android:background="@drawable/snippet_settings_rect"
     android:backgroundTint="@color/blue_grey"
     android:layout_marginBottom="15dp"
     >

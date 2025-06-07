@@ -1,27 +1,30 @@
 package com.skeeper.minicode.domain.models;
 
+import com.skeeper.minicode.domain.enums.ExtensionType;
+
 import java.util.List;
 
 public class LangModel {
+
+    ExtensionType langType;
+
     List<String> keywords;
     List<String> operators;
     List<String> primitiveTypes;
     List<String> objectTypes;
     List<String> attributes;
-//    String constructionBodyDefinition;
-//    String defaultCodeTemplate; // todo
-//    String defaultClassTemplate; // todo
 
-    public LangModel(List<String> keywords, List<String> operators,
+
+    public LangModel(ExtensionType langType, List<String> keywords, List<String> operators,
                      List<String> objectTypes, List<String> primitiveTypes,
-                     List<String> attributes, String constructionBodyDefinition)
+                     List<String> attributes)
     {
+        this.langType = langType;
         this.keywords = keywords;
         this.operators = operators;
         this.objectTypes = objectTypes;
         this.primitiveTypes = primitiveTypes;
         this.attributes = attributes;
-//        this.constructionBodyDefinition = constructionBodyDefinition;
     }
 
     public List<String> getKeywords() {
@@ -44,7 +47,7 @@ public class LangModel {
         return attributes;
     }
 
-//    public String getConstructionBodyDefinition() {
-//        return constructionBodyDefinition;
-//    }
+    public ExtensionType getLangType() {
+        return langType;
+    }
 }

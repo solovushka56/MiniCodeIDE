@@ -2,6 +2,7 @@ package com.skeeper.minicode.data.di;
 
 import android.content.Context;
 
+import com.google.gson.Gson;
 import com.skeeper.minicode.data.local.FileDirectoryProvider;
 import com.skeeper.minicode.data.local.ResourcesProvider;
 import com.skeeper.minicode.data.local.SharedPreferencesProvider;
@@ -75,5 +76,6 @@ public abstract class DataModule {
     static File provideStorageDir(@ApplicationContext Context context) {
         return context.getFilesDir();
     }
+
 
 }

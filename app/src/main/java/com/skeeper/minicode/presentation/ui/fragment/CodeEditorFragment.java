@@ -15,41 +15,34 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import com.amrdeveloper.codeview.CodeView;
 import com.skeeper.minicode.R;
-import com.skeeper.minicode.data.repos.LangRepository;
-import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
 import com.skeeper.minicode.databinding.FragmentCodeEditorBinding;
-import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
-import com.skeeper.minicode.domain.enums.ExtensionType;
-import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
-import com.skeeper.minicode.domain.models.HighlightColorModel;
-import com.skeeper.minicode.domain.usecases.LangRegexUseCase;
+import com.skeeper.minicode.domain.usecases.GetLangRegexMapUseCase;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
-import com.skeeper.minicode.presentation.viewmodels.factory.CodeEditViewModelFactory;
-import com.skeeper.minicode.utils.ExtensionUtils;
+import com.skeeper.minicode.presentation.viewmodels.HighlightViewModel;
 import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class CodeEditorFragment extends Fragment {
 
     public FragmentCodeEditorBinding binding;
     public FileItem boundFileItem = null;
     public CodeView codeView = null;
-    public CodeEditViewModel codeEditViewModel; //
+
+    public CodeEditViewModel codeEditViewModel;
+    public HighlightViewModel highlightViewModel;
+
     public UndoRedoManager undoRedoManager;
 
 
@@ -87,12 +80,23 @@ public class CodeEditorFragment extends Fragment {
         setupTextWatcher(codeView);
 //        codeEditViewModel = new ViewModelProvider(this, new CodeEditViewModelFactory(
 //                boundFileItem, FileOpenMode.LOCAL)).get(CodeEditViewModel.class);
+        highlightViewModel = new ViewModelProvider(this).get(HighlightViewModel.class);
 
-        // init highlight
-        LangRepository langRepository = new LangRepository(requireContext(), ExtensionType.JAVA);
-        var regexUseCase = new LangRegexUseCase(langRepository);
-        codeView.setSyntaxPatternsMap(regexUseCase.execute());
-        codeView.reHighlightSyntax();
+
+        highlightViewModel.getCurrentRegexMapData().observe(requireActivity(), data -> {
+            codeView.setSyntaxPatternsMap(data);
+            codeView.reHighlightSyntax();
+        });
+
+        if (boundFileItem != null)
+            highlightViewModel.init(boundFileItem.getDirectory());
+
+//        LangRepository langRepository = new LangRepository(requireContext(),
+//                extensionUseCase.execute(boundFileItem.getDirectory()));
+
+//        var regexUseCase = new GetLangRegexMapUseCase(langModel);
+//        codeView.setSyntaxPatternsMap(regexUseCase.execute());
+//        codeView.reHighlightSyntax();
 
         if (boundFileItem != null)
             codeView.setText(FileUtils.readFileText(boundFileItem.getDirectory()));

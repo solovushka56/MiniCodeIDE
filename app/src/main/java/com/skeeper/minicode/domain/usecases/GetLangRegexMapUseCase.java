@@ -2,7 +2,6 @@ package com.skeeper.minicode.domain.usecases;
 
 import android.graphics.Color;
 
-import com.skeeper.minicode.domain.contracts.repos.ILangRepository;
 import com.skeeper.minicode.domain.models.HighlightColorModel;
 import com.skeeper.minicode.domain.models.LangModel;
 
@@ -11,11 +10,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class LangRegexUseCase {
-    private final ILangRepository repository;
+public class GetLangRegexMapUseCase {
+    private final LangModel langModel;
 
-    public LangRegexUseCase(ILangRepository repository) {
-        this.repository = repository;
+    public GetLangRegexMapUseCase(LangModel langModel) {
+        this.langModel = langModel;
     }
 
 
@@ -23,7 +22,7 @@ public class LangRegexUseCase {
 
         Map<Pattern, Integer> syntaxPatternsMap = new LinkedHashMap<>();
         HighlightColorModel highlightModel = new HighlightColorModel();
-        LangModel langModel = repository.getLangModel();
+
 
         String commentRegex = "//.*";
         syntaxPatternsMap.put(Pattern.compile(commentRegex), Color.parseColor("#7A7E85"));

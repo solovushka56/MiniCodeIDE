@@ -12,24 +12,17 @@
     <color name="violet">#2D246D</color>
     <color name="blue_grey">#29243A</color>
     <color name="blue_dark">#17102E</color>
-
     <color name="orange_light">#ED6663</color>
     <color name="orange">#CC425E</color>
-
-
     <color name="green_light">#2BBD97</color>
     <color name="green">#0D6D80</color>
 
 
-    <color name="purple">#3DC2EC</color>
-
-    <color name="grey">#3DC2EC</color>
-
-    <color name="dark_blue">#3DC2EC</color>
-
+    <color name="purple">#EE33E0</color>
+    <color name="grey">#A0A0A0</color>
+    
     <color name="blue_ultra">#179fff</color>
     <color name="soft_blue">#4B70F5</color>
-
 
     <color name="brown_light">#CE9178</color>
     <color name="pink">#C270D6</color>

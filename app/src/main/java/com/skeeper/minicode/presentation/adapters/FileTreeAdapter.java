@@ -1,22 +1,27 @@
 package com.skeeper.minicode.presentation.adapters;
 
 import android.animation.ObjectAnimator;
-import android.util.SparseBooleanArray;
+import android.content.Context;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
 
-import java.io.File;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +29,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
     private List<FileItem> visibleItems;
     private final List<FileItem> allItems;
     private final IFileTreeListener listener;
-    private static final int FILE_TREE_TAB_PIXELS = 30;
+    private static final int FILE_TREE_TAB_PIXELS = 19;
 
     public FileTreeAdapter(List<FileItem> items, IFileTreeListener changesListener) {
         this.allItems = items;
@@ -96,20 +101,34 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
                 ? R.drawable.ic_folder
                 : R.drawable.ic_file);
 
+        var itemView = holder.itemView;
         if (item.isDirectory()) {
-            holder.arrow.setVisibility(View.VISIBLE);
-            holder.arrow.setRotation(item.isExpanded() ? 90 : 0);
-
-            holder.itemView.setOnClickListener(v -> toggleItem(item, holder));
+            itemView.setVisibility(View.VISIBLE);
+            itemView.setRotation(item.isExpanded() ? 90 : 0);
+            itemView.setOnClickListener(v ->  {
+                toggleFolder(item, holder);
+                listener.onFolderClick(item);
+            });
+            itemView.setOnLongClickListener(v -> {
+                listener.onFolderLongClick(item);
+                showContextMenu(v, item);
+                return true;
+            });
         }
         else {
             holder.arrow.setVisibility(View.INVISIBLE);
             holder.arrow.setRotation(0);
-            holder.itemView.setOnClickListener(v -> listener.onFileClick(item));
+            itemView.setOnClickListener(v -> listener.onFileClick(item));
+            itemView.setOnLongClickListener(v -> {
+                listener.onFileLongClick(item);
+                showContextMenu(v, item);
+                return true;
+            });
         }
+
     }
 
-    private void toggleItem(FileItem item, ViewHolder holder) {
+    private void toggleFolder(FileItem item, ViewHolder holder) {
         if (!item.isDirectory()) return;
 
         item.setExpanded(!item.isExpanded());
@@ -125,9 +144,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
                 .setDuration(180);
         animator.start();
 
-
         diffResult.dispatchUpdatesTo(this);
-
         listener.onFolderClick(item);
     }
 
@@ -150,4 +167,77 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
             panel = itemView.findViewById(R.id.panelBody);
         }
     }
+
+
+
+
+
+
+
+    private void showContextMenu(View anchorView, FileItem item) {
+        PopupMenu popupMenu = new PopupMenu(anchorView.getContext(), anchorView);
+        popupMenu.inflate(R.menu.file_context_menu);
+
+        MenuItem addFileItem = popupMenu.getMenu().findItem(R.id.menu_add_file);
+        addFileItem.setVisible(item.isDirectory());
+
+        try {
+            Field field = popupMenu.getClass().getDeclaredField("mPopup");
+            field.setAccessible(true);
+            Object menuPopupHelper = field.get(popupMenu);
+            Class<?> aClass = Class.forName(
+                    "com.android.internal.view.menu.MenuPopupHelper");
+            aClass.getDeclaredMethod(
+                    "setForceShowIcon",
+                            boolean.class)
+                    .invoke(menuPopupHelper, true);
+
+        } catch (Exception e) {
+        }
+
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            int id = menuItem.getItemId();
+            if (id == R.id.menu_rename) {
+                listener.onRenameSelected(item);
+                return true;
+            } else if (id == R.id.menu_delete) {
+                listener.onDeleteSelected(item);
+                return true;
+            } else if (id == R.id.menu_copy_path) {
+                listener.onCopyPathSelected(item);
+                return true;
+            } else if (id == R.id.menu_move) {
+                showMoveDialog(anchorView.getContext(), item);
+                return true;
+            } else if (id == R.id.menu_add_file && item.isDirectory()) {
+                listener.onAddFileSelected(item);
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
+    }
+
+    private void showMoveDialog(Context context, FileItem item) {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
+        builder.setTitle("Move " + item.getName());
+
+        final EditText input = new EditText(context);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("New directory path");
+        builder.setView(input);
+
+        builder.setPositiveButton("Move", (dialog, which) -> {
+            String newPath = input.getText().toString().trim();
+            if (!newPath.isEmpty()) {
+                listener.onMoveSelected(item, newPath);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+
+
+
 }

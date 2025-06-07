@@ -26,7 +26,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -60,7 +59,8 @@ import javax.inject.Inject;
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
-public class CodeEditorActivity extends AppCompatActivity implements IFileTreeListener, IKeyPressedListener {
+public class CodeEditorActivity extends AppCompatActivity
+        implements IFileTreeListener, IKeyPressedListener {
 
     @Inject
     ProjectManager projectManager;
@@ -73,8 +73,8 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     private List<SnippetModel> keySymbolModels;
     private FilesViewModel filesViewModel;
     private CodeEditorFragment currentCodeFragment = null;
-
     private final Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,11 +89,13 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
         projectName = getIntent().getStringExtra("projectName");
 
         keySymbolModels = SnippetsManager.loadList(
                 this, "keySymbolsData.json");
+
 
 //        currentCodeFragment = new CodeEditorFragment(binding.buttonUndo, binding.buttonRedo);
 //        setCodeFragment(currentCodeFragment);
@@ -125,7 +127,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             currentCodeFragment.saveFile(getCurrentCodeView().getText().toString());
             Toast.makeText(this, "File Saved!", Toast.LENGTH_SHORT).show();
         });
-        setKeySymbolsRecycler();
+        setupSnippetsRecycler();
         setupKeyboardListener();
 //        setupButtonListeners(getCurrentUndoRedoManager(), binding.buttonUndo, binding.buttonRedo);
 
@@ -137,6 +139,9 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         binding.leftDrawer.addView(fileSystemView);
         TextView projNameView = findViewById(R.id.projectNameTextView);
         projNameView.setText(projectName);
+
+
+
 
         filesViewModel = new ViewModelProvider(
                 this, new FileViewModelFactory(projectManager
@@ -161,7 +166,7 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     }
 
-    public void setCodeFragment(Fragment newFragment) {
+    public void setCodeFragment(CodeEditorFragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
@@ -231,17 +236,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
             }
             bottomPanel.requestLayout();
 
-//            if (bottomPanel.getVisibility() == View.VISIBLE)
-//            {
-//                binding.codeEditorLinearLayout
-//                        .getLayoutParams().height = screenHeight -
-//                        bottomPanel.getHeight() -
-//                        binding.topBar.getHeight();
-//            }
-//            else if (bottomPanel.getVisibility() == View.GONE)
-//            {
-//                binding.codeEditorLinearLayout.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-//            }
         });
 
     }
@@ -252,7 +246,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
                 getResources().getDisplayMetrics()
         );
     }
-
     public void onSymbolClick(View view) {
         Button btn = (Button) view;
         EditText editText = getCurrentCodeView();
@@ -277,17 +270,12 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         }
 
     }
-
-
-    private void setKeySymbolsRecycler() {
+    private void setupSnippetsRecycler() {
         var recyclerView = binding.symbolsPanel;
         var adapter = new SnippetsAdapter(this, keySymbolModels, this);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 this, RecyclerView.HORIZONTAL, false));
-
         recyclerView.setAdapter(adapter);
-
     }
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
@@ -300,19 +288,13 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
     }
 
 
-
     @Override
     public void onFileClick(FileItem fileItem) {
         setNewCodeEditorFragment(fileItem);
         binding.drawerLayout.closeDrawer(GravityCompat.START);
-
         if (binding.fileTipView.getVisibility() == VISIBLE)
             binding.fileTipView.setVisibility(INVISIBLE);
-
-
     }
-
-
 
     @Override
     public void onFolderClick(FileItem fileItem) {
@@ -325,6 +307,8 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     @Override
     public void onFolderLongClick(FileItem fileItem) {
+        Toast.makeText(this, "long folder click", Toast.LENGTH_SHORT).show();
+
 //
 //        View popupView = LayoutInflater.from(this)
 //                .inflate(R.layout.popup_create_file, null);
@@ -367,8 +351,32 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
 
     }
 
+    @Override
+    public void onRenameSelected(FileItem item) {
 
-    //on key symbol panel key pressed
+    }
+
+    @Override
+    public void onDeleteSelected(FileItem item) {
+
+    }
+
+    @Override
+    public void onCopyPathSelected(FileItem item) {
+
+    }
+
+    @Override
+    public void onMoveSelected(FileItem item, String newPath) {
+
+    }
+
+    @Override
+    public void onAddFileSelected(FileItem parentFolder) {
+
+    }
+
+
     @Override
     public void onKeyPressed(SnippetModel pressedKey) {
         var currentCodeView = getCurrentCodeView();
@@ -378,7 +386,6 @@ public class CodeEditorActivity extends AppCompatActivity implements IFileTreeLi
         }
         writeKeySymbol(pressedKey);
     }
-
     private void writeKeySymbol(SnippetModel keySymbolItemModel) {
         var currentCodeView = getCurrentCodeView();
         if (currentCodeView == null) {

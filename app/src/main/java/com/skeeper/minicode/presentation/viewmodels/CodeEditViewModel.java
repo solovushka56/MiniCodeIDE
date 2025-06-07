@@ -9,12 +9,10 @@ import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.HighlightColorModel;
-import com.skeeper.minicode.domain.models.LangModel;
 import com.skeeper.minicode.domain.usecases.GetFileTextUseCase;
-import com.skeeper.minicode.domain.usecases.LangRegexUseCase;
-import com.skeeper.minicode.utils.ExtensionUtils;
+import com.skeeper.minicode.domain.usecases.GetLangRegexMapUseCase;
 
-// for fragments mb
+
 
 public class CodeEditViewModel extends ViewModel {
 
@@ -23,7 +21,7 @@ public class CodeEditViewModel extends ViewModel {
 
     private IFileRepository fileRepository; // git or local
 
-    private LangRegexUseCase langRegexUseCase;
+    private GetLangRegexMapUseCase getLangRegexMapUseCase;
     private GetFileTextUseCase getFileUseCase;
     private HighlightColorModel highlightModel;
 
@@ -37,7 +35,6 @@ public class CodeEditViewModel extends ViewModel {
                 case LOCAL:
                     fileRepository = new LocalFileRepository(fileItem.getDirectory());
             }
-            var extensionType = ExtensionUtils.getFileExtensionType(fileItem.getName());
         }
     }
 
