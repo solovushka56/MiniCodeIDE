@@ -30,7 +30,6 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MenuActivity extends AppCompatActivity {
 
-
     private ActivityMenuBinding binding;
 
     private ImageButton activeButton;
@@ -38,10 +37,8 @@ public class MenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-//        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet_average));
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
         binding = ActivityMenuBinding.inflate(getLayoutInflater());
-
         setContentView(binding.getRoot());
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -51,7 +48,7 @@ public class MenuActivity extends AppCompatActivity {
         });
 
 
-        // todo: migrate to nav
+        // todo: migrate to nav bar
         binding.projectsButton.setOnClickListener(v -> {
             if (getCurrentFragment() instanceof ProjectsFragment) return;
             setFragment(new ProjectsFragment());
@@ -60,7 +57,6 @@ public class MenuActivity extends AppCompatActivity {
         binding.settingsButton.setOnClickListener(v -> {
             if (getCurrentFragment() instanceof SettingsFragment) return;
             setFragment(new SettingsFragment());
-
             switchActiveButton((ImageButton) v);
         });
         binding.tutorialsButton.setOnClickListener(v -> {
@@ -69,40 +65,22 @@ public class MenuActivity extends AppCompatActivity {
             switchActiveButton((ImageButton) v);
         });
 
-
-
-
         setFragment(new ProjectsFragment());
         setActiveButton(binding.projectsButton);
-        //        binding.mainFragmentLayout.setOnTouchListener(new OnSwipeTouchListener(this) {
-//            @Override
-//            public void onSwipeLeft() {
-//                switchToNextFragment();
-//            }
-//
-//            @Override
-//            public void onSwipeRight() {
-//                setFragment(new SettingsFragment());
-//                switchActiveButton((ImageButton) binding.settingsButton);
-//            }
-//        });
-
-
-
     }
 
     public Fragment getCurrentFragment() {
-        return getSupportFragmentManager().findFragmentById(binding.mainFragmentLayout.getId());
-
+        return getSupportFragmentManager().findFragmentById(
+                binding.mainFragmentLayout.getId());
     }
 
     public void setFragment(Fragment newFragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.slide_up_fade_in, R.anim.slide_down_fade_out);
+        fragmentTransaction.setCustomAnimations(
+                R.anim.slide_up_fade_in,
+                R.anim.slide_down_fade_out);
         fragmentTransaction.replace(R.id.mainFragmentLayout, newFragment);
-
-//        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -121,10 +99,11 @@ public class MenuActivity extends AppCompatActivity {
     private void switchActiveButton(ImageButton clickedButton) {
         if (activeButton == clickedButton) return;
 
-        animateButton(activeButton, false); // Деактивация текущей кнопки
-        animateButton(clickedButton, true); // Активация новой кнопки
+        animateButton(activeButton, false);
+        animateButton(clickedButton, true);
         activeButton = clickedButton;
     }
+
     private void animateButton(ImageButton button, boolean activate) {
         float targetScale = activate ? 1.0f : 0.8f;
         int bgColor = activate ? getColor(R.color.violet_light) : getColor(R.color.violet);

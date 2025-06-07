@@ -70,4 +70,11 @@ public class FileItem {
     public void setDirectory(File directory) {
         this.directory = directory;
     }
+
+    public String getPath() {
+        return directory != null
+                ? new File(directory, name).getAbsolutePath()
+                : name;
+    }
+
 }

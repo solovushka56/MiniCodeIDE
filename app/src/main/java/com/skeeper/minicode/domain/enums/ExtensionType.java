@@ -6,5 +6,4 @@ public enum ExtensionType {
     CSHARP,
     OTHER,
     TEXT
-
 }

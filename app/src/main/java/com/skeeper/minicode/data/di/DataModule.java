@@ -7,6 +7,7 @@ import com.skeeper.minicode.data.local.ResourcesProvider;
 import com.skeeper.minicode.data.local.SharedPreferencesProvider;
 import com.skeeper.minicode.data.repos.UserRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
+import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
 
 import java.io.File;
 
@@ -51,16 +52,27 @@ public abstract class DataModule {
     }
 
 
+//    @Provides
+//    @Singleton
+//    static ResourcesProvider provideResourcesProvider(Context context) {
+//        return new ResourcesProvider(context);
+//    }
+//    @Provides
+//    @Singleton
+//    static ResourcesProvider provideResourcesProvider(Context context) {
+//        return new ResourcesProvider(context);
+//    }
+
     @Provides
     @Singleton
-    static ResourcesProvider provideResourcesProvider(Context context) {
+    static IResourcesProvider provideIResourcesProvider(Context context) {
         return new ResourcesProvider(context);
     }
 
 
     @Provides
     @Singleton
-    File provideStorageDir(@ApplicationContext Context context) {
+    static File provideStorageDir(@ApplicationContext Context context) {
         return context.getFilesDir();
     }
 
