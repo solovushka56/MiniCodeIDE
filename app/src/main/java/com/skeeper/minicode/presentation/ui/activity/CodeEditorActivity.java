@@ -324,64 +324,131 @@ public class CodeEditorActivity extends AppCompatActivity
 
     @Override
     public void onRenameSelected(FileItem item) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_rename_file, null);
 
+        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
+        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
+        TextInputEditText input = dialogView.findViewById(R.id.newNameTextEdit);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        input.setText(item.getName());
+
+        positiveButton.setOnClickListener(v -> {
+            String newName = input.getText().toString().trim();
+            File parentDir = item.getDirectory().getParentFile();
+
+            File renamedFile = new File(parentDir, newName);
+
+            if (renamedFile.exists()) {
+                input.setError("Item with this name already exists!");
+                return;
+            }
+
+            filesViewModel.renameFile(item.getDirectory(), newName);
+            dialog.dismiss();
+        });
+
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
     @Override
     public void onDeleteSelected(FileItem item) {
-        new MaterialAlertDialogBuilder(this)
-                .setTitle("Удаление")
-                .setMessage("Удалить " + item.getName() + "?")
-                .setPositiveButton("Удалить", (dialog, which) -> {
-                    filesViewModel.deleteFile(item.getDirectory());
-                })
-                .setNegativeButton("Отмена", null)
-                .show();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_remove_file, null);
+
+        TextView textView = dialogView.findViewById(R.id.removeFileText);
+        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
+        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        textView.setText("Remove " + item.getName() + "?");
+
+        positiveButton.setOnClickListener(v -> {
+            filesViewModel.deleteFile(item.getDirectory());
+            dialog.dismiss();
+        });
+
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
     }
 
     @Override
     public void onCopyPathSelected(FileItem item) {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        ClipData clip = ClipData.newPlainText("File path", item.getPath());
+        ClipData clip = ClipData.newPlainText("File path", item.getDirectory().getPath());
         clipboard.setPrimaryClip(clip);
         Toast.makeText(this, "Path Copied!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onMoveSelected(FileItem item) {
-        var builder = new MaterialAlertDialogBuilder(this);
-        builder.setTitle("Move " + item.getName());
-        
-        EditText input = new EditText(this);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("New directory path");
-        builder.setView(input);
+//        var builder = new MaterialAlertDialogBuilder(this);
+//        builder.setTitle("Move " + item.getName());
+//
+//        EditText input = new EditText(this);
+//        input.setInputType(InputType.TYPE_CLASS_TEXT);
+//        input.setHint("New directory path");
+//        builder.setView(input);
+//
+//        builder.setPositiveButton("Move", (dialog, w) -> {
+//            String newPath = input.getText().toString().trim();
+//            File newDir = new File(newPath);
+//            if (newDir.isDirectory()) {
+//                filesViewModel.moveFile(item.getDirectory(), new File(newPath));
+//            }
+//            else {
+//                Toast.makeText(this,
+//                        "The folder directory is entered incorrectly!",
+//                        Toast.LENGTH_SHORT).show();
+//                input.setText("");
+//                onMoveSelected(item);
+//            }
+//        });
+//        builder.setNegativeButton("Cancel", null);
+//        builder.show();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_move_file, null);
+        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
+        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
 
-        builder.setPositiveButton("Move", (dialog, w) -> {
-            String newPath = input.getText().toString().trim();
-            File newDir = new File(newPath);
-            if (newDir.isDirectory()) {
-                filesViewModel.moveFile(item.getDirectory(), new File(newPath));
+        TextInputEditText pathInput = dialogView.findViewById(R.id.enterNewDirectory);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        positiveButton.setOnClickListener(v -> {
+            String newPath = pathInput.getText().toString().trim();
+            if (!new File(newPath).exists()) {
+                pathInput.setError("Directory is incorrect");
+                return;
             }
-            else {
-                Toast.makeText(this,
-                        "The folder directory is entered incorrectly!",
-                        Toast.LENGTH_SHORT).show();
-                input.setText("");
-                onMoveSelected(item);
-            }
+            filesViewModel.moveFile(item.getDirectory(), new File(newPath));
+            dialog.dismiss();
         });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
+
     }
     
     @Override
     public void onAddFileSelected(FileItem item) {
+        if (!item.isDirectory()) return;
+
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_create_file, null);
 
         TextView title =  dialogView.findViewById(R.id.dialogTitle);
-        TextInputEditText folderPathInput = dialogView.findViewById(R.id.enterParentFolder);
         TextInputEditText fileNameInput = dialogView.findViewById(R.id.enterName);
         Button positiveButton = dialogView.findViewById(R.id.positiveButton);
         Button negativeButton = dialogView.findViewById(R.id.negativeButton);
@@ -394,7 +461,6 @@ public class CodeEditorActivity extends AppCompatActivity
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
 
-
         radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == optionFile.getId()) {
                 title.setText("Create new File");
@@ -405,16 +471,7 @@ public class CodeEditorActivity extends AppCompatActivity
 
         positiveButton.setOnClickListener(v -> {
             String fileName = fileNameInput.getText().toString().trim();
-            String path = folderPathInput.getText().toString().trim();
-
-            if (path.isEmpty()) {
-                folderPathInput.setError("Enter folder path");
-                return;
-            }
-            if (!new File(path).exists()) {
-                folderPathInput.setError("This path doesn't exist");
-                return;
-            }
+            String path = item.getPath();
 
             if (fileName.isEmpty()) {
                 fileNameInput.setError("Enter file name");

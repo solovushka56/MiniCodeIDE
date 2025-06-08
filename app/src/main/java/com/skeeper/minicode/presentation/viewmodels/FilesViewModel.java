@@ -55,19 +55,19 @@ public class FilesViewModel extends ViewModel {
     }
 
     public void deleteFile(File file) {
-
-        FileUtils.deleteFile(file);
+        if(!FileUtils.deleteFile(file)) return;
+        updateFilesAsync();
     }
 
     public void renameFile(File file, String newName) {
-
-        FileUtils.renameFile(file, newName);
+        if (!FileUtils.renameFile(file, newName)) return;
+        updateFilesAsync();
     }
 
     public void moveFile(File file, File targetDir) {
-        FileUtils.moveFile(file, targetDir);
+        if(!FileUtils.moveFile(file, targetDir)) return;
+        updateFilesAsync();
     }
-
 
     public void writeFileText(File file, String text) {
         FileUtils.writeFileText(file, text);
@@ -79,4 +79,5 @@ public class FilesViewModel extends ViewModel {
             files.postValue(updatedList);
         });
     }
+
 }

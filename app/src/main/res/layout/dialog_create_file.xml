@@ -16,32 +16,10 @@
         android:padding="3dp"
         android:textColor="@color/blue_light"
         android:textStyle="bold"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="18dp"
         />
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:hint="Parent folder path"
-        app:hintTextColor="@color/blue_light"
-        android:textColorHint="@color/pale_blue">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/enterParentFolder"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_rect_common"
-            android:backgroundTint="@color/violet"
-            android:fontFamily="@font/cascadia_code"
-            android:imeOptions="actionDone"
-            android:inputType="textCapSentences"
-            android:maxLines="1"
-            android:textSize="14sp"
-            android:textColor="@color/blue_light"
-            />
-    </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
