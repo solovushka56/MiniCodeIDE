@@ -93,6 +93,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
 
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)
                 holder.itemView.getLayoutParams();
+
         params.leftMargin = item.getLevel() * FILE_TREE_TAB_PIXELS;
         holder.itemView.setLayoutParams(params);
 
@@ -102,9 +103,11 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
                 : R.drawable.ic_file);
 
         var itemView = holder.itemView;
+
         if (item.isDirectory()) {
-            itemView.setVisibility(View.VISIBLE);
-            itemView.setRotation(item.isExpanded() ? 90 : 0);
+            holder.arrow.setVisibility(View.VISIBLE);
+            holder.arrow.setRotation(item.isExpanded() ? 90 : 0);
+
             itemView.setOnClickListener(v ->  {
                 toggleFolder(item, holder);
                 listener.onFolderClick(item);
@@ -207,7 +210,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
                 listener.onCopyPathSelected(item);
                 return true;
             } else if (id == R.id.menu_move) {
-                showMoveDialog(anchorView.getContext(), item);
+                listener.onMoveSelected(item);
                 return true;
             } else if (id == R.id.menu_add_file && item.isDirectory()) {
                 listener.onAddFileSelected(item);
@@ -218,24 +221,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
         popupMenu.show();
     }
 
-    private void showMoveDialog(Context context, FileItem item) {
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
-        builder.setTitle("Move " + item.getName());
 
-        final EditText input = new EditText(context);
-        input.setInputType(InputType.TYPE_CLASS_TEXT);
-        input.setHint("New directory path");
-        builder.setView(input);
-
-        builder.setPositiveButton("Move", (dialog, which) -> {
-            String newPath = input.getText().toString().trim();
-            if (!newPath.isEmpty()) {
-                listener.onMoveSelected(item, newPath);
-            }
-        });
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
-    }
 
 
 

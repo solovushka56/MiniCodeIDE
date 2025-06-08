@@ -8,10 +8,7 @@ import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
 import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
-import com.skeeper.minicode.domain.models.HighlightColorModel;
-import com.skeeper.minicode.domain.usecases.GetFileTextUseCase;
-import com.skeeper.minicode.domain.usecases.GetLangRegexMapUseCase;
-
+import com.skeeper.minicode.utils.FileUtils;
 
 
 public class CodeEditViewModel extends ViewModel {
@@ -21,25 +18,17 @@ public class CodeEditViewModel extends ViewModel {
 
     private IFileRepository fileRepository; // git or local
 
-    private GetLangRegexMapUseCase getLangRegexMapUseCase;
-    private GetFileTextUseCase getFileUseCase;
-    private HighlightColorModel highlightModel;
-
     public CodeEditViewModel(@Nullable FileItem fileItem, FileOpenMode fileOpenMode) {
         if (fileItem != null) {
-            fileRepository = new LocalFileRepository(fileItem.getDirectory());
             editingFile.setValue(fileItem);
-            switch (fileOpenMode) {
-                case NEW:
-                    fileRepository = new LocalFileRepository(fileItem.getDirectory());
-                case LOCAL:
-                    fileRepository = new LocalFileRepository(fileItem.getDirectory());
-            }
+            fileRepository = new LocalFileRepository(fileItem.getDirectory());
         }
+
     }
 
+
     public void saveFile(String fileText) {
-        if (editingFile == null) return;
+        if (editingFile.getValue() == null) return;
         fileRepository.writeFileText(fileText);
     }
 

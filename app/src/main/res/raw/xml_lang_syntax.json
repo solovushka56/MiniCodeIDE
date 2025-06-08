@@ -1,0 +1,26 @@
+{
+  "langType": "2",
+  "keywords": [
+    "xml", "DOCTYPE", "ELEMENT", "ATTLIST", "ENTITY", "NOTATION",
+    "CDATA", "INCLUDE", "IGNORE", "SYSTEM", "PUBLIC"
+  ],
+  "operators": [
+    "<", ">", "</", "/>", "=", "&", ";", ":", "<?", "?>", "<!--", "-->",
+    "<![CDATA[", "]]>", "<!", "]"
+  ],
+  "primitiveTypes": [],
+  "objectTypes": [
+    "Element", "Attribute", "Document", "Node", "NodeList",
+    "DocumentType", "Entity", "Notation", "CDATASection", "Comment",
+    "ProcessingInstruction"
+  ],
+  "other_constructions": [
+    "XML declaration", "DOCTYPE declaration", "CDATA section",
+    "processing instruction", "namespace declaration", "entity reference",
+    "character reference", "comment", "element nesting", "attribute value quoting"
+  ],
+  "attributes": [
+    "xmlns", "xmlns:xsi", "xsi:schemaLocation", "xml:lang", "xml:space",
+    "version", "encoding", "standalone", "type", "use", "default", "id", "name"
+  ]
+}

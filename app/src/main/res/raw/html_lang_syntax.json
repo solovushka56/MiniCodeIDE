@@ -1,0 +1,36 @@
+{
+  "langType": "3",
+  "keywords": [
+    "html", "head", "body", "div", "span", "a", "img", "p", "ul", "ol", "li",
+    "table", "tr", "td", "th", "form", "input", "button", "label", "select",
+    "option", "textarea", "style", "script", "link", "meta", "title", "header",
+    "footer", "section", "nav", "article", "aside", "main", "h1", "h2", "h3",
+    "h4", "h5", "h6", "br", "hr", "iframe", "audio", "video", "source", "svg",
+    "path", "circle", "rect", "strong", "em", "b", "i", "u"
+  ],
+  "operators": [
+    "<", ">", "/", "=", "&", ";", "\"", "'", ":", "#", "?", "!", "-", "{", "}"
+  ],
+  "primitiveTypes": [],
+  "objectTypes": [
+    "Document", "Element", "HTMLElement", "HTMLDivElement", "HTMLAnchorElement",
+    "HTMLImageElement", "HTMLFormElement", "HTMLInputElement", "HTMLButtonElement",
+    "HTMLSelectElement", "HTMLOptionElement", "HTMLTextAreaElement", "HTMLUListElement",
+    "HTMLLIElement", "HTMLTableElement", "HTMLTableRowElement", "HTMLTableCellElement",
+    "HTMLHeadingElement", "HTMLParagraphElement", "HTMLStyleElement", "HTMLScriptElement",
+    "HTMLLinkElement", "HTMLMetaElement", "Window", "Node", "Event", "EventTarget"
+  ],
+  "other_constructions": [
+    "DOCTYPE", "comment <!-- -->", "CDATA", "self-closing tag", "void element",
+    "character entity", "data attribute", "boolean attribute", "inline style",
+    "inline script", "meta charset", "viewport declaration", "favicon link",
+    "conditional comment", "template tag", "shadow DOM", "ARIA attribute"
+  ],
+  "attributes": [
+    "id", "class", "style", "href", "src", "alt", "title", "type", "value",
+    "name", "placeholder", "required", "disabled", "readonly", "checked",
+    "selected", "for", "rel", "target", "colspan", "rowspan", "role",
+    "aria-label", "data-*", "lang", "charset", "content", "viewport",
+    "async", "defer", "media", "sizes", "srcset", "crossorigin", "integrity"
+  ]
+}

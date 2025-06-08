@@ -51,7 +51,8 @@ public class ProjectCloneActivity extends AppCompatActivity {
         gitViewModel = new ViewModelProvider(this).get(GitViewModel.class);
         gitViewModel.getCloningState().observe(this, state -> {
             switch (state) {
-                case START -> Toast.makeText(this, "Start cloning...", Toast.LENGTH_LONG).show();
+                case START ->
+                        Toast.makeText(this, "Start cloning...", Toast.LENGTH_LONG).show();
                 case FAILED ->
                         Toast.makeText(this, "Failed to Clone! :_(", Toast.LENGTH_SHORT).show();
                 case END -> {
@@ -62,8 +63,10 @@ public class ProjectCloneActivity extends AppCompatActivity {
         });
 
         binding.buttonCreate.setOnClickListener(v -> {
-            String projectName = binding.projectNameEditText.getText().toString().replaceAll("\\s", "");
-            String repoUrl = binding.projectUrlEditText.getText().toString().replaceAll("\\s", "");
+            String projectName = binding.projectNameEditText
+                    .getText().toString().replaceAll("\\s", "");
+            String repoUrl = binding.projectUrlEditText
+                    .getText().toString().replaceAll("\\s", "");
 
 
             if (repoUrl.isEmpty() || projectName.isEmpty()) {
@@ -81,20 +84,26 @@ public class ProjectCloneActivity extends AppCompatActivity {
         });
 
 
-        ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager clipboardManager = (ClipboardManager)
+                getSystemService(Context.CLIPBOARD_SERVICE);
+
         binding.buttonPaste.setOnClickListener(v -> {
             if (clipboardManager != null && clipboardManager.hasPrimaryClip()) {
-                CharSequence pasteData = clipboardManager.getPrimaryClip().getItemAt(0).getText();
+                CharSequence pasteData = clipboardManager
+                        .getPrimaryClip()
+                        .getItemAt(0)
+                        .getText();
                 if (pasteData != null) {
                     EditText editText = binding.projectUrlEditText;
                     editText.setText(pasteData);
-                } else {
+                }
+                else {
                     Toast.makeText(this, "Буфер обмена пуст", Toast.LENGTH_SHORT).show();
                 }
-            } else {
+            }
+            else {
                 Toast.makeText(this, "Нет данных в буфере", Toast.LENGTH_SHORT).show();
             }
-
         });
     }
 

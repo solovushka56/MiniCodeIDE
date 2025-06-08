@@ -1,16 +1,35 @@
 {
-  "languages": {
-    "java": {
-      "keywords": [
-      ],
-      "operators": [
-      ],
-      "primitiveTypes": [
-      ],
-      "objectTypes": [
-      ],
-      "other_constructions": [
-      ]
-    }
-  }
+  "langType": "1",
+  "keywords": [
+    "False", "None", "True", "and", "as", "assert", "async", "await",
+    "break", "class", "continue", "def", "del", "elif", "else", "except",
+    "finally", "for", "from", "global", "if", "import", "in", "is",
+    "lambda", "nonlocal", "not", "or", "pass", "raise", "return", "try",
+    "while", "with", "yield"
+  ],
+  "operators": [
+    "+", "-", "*", "**", "/", "//", "%", "@",
+    "<<", ">>", "&", "|", "^", "~",
+    ":=",
+    "<", ">", "<=", ">=", "==", "!=",
+    "=", "+=", "-=", "*=", "/=", "//=", "%=", "@=",
+    "&=", "|=", "^=", "<<=", ">>=", "**="
+  ],
+  "primitiveTypes": [
+    "int", "float", "complex", "bool", "str", "bytes", "None"
+  ],
+  "objectTypes": [
+    "list", "tuple", "dict", "set", "frozenset", "bytearray",
+    "range", "slice", "memoryview", "object", "type",
+    "Exception", "BaseException", "function", "module"
+  ],
+  "other_constructions": [
+    "try-except", "try-finally", "with", "async/await",
+    "decorator", "generator", "lambda", "comprehension",
+    "assert", "global", "nonlocal", "yield", "raise", "del", "pass"
+  ],
+  "attributes": [
+    "@staticmethod", "@classmethod", "@property",
+    "@abstractmethod", "@dataclass", "@contextmanager"
+  ]
 }

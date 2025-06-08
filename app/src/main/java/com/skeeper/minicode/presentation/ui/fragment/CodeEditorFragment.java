@@ -22,7 +22,6 @@ import com.amrdeveloper.codeview.CodeView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.FragmentCodeEditorBinding;
 import com.skeeper.minicode.domain.models.FileItem;
-import com.skeeper.minicode.domain.usecases.GetLangRegexMapUseCase;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 import com.skeeper.minicode.presentation.viewmodels.HighlightViewModel;
 import com.skeeper.minicode.utils.FileUtils;
@@ -37,13 +36,14 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class CodeEditorFragment extends Fragment {
 
     public FragmentCodeEditorBinding binding;
-    public FileItem boundFileItem = null;
-    public CodeView codeView = null;
+    private final ImageButton buttonUndo;
+    private final ImageButton buttonRedo;
+    public UndoRedoManager undoRedoManager;
 
-    public CodeEditViewModel codeEditViewModel;
     public HighlightViewModel highlightViewModel;
 
-    public UndoRedoManager undoRedoManager;
+    private final FileItem boundFileItem;
+    public CodeView codeView = null;
 
 
     public CodeEditorFragment(FileItem fileItem, ImageButton buttonUndo, ImageButton buttonRedo) {
@@ -53,13 +53,7 @@ public class CodeEditorFragment extends Fragment {
 
     }
 
-    public CodeEditorFragment(ImageButton buttonUndo, ImageButton buttonRedo) {
-        this.buttonUndo = buttonUndo;
-        this.buttonRedo = buttonRedo;
-    }
 
-    ImageButton buttonUndo;
-    ImageButton buttonRedo;
 
 
     @Override
@@ -89,14 +83,8 @@ public class CodeEditorFragment extends Fragment {
         });
 
         if (boundFileItem != null)
-            highlightViewModel.init(boundFileItem.getDirectory());
+            highlightViewModel.initHighlightTo(boundFileItem.getDirectory());
 
-//        LangRepository langRepository = new LangRepository(requireContext(),
-//                extensionUseCase.execute(boundFileItem.getDirectory()));
-
-//        var regexUseCase = new GetLangRegexMapUseCase(langModel);
-//        codeView.setSyntaxPatternsMap(regexUseCase.execute());
-//        codeView.reHighlightSyntax();
 
         if (boundFileItem != null)
             codeView.setText(FileUtils.readFileText(boundFileItem.getDirectory()));
@@ -162,23 +150,6 @@ public class CodeEditorFragment extends Fragment {
         codeview.setUpdateDelayTime(0);
         codeview.setTabLength(4);
         codeview.setLineNumberTypeface(ResourcesCompat.getFont(requireContext(), R.font.cascadia_code));
-    }
-
-
-    // when fragment changes or leaving we save file
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        saveFile(codeView.getText().toString());
-
-    }
-
-    public void saveFile(String fileText) {
-        if (boundFileItem == null) return;
-        Log.e("MSG1", "saving file");
-        FileUtils.writeFileText(boundFileItem.getDirectory(), fileText);
-//        codeEditViewModel.saveFile(fileText);
     }
 
 }

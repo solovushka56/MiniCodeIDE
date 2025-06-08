@@ -1,12 +1,10 @@
-package com.skeeper.minicode.domain.usecases.project;
+package com.skeeper.minicode.domain.usecases.project.syntax;
 
-import android.content.res.Resources;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
-import com.skeeper.minicode.data.mappers.LangSyntaxParser;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
 import com.skeeper.minicode.domain.models.LangModel;
 

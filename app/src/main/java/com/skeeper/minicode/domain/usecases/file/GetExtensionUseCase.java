@@ -27,7 +27,8 @@ public class GetExtensionUseCase {
         return switch (extension) {
             case "java" -> ExtensionType.JAVA;
             case "py" -> ExtensionType.PYTHON;
-            case "cs" -> ExtensionType.CSHARP;
+            case "xml" -> ExtensionType.XML;
+            case "html" -> ExtensionType.HTML;
             default -> ExtensionType.OTHER;
         };
     }

@@ -47,7 +47,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-
+    implementation("com.google.android.material:material:1.11.0")
 
     // security
     implementation("at.favre.lib:bcrypt:0.9.0")

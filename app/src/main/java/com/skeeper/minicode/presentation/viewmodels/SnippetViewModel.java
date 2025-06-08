@@ -29,8 +29,6 @@ public class SnippetViewModel extends ViewModel {
     private IResourcesProvider resourcesProvider;
     private IFileDirectoryProvider fileDirectoryProvider;
 
-
-
     private SnippetRepository snippetsFileRepository;
     private LiveData<List<SnippetModel>> snippets;
 

@@ -3,24 +3,31 @@ package com.skeeper.minicode.presentation.ui.activity;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
@@ -33,12 +40,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.radiobutton.MaterialRadioButton;
+import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileTreeView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.adapters.SnippetsAdapter;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
+import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
 import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
@@ -50,6 +61,7 @@ import com.skeeper.minicode.domain.models.SnippetModel;
 import com.skeeper.minicode.core.singleton.SnippetsManager;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,7 +86,7 @@ public class CodeEditorActivity extends AppCompatActivity
     private FilesViewModel filesViewModel;
     private CodeEditorFragment currentCodeFragment = null;
     private final Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
-
+    private CodeEditViewModel codeEditViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,15 +108,8 @@ public class CodeEditorActivity extends AppCompatActivity
         keySymbolModels = SnippetsManager.loadList(
                 this, "keySymbolsData.json");
 
-
-//        currentCodeFragment = new CodeEditorFragment(binding.buttonUndo, binding.buttonRedo);
-//        setCodeFragment(currentCodeFragment);
-
-
-
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
-
 
         binding.backButton.setOnClickListener(v -> {
             finish();
@@ -124,13 +129,12 @@ public class CodeEditorActivity extends AppCompatActivity
             recreate();
         });
         binding.saveButton.setOnClickListener(v -> {
-            currentCodeFragment.saveFile(getCurrentCodeView().getText().toString());
+//            currentCodeFragment.saveFile(getCurrentCodeView().getText().toString());
             Toast.makeText(this, "File Saved!", Toast.LENGTH_SHORT).show();
         });
         setupSnippetsRecycler();
         setupKeyboardListener();
 //        setupButtonListeners(getCurrentUndoRedoManager(), binding.buttonUndo, binding.buttonRedo);
-
 
         // filesys setup
         FileTreeView fileSystemView = new FileTreeView(this);
@@ -140,21 +144,16 @@ public class CodeEditorActivity extends AppCompatActivity
         TextView projNameView = findViewById(R.id.projectNameTextView);
         projNameView.setText(projectName);
 
-
-
-
         filesViewModel = new ViewModelProvider(
                 this, new FileViewModelFactory(projectManager
                 .getProjectDir(projectName)))
                 .get(FilesViewModel.class);
-        filesViewModel.getFileRepositoryList().observe(this, (fileItems) ->
+        filesViewModel.getFiles().observe(this, (fileItems) ->
                 fileSystemView.updateFileItems(this, fileItems));
-
     }
 
 
-    public void setNewCodeEditorFragment(FileItem fileItem)
-    {
+    public void setNewCodeEditorFragment(FileItem fileItem) {
         if (cachedFragments.get(fileItem) == null) {
             currentCodeFragment = new CodeEditorFragment(fileItem, binding.buttonUndo, binding.buttonRedo);
             cachedFragments.put(fileItem, currentCodeFragment);
@@ -307,38 +306,10 @@ public class CodeEditorActivity extends AppCompatActivity
 
     @Override
     public void onFolderLongClick(FileItem fileItem) {
-        Toast.makeText(this, "long folder click", Toast.LENGTH_SHORT).show();
-
-//
-//        View popupView = LayoutInflater.from(this)
-//                .inflate(R.layout.popup_create_file, null);
-//
-//        PopupWindow popupWindow = new PopupWindow(
-//                popupView,
-//                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                ViewGroup.LayoutParams.WRAP_CONTENT,
-//                true
-//        );
-//
-//        Button closeBtn = popupView.findViewById(R.id.popupButtonConfirm);
-//        closeBtn.setOnClickListener(v -> popupWindow.dismiss());
-//
-//        popupWindow.setTouchInterceptor((v, event) -> {
-//            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
-//                popupWindow.dismiss();
-//                return true;
-//            }
-//            return false;
-//        });
-//
-//        popupWindow.showAsDropDown(binding.main, 0, 0, Gravity.CENTER);
-
     }
 
     @Override
     public void onFileLongClick(FileItem fileItem) {
-        Toast.makeText(this, "long file click", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
@@ -358,22 +329,120 @@ public class CodeEditorActivity extends AppCompatActivity
 
     @Override
     public void onDeleteSelected(FileItem item) {
-
+        new MaterialAlertDialogBuilder(this)
+                .setTitle("Удаление")
+                .setMessage("Удалить " + item.getName() + "?")
+                .setPositiveButton("Удалить", (dialog, which) -> {
+                    filesViewModel.deleteFile(item.getDirectory());
+                })
+                .setNegativeButton("Отмена", null)
+                .show();
     }
 
     @Override
     public void onCopyPathSelected(FileItem item) {
-
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        ClipData clip = ClipData.newPlainText("File path", item.getPath());
+        clipboard.setPrimaryClip(clip);
+        Toast.makeText(this, "Path Copied!", Toast.LENGTH_SHORT).show();
     }
 
     @Override
-    public void onMoveSelected(FileItem item, String newPath) {
+    public void onMoveSelected(FileItem item) {
+        var builder = new MaterialAlertDialogBuilder(this);
+        builder.setTitle("Move " + item.getName());
+        
+        EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("New directory path");
+        builder.setView(input);
 
+        builder.setPositiveButton("Move", (dialog, w) -> {
+            String newPath = input.getText().toString().trim();
+            File newDir = new File(newPath);
+            if (newDir.isDirectory()) {
+                filesViewModel.moveFile(item.getDirectory(), new File(newPath));
+            }
+            else {
+                Toast.makeText(this,
+                        "The folder directory is entered incorrectly!",
+                        Toast.LENGTH_SHORT).show();
+                input.setText("");
+                onMoveSelected(item);
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
-
+    
     @Override
-    public void onAddFileSelected(FileItem parentFolder) {
+    public void onAddFileSelected(FileItem item) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_create_file, null);
 
+        TextView title =  dialogView.findViewById(R.id.dialogTitle);
+        TextInputEditText folderPathInput = dialogView.findViewById(R.id.enterParentFolder);
+        TextInputEditText fileNameInput = dialogView.findViewById(R.id.enterName);
+        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
+        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
+        RadioButton optionFile = dialogView.findViewById(R.id.optionFileCreate);
+        RadioButton optionFolder = dialogView.findViewById(R.id.optionFolderCreate);
+        RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroup);
+
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == optionFile.getId()) {
+                title.setText("Create new File");
+            } else if (checkedId == optionFolder.getId()) {
+                title.setText("Create new Folder");
+            }
+        });
+
+        positiveButton.setOnClickListener(v -> {
+            String fileName = fileNameInput.getText().toString().trim();
+            String path = folderPathInput.getText().toString().trim();
+
+            if (path.isEmpty()) {
+                folderPathInput.setError("Enter folder path");
+                return;
+            }
+            if (!new File(path).exists()) {
+                folderPathInput.setError("This path doesn't exist");
+                return;
+            }
+
+            if (fileName.isEmpty()) {
+                fileNameInput.setError("Enter file name");
+                return;
+            }
+
+            if (optionFile.isChecked() && !fileName.contains(".")) {
+                fileNameInput.setError("Add file extension");
+                return;
+            }
+
+            dialog.dismiss();
+
+            if (optionFile.isChecked())
+                filesViewModel.createFile(new File(path, fileName));
+            else if(optionFolder.isChecked())
+                filesViewModel.createFolder(new File(path), fileName);
+        });
+
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
+
+        dialog.show();
+
+        fileNameInput.requestFocus();
+        fileNameInput.postDelayed(() -> {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(fileNameInput, InputMethodManager.SHOW_IMPLICIT);
+        }, 100);
     }
 
 

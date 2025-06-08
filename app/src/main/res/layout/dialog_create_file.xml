@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/project_item_rect"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/dialogTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Create new File"
+        android:textSize="20sp"
+        android:padding="3dp"
+        android:textColor="@color/blue_light"
+        android:textStyle="bold"
+        android:layout_marginBottom="5dp"
+        />
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:hint="Parent folder path"
+        app:hintTextColor="@color/blue_light"
+        android:textColorHint="@color/pale_blue">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/enterParentFolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_rect_common"
+            android:backgroundTint="@color/violet"
+            android:fontFamily="@font/cascadia_code"
+            android:imeOptions="actionDone"
+            android:inputType="textCapSentences"
+            android:maxLines="1"
+            android:textSize="14sp"
+            android:textColor="@color/blue_light"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:hint="Name"
+        app:hintTextColor="@color/blue_light"
+        android:textColorHint="@color/soft_blue">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/enterName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_rect_common"
+            android:backgroundTint="@color/violet"
+            android:fontFamily="@font/cascadia_code"
+            android:imeOptions="actionDone"
+            android:inputType="textCapSentences|textAutoCorrect"
+            android:maxLines="1"
+            android:textColor="@color/blue_light"
+            android:textSize="14sp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:layout_gravity="center"
+                app:buttonTint="@color/blue_light"
+                android:textColor="@color/blue_light"
+                android:id="@+id/optionFileCreate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create File"
+                android:textSize="14sp"
+
+                android:layout_marginEnd="24dp"
+                android:checked="true"/>
+
+            <RadioButton
+                android:layout_gravity="center"
+                app:buttonTint="@color/blue_light"
+                android:textColor="@color/blue_light"
+                android:id="@+id/optionFolderCreate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create Folder"
+                android:textSize="14sp"
+
+                />
+
+        </RadioGroup>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:layout_marginTop="16dp">
+
+        <Button
+            android:id="@+id/negativeButton"
+            android:backgroundTint="@color/violet_average"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textSize="14sp"
+            android:textColor="@color/blue_light"
+            style="?attr/borderlessButtonStyle"/>
+
+        <Button
+            android:backgroundTint="@color/violet_average"
+            android:id="@+id/positiveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create"
+
+            android:textColor="@color/blue_light"
+            style="?attr/borderlessButtonStyle"
+            android:textSize="14sp"
+            android:layout_marginStart="16dp"/>
+
+
+    </LinearLayout>
+</LinearLayout>

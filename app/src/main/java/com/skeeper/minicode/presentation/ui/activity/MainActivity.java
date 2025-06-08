@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
         if (!keySymbolConfigFile.exists()) {
             SnippetsManager.saveList(
                     this, "keySymbolsData.json", new ArrayList<>(Arrays.asList(
-
                     new SnippetModel("tab", "    "),
                     new SnippetModel("{}", "{}"),
                     new SnippetModel("[]", "[]"),

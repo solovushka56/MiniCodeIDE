@@ -32,10 +32,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class GitViewModel extends ViewModel {
+
     IFileDirectoryProvider fileDirectoryProvider;
     private File projectDir;
 
-    private int id;
     private String projectName;
     private String projectDescription;
     private String projectPath;
@@ -45,7 +45,8 @@ public class GitViewModel extends ViewModel {
     @Inject
     ProjectManager projectManager;
 
-    private MutableLiveData<RepoCloningState> cloningState = new MutableLiveData<>();
+    private MutableLiveData<RepoCloningState>
+            cloningState = new MutableLiveData<>();
 
 
     @Inject
@@ -90,7 +91,6 @@ public class GitViewModel extends ViewModel {
                             return false;
                         }
                     });
-
             try {
                 Git git = clone.call();
             } catch (GitAPIException e) {

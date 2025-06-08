@@ -1,4 +1,4 @@
-package com.skeeper.minicode.domain.usecases;
+package com.skeeper.minicode.domain.usecases.project.syntax;
 
 import android.graphics.Color;
 
@@ -22,7 +22,6 @@ public class GetLangRegexMapUseCase {
 
         Map<Pattern, Integer> syntaxPatternsMap = new LinkedHashMap<>();
         HighlightColorModel highlightModel = new HighlightColorModel();
-
 
         String commentRegex = "//.*";
         syntaxPatternsMap.put(Pattern.compile(commentRegex), Color.parseColor("#7A7E85"));

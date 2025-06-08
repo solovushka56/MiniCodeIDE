@@ -4,37 +4,35 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.data.mappers.FileTreeMapper;
-import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.utils.FileUtils;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class FilesViewModel extends ViewModel implements IFileRepository {
+/// for file tree ierarch management
+public class FilesViewModel extends ViewModel {
 
     private File rootDirectory;
 
-    private final MutableLiveData<List<FileItem>> fileRepositoryList = new MutableLiveData<>();
-    private final MutableLiveData<FileItem> selectedFile = new MutableLiveData<>();
-
+    private final MutableLiveData<List<FileItem>> files = new MutableLiveData<>();
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final FileTreeMapper fileTreeMapper = new FileTreeMapper();
 
     public FilesViewModel(File rootDirectory) {
         this.rootDirectory = rootDirectory;
-        FileTreeMapper fileTreeMapper = new FileTreeMapper();
-        fileRepositoryList.setValue(fileTreeMapper.buildFileTree(rootDirectory, 0));
+        updateFilesAsync();
     }
 
 
-
-
-
-
-    public MutableLiveData<FileItem> getSelectedFile() {
-        return selectedFile;
-    }
-    public MutableLiveData<List<FileItem>> getFileRepositoryList() {
-        return fileRepositoryList;
+    public MutableLiveData<List<FileItem>> getFiles() {
+        return files;
     }
     public File getRootDirectory() {
         return rootDirectory;
@@ -44,38 +42,41 @@ public class FilesViewModel extends ViewModel implements IFileRepository {
     }
 
 
-    @Override
-    public File getFile() {
-        return selectedFile.getValue().getDirectory();
+
+
+    public void createFile(File newFile) {
+        if(!FileUtils.createFile(newFile)) return;
+        updateFilesAsync();
     }
 
-    @Override
-    public void createFile() {
-        FileUtils.createFile(selectedFile.getValue().getDirectory());
+    public void createFolder(File directory, String name) {
+        if(!FileUtils.createFolder(directory, name)) return;
+        updateFilesAsync();
     }
 
-    @Override
-    public void deleteFile() {
-        FileUtils.deleteFile(selectedFile.getValue().getDirectory());
+    public void deleteFile(File file) {
+
+        FileUtils.deleteFile(file);
     }
 
-    @Override
-    public void renameFile(String newName) {
-        FileUtils.renameFile(selectedFile.getValue().getDirectory(), newName);
+    public void renameFile(File file, String newName) {
+
+        FileUtils.renameFile(file, newName);
     }
 
-    @Override
-    public void moveFile(File targetDir) {
-        FileUtils.moveFile(selectedFile.getValue().getDirectory(), targetDir);
+    public void moveFile(File file, File targetDir) {
+        FileUtils.moveFile(file, targetDir);
     }
 
-    @Override
-    public String readFileText() {
-        return FileUtils.readFileText(selectedFile.getValue().getDirectory());
+
+    public void writeFileText(File file, String text) {
+        FileUtils.writeFileText(file, text);
     }
 
-    @Override
-    public void writeFileText(String text) {
-        FileUtils.writeFileText(selectedFile.getValue().getDirectory(), text);
+    private void updateFilesAsync() {
+        executor.execute(() -> {
+            var updatedList = fileTreeMapper.buildFileTree(rootDirectory, 0);
+            files.postValue(updatedList);
+        });
     }
 }

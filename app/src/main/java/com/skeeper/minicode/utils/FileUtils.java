@@ -15,8 +15,22 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
 
+import hilt_aggregated_deps._com_skeeper_minicode_presentation_ui_activity_CodeEditorActivity_GeneratedInjector;
+
 public class FileUtils {
 
+
+    public static boolean createFolder(File directory, String name) {
+        boolean success;
+
+        File folder = new File(directory, name);
+        if (!folder.exists())
+            success = folder.mkdir();
+        else
+            success = false;
+
+        return success;
+    }
 
     public static boolean createFile(File file) {
         boolean success;
