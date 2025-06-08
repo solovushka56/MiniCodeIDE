@@ -19,6 +19,7 @@ import com.skeeper.minicode.domain.models.SnippetModel;
 import com.skeeper.minicode.core.singleton.SnippetsManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -31,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
 
-    @Inject
-    ProjectManager projectManager;
+    @Inject ProjectManager projectManager;
+    @Inject SnippetsManager snippetsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +51,20 @@ public class MainActivity extends AppCompatActivity {
 
         File keySymbolConfigFile = new File(getFilesDir(), "keySymbolsData.json");
         if (!keySymbolConfigFile.exists()) {
-            SnippetsManager.saveList(
-                    this, "keySymbolsData.json", new ArrayList<>(Arrays.asList(
-                    new SnippetModel("tab", "    "),
-                    new SnippetModel("{}", "{}"),
-                    new SnippetModel("[]", "[]"),
-                    new SnippetModel("()", "()"),
-                    new SnippetModel(";", ";"),
-                    new SnippetModel("pb", "public"),
-                    new SnippetModel("pr", "private")
-            )));
+            try {
+                snippetsManager.saveList(
+                         new ArrayList<>(Arrays.asList(
+                        new SnippetModel("tab", "    "),
+                        new SnippetModel("{}", "{}"),
+                        new SnippetModel("[]", "[]"),
+                        new SnippetModel("()", "()"),
+                        new SnippetModel(";", ";"),
+                        new SnippetModel("pb", "public"),
+                        new SnippetModel("pr", "private")
+                )));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
         }
 

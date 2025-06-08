@@ -3,6 +3,7 @@ package com.skeeper.minicode.data.di;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.skeeper.minicode.core.singleton.SnippetsManager;
 import com.skeeper.minicode.data.local.FileDirectoryProvider;
 import com.skeeper.minicode.data.local.ResourcesProvider;
 import com.skeeper.minicode.data.local.SharedPreferencesProvider;
@@ -27,6 +28,7 @@ public abstract class DataModule {
 
     @Binds
     public abstract IFileDirectoryProvider bindFileDirectoryProvider(FileDirectoryProvider provider);
+
 
     @Provides
     @Singleton

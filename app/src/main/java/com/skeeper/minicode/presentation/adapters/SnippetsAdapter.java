@@ -18,6 +18,7 @@ import com.skeeper.minicode.domain.models.SnippetModel;
 import java.util.List;
 
 public class SnippetsAdapter extends RecyclerView.Adapter<SnippetsAdapter.KeySymbolViewHolder>  {
+
     Context context;
     List<SnippetModel> models;
     IKeyPressedListener listener;
@@ -31,7 +32,8 @@ public class SnippetsAdapter extends RecyclerView.Adapter<SnippetsAdapter.KeySym
     @NonNull
     @Override
     public KeySymbolViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        var view = LayoutInflater.from(parent.getContext()).inflate(R.layout.snippet_button_item, parent, false);
+        var view = LayoutInflater.from(parent.getContext()).inflate(
+                R.layout.snippet_button_item, parent, false);
         return new KeySymbolViewHolder(view);
     }
 
@@ -40,10 +42,8 @@ public class SnippetsAdapter extends RecyclerView.Adapter<SnippetsAdapter.KeySym
         var currentModel = models.get(position);
         TextView currentButton = holder.textView;
 
-        //content description is text that will be paste in code editor on click
         currentButton.setText(currentModel.getSymbolKey());
         currentButton.setContentDescription(currentModel.getSymbolValue());
-
 
         holder.rect.setOnClickListener(v -> {
             VibrationManager.vibrate(40L, currentButton.getContext());

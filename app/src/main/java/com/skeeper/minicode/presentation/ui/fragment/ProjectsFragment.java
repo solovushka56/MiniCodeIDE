@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,6 +21,7 @@ import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.ui.activity.ProjectCloneActivity;
 import com.skeeper.minicode.presentation.ui.activity.ProjectCreateActivity;
+import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,13 +33,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class ProjectsFragment extends Fragment {
 
-    FragmentProjectsBinding binding;
-
-    public List<ProjectModel> models = new ArrayList<>();
-
-    @Inject
-    ProjectManager projectManager;
-
+    private FragmentProjectsBinding binding;
+    private ProjectsViewModel projectsViewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +54,14 @@ public class ProjectsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        models = projectManager.loadAllProjectModels();
-        setProjectsRecycler();
+
+        projectsViewModel = new ViewModelProvider(this).get(ProjectsViewModel.class);
+
+        projectsViewModel.getModels().observe(
+                requireActivity(),
+                this::setProjectsRecycler);
+
+        projectsViewModel.loadModelsAsync();
 
         binding.createProjectButton.setOnClickListener(v -> {
             Intent intent = new Intent(requireActivity(), ProjectCreateActivity.class);
@@ -75,16 +78,15 @@ public class ProjectsFragment extends Fragment {
 
     }
 
-    private void setProjectsRecycler() {
+    private void setProjectsRecycler(List<ProjectModel> models) {
         var recyclerView = binding.projectsRecyclerView;
         var adapter = new ProjectAdapter(requireActivity(), models);
-
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 requireActivity(), RecyclerView.VERTICAL, false));
-
         recyclerView.setAdapter(adapter);
-
     }
+
+
 
 
     @Override

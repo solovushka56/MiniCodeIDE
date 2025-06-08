@@ -72,31 +72,18 @@ public class CodeEditorFragment extends Fragment {
         undoRedoManager = new UndoRedoManager(codeView);
         setupButtonListeners(undoRedoManager, buttonUndo, buttonRedo);
         setupTextWatcher(codeView);
-//        codeEditViewModel = new ViewModelProvider(this, new CodeEditViewModelFactory(
-//                boundFileItem, FileOpenMode.LOCAL)).get(CodeEditViewModel.class);
-        highlightViewModel = new ViewModelProvider(this).get(HighlightViewModel.class);
 
+        highlightViewModel = new ViewModelProvider(this).get(HighlightViewModel.class);
 
         highlightViewModel.getCurrentRegexMapData().observe(requireActivity(), data -> {
             codeView.setSyntaxPatternsMap(data);
             codeView.reHighlightSyntax();
         });
 
-        if (boundFileItem != null)
+        if (boundFileItem != null) {
             highlightViewModel.initHighlightTo(boundFileItem.getDirectory());
-
-
-        if (boundFileItem != null)
             codeView.setText(FileUtils.readFileText(boundFileItem.getDirectory()));
-//        codeView.setText(String.valueOf(langRepository.getLangModel().getAttributes()));
-//        if (fromGit)
-//            vm.initVM(boundFileItem, FileOpenMode.FROM_GIT, langRepository.getLangModel());
-//        else if (boundFileItem != null)
-//            vm.initVM(boundFileItem, FileOpenMode.LOCAL, langRepository.getLangModel());
-//        else vm.initVM(boundFileItem, FileOpenMode.NEW, langRepository.getLangModel());
-//
-
-
+        }
     }
 
 
@@ -126,7 +113,6 @@ public class CodeEditorFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-//                updateButtonStates();
             }
         });
     }
@@ -152,4 +138,7 @@ public class CodeEditorFragment extends Fragment {
         codeview.setLineNumberTypeface(ResourcesCompat.getFont(requireContext(), R.font.cascadia_code));
     }
 
+    public FileItem getBoundFileItem() {
+        return boundFileItem;
+    }
 }

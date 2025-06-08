@@ -33,6 +33,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -62,6 +63,7 @@ import com.skeeper.minicode.core.singleton.SnippetsManager;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,12 +72,14 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
+// todo add viewmodel
 @AndroidEntryPoint
 public class CodeEditorActivity extends AppCompatActivity
         implements IFileTreeListener, IKeyPressedListener {
 
-    @Inject
-    ProjectManager projectManager;
+    @Inject ProjectManager projectManager;
+
+    @Inject SnippetsManager snippetsManager;
 
     private ActivityCodeEditorBinding binding;
     private View rootView;
@@ -105,8 +109,11 @@ public class CodeEditorActivity extends AppCompatActivity
         getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
         projectName = getIntent().getStringExtra("projectName");
 
-        keySymbolModels = SnippetsManager.loadList(
-                this, "keySymbolsData.json");
+        try {
+            keySymbolModels = snippetsManager.loadList();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
@@ -129,7 +136,6 @@ public class CodeEditorActivity extends AppCompatActivity
             recreate();
         });
         binding.saveButton.setOnClickListener(v -> {
-//            currentCodeFragment.saveFile(getCurrentCodeView().getText().toString());
             Toast.makeText(this, "File Saved!", Toast.LENGTH_SHORT).show();
         });
         setupSnippetsRecycler();
@@ -182,35 +188,6 @@ public class CodeEditorActivity extends AppCompatActivity
     }
 
 
-    private void setupButtonListeners(UndoRedoManager undoRedoManager, ImageButton btnUndo, ImageButton btnRedo) {
-
-        btnUndo.setOnClickListener(v -> {
-            if (!undoRedoManager.canUndo()) return;
-            VibrationManager.vibrate(30L, this);
-            undoRedoManager.undo();
-            updateButtonStates();
-        });
-        btnRedo.setOnClickListener(v -> {
-            if (!undoRedoManager.canRedo()) return;
-            VibrationManager.vibrate(30L, this);
-            undoRedoManager.redo();
-            updateButtonStates();
-        });
-    }
-    private void setupTextWatcher(EditText editText) {
-        editText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-//                updateButtonStates();
-            }
-        });
-    }
     private void updateButtonStates() {
         binding.buttonUndo.setEnabled(getCurrentUndoRedoManager().canUndo());
         binding.buttonRedo.setEnabled(getCurrentUndoRedoManager().canRedo());
@@ -245,30 +222,7 @@ public class CodeEditorActivity extends AppCompatActivity
                 getResources().getDisplayMetrics()
         );
     }
-    public void onSymbolClick(View view) {
-        Button btn = (Button) view;
-        EditText editText = getCurrentCodeView();
-        int start = Math.max(editText.getSelectionStart(), 0);
-        int end = Math.max(editText.getSelectionEnd(), 0);
-        editText.getText().replace(Math.min(start, end), Math.max(start, end),
-                btn.getContentDescription(), 0, btn.getText().length());
-    }
-    private void updateKeywordPanel(WindowInsetsCompat insets) {
-        boolean isKeyboardVisible = insets.isVisible(WindowInsetsCompat.Type.ime());
-        int keyboardHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
 
-        var windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        int screenHeight = windowManager.getDefaultDisplay().getHeight();
-
-        if (isKeyboardVisible) {
-            binding.symbolsPanel.setY(screenHeight - keyboardHeight + 25);
-            binding.symbolsPanel.setVisibility(VISIBLE);
-        }
-        else {
-            binding.symbolsPanel.setVisibility(View.GONE);
-        }
-
-    }
     private void setupSnippetsRecycler() {
         var recyclerView = binding.symbolsPanel;
         var adapter = new SnippetsAdapter(this, keySymbolModels, this);
@@ -285,7 +239,6 @@ public class CodeEditorActivity extends AppCompatActivity
             }
         }
     }
-
 
     @Override
     public void onFileClick(FileItem fileItem) {
@@ -373,6 +326,17 @@ public class CodeEditorActivity extends AppCompatActivity
 
         positiveButton.setOnClickListener(v -> {
             filesViewModel.deleteFile(item.getDirectory());
+
+            if (currentCodeFragment == cachedFragments.get(item))
+            {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                if (currentCodeFragment != null) {
+                    fragmentManager.beginTransaction()
+                            .remove(currentCodeFragment)
+                            .commit();
+                }
+            }
+            cachedFragments.remove(item);
             dialog.dismiss();
         });
 
@@ -456,7 +420,6 @@ public class CodeEditorActivity extends AppCompatActivity
         RadioButton optionFolder = dialogView.findViewById(R.id.optionFolderCreate);
         RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroup);
 
-
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
         builder.setView(dialogView);
         AlertDialog dialog = builder.create();
@@ -471,7 +434,7 @@ public class CodeEditorActivity extends AppCompatActivity
 
         positiveButton.setOnClickListener(v -> {
             String fileName = fileNameInput.getText().toString().trim();
-            String path = item.getPath();
+            String path = item.getDirectory().getPath();
 
             if (fileName.isEmpty()) {
                 fileNameInput.setError("Enter file name");
@@ -483,12 +446,12 @@ public class CodeEditorActivity extends AppCompatActivity
                 return;
             }
 
-            dialog.dismiss();
-
             if (optionFile.isChecked())
                 filesViewModel.createFile(new File(path, fileName));
             else if(optionFolder.isChecked())
                 filesViewModel.createFolder(new File(path), fileName);
+
+            dialog.dismiss();
         });
 
         negativeButton.setOnClickListener(v -> dialog.dismiss());

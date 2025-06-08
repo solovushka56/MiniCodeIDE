@@ -26,8 +26,15 @@ import com.skeeper.minicode.utils.helpers.animations.ViewAnimator;
 import com.skeeper.minicode.domain.models.SnippetModel;
 import com.skeeper.minicode.core.singleton.SnippetsManager;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.inject.Inject;
+
+import dagger.hilt.android.AndroidEntryPoint;
+
+//  todo view model
+@AndroidEntryPoint
 public class CodeEditorSettingsActivity extends AppCompatActivity {
 
     ActivityCodeEditorSettingsBinding binding;
@@ -37,6 +44,7 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
     private TextInputEditText keyInputView;
     private TextInputEditText valueInputView;
 
+    @Inject SnippetsManager snippetsManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +63,12 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
         keyInputView = binding.keyTextEdit;
         valueInputView = binding.valueTextEdit;
 
-        snippetsList = SnippetsManager.loadList(this);
+        try {
+            snippetsList = snippetsManager.loadList();
+        } catch (IOException e) {
+//            throw new RuntimeException(e);
+
+        }
         for (var model : snippetsList) {
             createSnippetPanel(model);
         }
@@ -79,7 +92,12 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
         });
 
         binding.buttonConfirm.setOnClickListener(v -> {
-            SnippetsManager.saveList(this, snippetsList);
+            try {
+                snippetsManager.saveList(snippetsList);
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
             finish();
         });
 
@@ -105,36 +123,10 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
                     ).start();
 //                binding.mainLinearLayout.removeView(snippetPanel);
         });
-        binding.mainLinearLayout.addView(snippetPanel);
+        binding.itemsLayout.addView(snippetPanel);
     }
 
-    private void showPopupWindow(View anchorView) {
-        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-        View popupView = inflater.inflate(R.layout.pop_up_window_key_value, null);
 
-        var popupWindow = new PopupWindow(
-                popupView,
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                true
-        );
-
-
-        popupWindow.showAsDropDown(binding.header, 0, 0, Gravity.CENTER);
-
-        TextInputEditText keyText = findViewById(R.id.keyTextEdit);
-        TextInputEditText valueText = findViewById(R.id.valueTextEdit);
-        Button confirmButton = findViewById(R.id.popupButtonConfirm);
-
-
-
-
-    }
-
-    private void addKey() {
-        SnippetsManager.loadList(this, "keySymbolsData.json");
-
-    }
 
 
 }

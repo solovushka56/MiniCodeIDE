@@ -31,18 +31,18 @@ public class FilesViewModel extends ViewModel {
     }
 
 
+
     public MutableLiveData<List<FileItem>> getFiles() {
         return files;
     }
+
     public File getRootDirectory() {
         return rootDirectory;
     }
+
     public void setRootDirectory(File rootDirectory) {
         this.rootDirectory = rootDirectory;
     }
-
-
-
 
     public void createFile(File newFile) {
         if(!FileUtils.createFile(newFile)) return;

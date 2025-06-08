@@ -11,106 +11,100 @@ import com.skeeper.minicode.domain.models.SnippetModel;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 
-//todo remove
+import dagger.hilt.android.qualifiers.ApplicationContext;
+
+@Singleton
 public class SnippetsManager {
 
-    private static SnippetsManager instance = null;
-    private SnippetsManager() {}
+    private final Context context;
+    private final Gson gson = new Gson();
+    private static final String FILENAME = "keySymbolsData.json";
 
-    public static SnippetsManager getInstance() {
-        if (instance == null) instance = new SnippetsManager();
-        return instance;
+
+    @Inject
+    public SnippetsManager(@ApplicationContext Context context) {
+        this.context = context;
     }
 
-    private static final Gson gson = new Gson();
-    public static final String FILENAME= "keySymbolsData.json";
 
-
-    public static void addSnippet(Context context, String key, String value) {
-        List<SnippetModel> list = loadList(context);
+    public void addSnippet(String key, String value) throws IOException {
+        List<SnippetModel> list = loadList();
         boolean keyExists = list.stream()
                 .anyMatch(item -> item.getSymbolKey().equals(key));
         if (!keyExists) {
             list.add(new SnippetModel(key, value));
-            saveList(context, list);
+            saveList(list);
         }
     }
 
 
-    public static void removeSnippet(Context context, String snippetKey) {
-        var loadedList = loadList(context);
-        for (var item : loadedList) {
-            if (Objects.equals(item.getSymbolKey(), snippetKey)) {
-                loadedList.remove(item);
-                saveList(context, loadedList);
-
+    public void removeSnippet(String snippetKey) throws IOException {
+        List<SnippetModel> loadedList = loadList();
+        Iterator<SnippetModel> iterator = loadedList.iterator();
+        while (iterator.hasNext()) {
+            if (Objects.equals(iterator.next().getSymbolKey(), snippetKey)) {
+                iterator.remove();
             }
         }
+        saveList(loadedList);
     }
 
-    public static void saveList(Context context, List<SnippetModel> models) {
+    public void saveList(List<SnippetModel> models) throws IOException {
         List<SerializablePair> serializableList = convertToSerializable(toPairList(models));
         String json = gson.toJson(serializableList);
         try (FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
              OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
-    public static List<SnippetModel> loadList(Context context) {
+
+    public List<SnippetModel> loadList() throws IOException {
         try (FileInputStream fis = context.openFileInput(FILENAME);
              InputStreamReader reader = new InputStreamReader(fis)) {
             Type type = new TypeToken<List<SerializablePair>>(){}.getType();
             List<SerializablePair> loaded = gson.fromJson(reader, type);
             return toModelList(convertFromSerializable(loaded));
-        } catch (IOException | JsonSyntaxException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
         }
     }
 
 
 
 
-    public static void saveList(Context context, String fileName, List<SnippetModel> models) {
+    public void saveList(String fileName, List<SnippetModel> models) throws IOException {
         List<SerializablePair> serializableList = convertToSerializable(toPairList(models));
         String json = gson.toJson(serializableList);
         try (FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
              OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             writer.write(json);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 
-    public static List<SnippetModel> loadList(Context context, String fileName) {
+    public List<SnippetModel> loadList(String fileName) throws IOException {
         try (FileInputStream fis = context.openFileInput(fileName);
              InputStreamReader reader = new InputStreamReader(fis)) {
             Type type = new TypeToken<List<SerializablePair>>(){}.getType();
             List<SerializablePair> loaded = gson.fromJson(reader, type);
             return toModelList(convertFromSerializable(loaded));
-        } catch (IOException | JsonSyntaxException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
         }
     }
 
 
 
-    private static List<SerializablePair> convertToSerializable(List<Pair<String, String>> list) {
+    private List<SerializablePair> convertToSerializable(List<Pair<String, String>> list) {
         List<SerializablePair> result = new ArrayList<>();
         for (Pair<String, String> pair : list) {
             result.add(new SerializablePair(pair.first, pair.second));
         }
         return result;
     }
-    private static List<Pair<String, String>> convertFromSerializable(List<SerializablePair> list) {
+    private List<Pair<String, String>> convertFromSerializable(List<SerializablePair> list) {
         List<Pair<String, String>> result = new ArrayList<>();
         for (SerializablePair sp : list) {
             result.add(new Pair<>(sp.getKey(), sp.getValue()));
@@ -118,7 +112,7 @@ public class SnippetsManager {
         return result;
     }
 
-    private static List<SnippetModel> toModelList(List<Pair<String, String>> list) {
+    private List<SnippetModel> toModelList(List<Pair<String, String>> list) {
         List<SnippetModel> models = new ArrayList<>();
         for (var pair : list) {
             models.add(new SnippetModel(pair.first, pair.second));
@@ -126,7 +120,7 @@ public class SnippetsManager {
         return models;
     }
 
-    private static List<Pair<String, String>> toPairList(List<SnippetModel> modelList) {
+    private List<Pair<String, String>> toPairList(List<SnippetModel> modelList) {
         List<Pair<String, String>> pairList = new ArrayList<>();
         for (var model : modelList) {
             pairList.add(new Pair<>(model.getSymbolKey(), model.getSymbolValue()));
