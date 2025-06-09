@@ -10,14 +10,11 @@ import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.Layout;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +31,6 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -43,20 +39,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
-import com.skeeper.minicode.domain.enums.Direction;
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileTreeView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.adapters.SnippetsAdapter;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
-import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
+import com.skeeper.minicode.presentation.viewmodels.SnippetViewModel;
 import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
-import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.SnippetModel;
@@ -80,16 +73,19 @@ public class CodeEditorActivity extends AppCompatActivity
         implements IFileTreeListener, IKeyPressedListener {
 
     @Inject ProjectManager projectManager;
-    @Inject SnippetsManager snippetsManager;
+
+
 
     private ActivityCodeEditorBinding binding;
     private View rootView;
     private RecyclerView bottomPanel;
     private final int minKeyboardHeight = 100;
     private String projectName = null;
-    private List<SnippetModel> keySymbolModels;
-    private FilesViewModel filesViewModel;
     private CodeEditorFragment currentCodeFragment = null;
+
+    private SnippetViewModel snippetViewModel;
+    private FilesViewModel filesViewModel;
+
     private final Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
 
     @Override
@@ -105,15 +101,20 @@ public class CodeEditorActivity extends AppCompatActivity
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
         getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
         projectName = getIntent().getStringExtra("projectName");
 
-        try {
-            keySymbolModels = snippetsManager.loadList();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+
+        snippetViewModel = new ViewModelProvider(this).get(SnippetViewModel.class);
+        snippetViewModel.getSnippets().observe(this, snippets -> {
+            var recyclerView = binding.symbolsPanel;
+            var adapter = new SnippetsAdapter(this, snippets, this);
+            recyclerView.setLayoutManager(new LinearLayoutManager(
+                    this, RecyclerView.HORIZONTAL, false));
+            recyclerView.setAdapter(adapter);
+        });
+        snippetViewModel.loadSnippetsAsync();
+
 
         rootView = binding.main;
         bottomPanel = binding.symbolsPanel;
@@ -141,16 +142,24 @@ public class CodeEditorActivity extends AppCompatActivity
                     currentCodeFragment.getBoundFileItem().getDirectory(),
                     getCurrentCodeView().getText().toString());
         });
-        setupSnippetsRecycler();
         setupKeyboardListener();
 
         // filesys setup
+        File projectDir = projectManager.getProjectDir(projectName);
         FileTreeView fileSystemView = new FileTreeView(this);
-        fileSystemView.init(this, binding.leftDrawer,
-                projectManager.getProjectDir(projectName));
+        fileSystemView.init(this, binding.leftDrawer, projectDir);
         binding.leftDrawer.addView(fileSystemView);
+
         TextView projNameView = findViewById(R.id.projectNameTextView);
         projNameView.setText(projectName);
+        fileSystemView.setOnCreateFileButtonListener(v -> {
+            onAddFileSelected(new FileItem(
+                    projectDir,
+                    projectDir.getName(),
+                    true,
+                    0
+            ));
+        });
 
 
         filesViewModel = new ViewModelProvider(
@@ -159,8 +168,6 @@ public class CodeEditorActivity extends AppCompatActivity
                 .get(FilesViewModel.class);
         filesViewModel.getFiles().observe(this, (fileItems) ->
                 fileSystemView.updateFileItems(this, fileItems));
-
-
 
     }
 
@@ -229,13 +236,7 @@ public class CodeEditorActivity extends AppCompatActivity
         );
     }
 
-    private void setupSnippetsRecycler() {
-        var recyclerView = binding.symbolsPanel;
-        var adapter = new SnippetsAdapter(this, keySymbolModels, this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(
-                this, RecyclerView.HORIZONTAL, false));
-        recyclerView.setAdapter(adapter);
-    }
+
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -471,6 +472,7 @@ public class CodeEditorActivity extends AppCompatActivity
         }, 100);
     }
 
+
     @Override
     public void onArrowPressed(int direction) {
         int cursorPosition = getCurrentCodeView().getSelectionStart();
@@ -507,8 +509,6 @@ public class CodeEditorActivity extends AppCompatActivity
         }
     }
 
-
-
     @Override
     public void onKeyPressed(SnippetModel pressedKey) {
         var currentCodeView = getCurrentCodeView();
@@ -518,6 +518,7 @@ public class CodeEditorActivity extends AppCompatActivity
         }
         writeKeySymbol(pressedKey);
     }
+
     private void writeKeySymbol(SnippetModel keySymbolItemModel) {
         var currentCodeView = getCurrentCodeView();
         if (currentCodeView == null) {

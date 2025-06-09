@@ -11,17 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.databinding.ActivityMainBinding;
-import com.skeeper.minicode.domain.models.SnippetModel;
 import com.skeeper.minicode.core.singleton.SnippetsManager;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.skeeper.minicode.presentation.viewmodels.SnippetViewModel;
 
 import javax.inject.Inject;
 
@@ -30,10 +26,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class MainActivity extends AppCompatActivity {
 
-    ActivityMainBinding binding;
-
-    @Inject ProjectManager projectManager;
-    @Inject SnippetsManager snippetsManager;
+    private ActivityMainBinding binding;
+    private SnippetViewModel snippetViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,24 +43,8 @@ public class MainActivity extends AppCompatActivity {
         });
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
 
-        File keySymbolConfigFile = new File(getFilesDir(), "keySymbolsData.json");
-        if (!keySymbolConfigFile.exists()) {
-            try {
-                snippetsManager.saveList(
-                         new ArrayList<>(Arrays.asList(
-                        new SnippetModel("tab", "    "),
-                        new SnippetModel("{}", "{}"),
-                        new SnippetModel("[]", "[]"),
-                        new SnippetModel("()", "()"),
-                        new SnippetModel(";", ";"),
-                        new SnippetModel("pb", "public"),
-                        new SnippetModel("pr", "private")
-                )));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-        }
+        snippetViewModel = new ViewModelProvider(this).get(SnippetViewModel.class);
+        snippetViewModel.saveSnippetsFilePresetIfNotExists();
 
         binding.startButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, MenuActivity.class);
@@ -87,5 +65,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import androidx.core.graphics.Insets;
@@ -23,6 +24,8 @@ import java.util.List;
 public class FileTreeView extends RelativeLayout {
 
     public RecyclerView filesRecyclerView;
+    public ImageButton createFileButton;
+
     public File directory;
     List<FileItem> fileItems;
 
@@ -46,6 +49,8 @@ public class FileTreeView extends RelativeLayout {
         });
 
         filesRecyclerView = view.findViewById(R.id.recycler_view);
+        createFileButton = view.findViewById(R.id.createFileButton);
+
         filesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.directory = directory;
 
@@ -56,6 +61,10 @@ public class FileTreeView extends RelativeLayout {
         filesRecyclerView.setAdapter(new FileTreeAdapter(fileItems, (IFileTreeListener) changesListener));
 
     }
-
+    public void setOnCreateFileButtonListener(OnClickListener listener) {
+        if (createFileButton != null) {
+            createFileButton.setOnClickListener(listener);
+        }
+    }
 
 }

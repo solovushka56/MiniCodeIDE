@@ -18,6 +18,7 @@ import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityProjectCloneBinding;
 import com.skeeper.minicode.presentation.viewmodels.GitViewModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.utils.helpers.NetworkConnectionHelper;
 
 import java.io.File;
 
@@ -62,7 +63,13 @@ public class ProjectCloneActivity extends AppCompatActivity {
             }
         });
 
-        binding.buttonCreate.setOnClickListener(v -> {
+        binding.buttonClone.setOnClickListener(v -> {
+            if (!NetworkConnectionHelper.hasConnection(this)) {
+                Toast.makeText(this, "No network connection!",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            disableUI();
             String projectName = binding.projectNameEditText
                     .getText().toString().replaceAll("\\s", "");
             String repoUrl = binding.projectUrlEditText
@@ -115,4 +122,15 @@ public class ProjectCloneActivity extends AppCompatActivity {
         overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         finish();
     }
+
+
+    private void disableUI() {
+        binding.buttonClone.setEnabled(false);
+        binding.buttonPaste.setEnabled(false);
+        binding.projectNameEditText.setEnabled(false);
+        binding.projectUrlEditText.setEnabled(false);
+        binding.buttonClone.setAlpha(0.5f);
+    }
+
+
 }

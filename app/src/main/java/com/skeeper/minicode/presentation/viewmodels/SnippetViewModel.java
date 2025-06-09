@@ -3,21 +3,22 @@ package com.skeeper.minicode.presentation.viewmodels;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.google.gson.Gson;
-import com.skeeper.minicode.R;
+import com.skeeper.minicode.core.singleton.SnippetsManager;
 import com.skeeper.minicode.data.repos.SnippetRepository;
-import com.skeeper.minicode.data.repos.filerepos.AsyncLocalFileRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
-import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
-import com.skeeper.minicode.domain.models.LangModel;
 import com.skeeper.minicode.domain.models.SnippetModel;
+import com.skeeper.minicode.utils.FileUtils;
 
 import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -25,42 +26,64 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class SnippetViewModel extends ViewModel {
+    private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
-    private IResourcesProvider resourcesProvider;
-    private IFileDirectoryProvider fileDirectoryProvider;
-
+    private final IFileDirectoryProvider fileDirectoryProvider;
     private SnippetRepository snippetsFileRepository;
-    private LiveData<List<SnippetModel>> snippets;
+    private MutableLiveData<List<SnippetModel>> snippets = new MutableLiveData<>();
+
+    @Inject
+    SnippetsManager snippetsManager;
 
 
     @Inject
-    public SnippetViewModel(IResourcesProvider resourcesProvider,
-                            IFileDirectoryProvider fileDirectoryProvider) {
+    public SnippetViewModel(IFileDirectoryProvider fileDirectoryProvider) {
+        this.fileDirectoryProvider = fileDirectoryProvider;
+    }
 
-        if (!getSnippetDir().exists()) {
-            try (InputStream inputStream = resourcesProvider
-                    .getResources()
-                    .openRawResource(R.raw.snippets_preset)) {
+    public void saveSnippetsFilePresetIfNotExists() {
+        File keySymbolConfigFile = new File(fileDirectoryProvider.getFilesDir(), "keySymbolsData.json");
+        if (!keySymbolConfigFile.exists()) {
+            new Thread(() -> {
+                try {
+                    snippetsManager.saveList(new ArrayList<>(Arrays.asList(
+                            new SnippetModel("tab", "    "),
+                            new SnippetModel("{}", "{}"),
+                            new SnippetModel("[]", "[]"),
+                            new SnippetModel("()", "()"),
+                            new SnippetModel(";", ";"),
+                            new SnippetModel("pb", "public"),
+                            new SnippetModel("pr", "private")
+                    )));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
 
-                InputStreamReader reader = new InputStreamReader(inputStream);
-                var gson = new Gson();
-                snippetsFileRepository.createFile();
-//                snippetsFileRepository.writeFileText();
-                //todo implement
-            }
-            catch (Exception e) {
-                Log.e("PARSING", "json dont parse");
-
-            }
         }
     }
 
+
+
+
+
+    public LiveData<List<SnippetModel>> loadSnippetsAsync() {
+        executor.execute(() -> {
+            try {
+                snippets.postValue(snippetsManager.loadList());
+            } catch (IOException e) {
+                Log.e("SNIPPET", "load failed");
+            }
+        });
+
+        return snippets;
+    }
 
     private File getSnippetDir() {
         return new File(fileDirectoryProvider.getFilesDir(), "snippetData");
     }
 
-    public LiveData<List<SnippetModel>> getSnippets() {
+    public MutableLiveData<List<SnippetModel>> getSnippets() {
         return snippets;
     }
 }
