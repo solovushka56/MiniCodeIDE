@@ -11,6 +11,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
@@ -45,6 +46,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.radiobutton.MaterialRadioButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
+import com.skeeper.minicode.domain.enums.Direction;
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileTreeView;
 import com.skeeper.minicode.R;
@@ -78,7 +80,6 @@ public class CodeEditorActivity extends AppCompatActivity
         implements IFileTreeListener, IKeyPressedListener {
 
     @Inject ProjectManager projectManager;
-
     @Inject SnippetsManager snippetsManager;
 
     private ActivityCodeEditorBinding binding;
@@ -90,7 +91,6 @@ public class CodeEditorActivity extends AppCompatActivity
     private FilesViewModel filesViewModel;
     private CodeEditorFragment currentCodeFragment = null;
     private final Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
-    private CodeEditViewModel codeEditViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,10 +137,12 @@ public class CodeEditorActivity extends AppCompatActivity
         });
         binding.saveButton.setOnClickListener(v -> {
             Toast.makeText(this, "File Saved!", Toast.LENGTH_SHORT).show();
+            filesViewModel.saveFile(
+                    currentCodeFragment.getBoundFileItem().getDirectory(),
+                    getCurrentCodeView().getText().toString());
         });
         setupSnippetsRecycler();
         setupKeyboardListener();
-//        setupButtonListeners(getCurrentUndoRedoManager(), binding.buttonUndo, binding.buttonRedo);
 
         // filesys setup
         FileTreeView fileSystemView = new FileTreeView(this);
@@ -150,12 +152,16 @@ public class CodeEditorActivity extends AppCompatActivity
         TextView projNameView = findViewById(R.id.projectNameTextView);
         projNameView.setText(projectName);
 
+
         filesViewModel = new ViewModelProvider(
                 this, new FileViewModelFactory(projectManager
                 .getProjectDir(projectName)))
                 .get(FilesViewModel.class);
         filesViewModel.getFiles().observe(this, (fileItems) ->
                 fileSystemView.updateFileItems(this, fileItems));
+
+
+
     }
 
 
@@ -464,6 +470,43 @@ public class CodeEditorActivity extends AppCompatActivity
             imm.showSoftInput(fileNameInput, InputMethodManager.SHOW_IMPLICIT);
         }, 100);
     }
+
+    @Override
+    public void onArrowPressed(int direction) {
+        int cursorPosition = getCurrentCodeView().getSelectionStart();
+        switch (direction) {
+            case 0:
+                if (cursorPosition > 0) getCurrentCodeView().setSelection(cursorPosition - 1);
+                break;
+            case 1:
+                if (cursorPosition < getCurrentCodeView().getText().length())
+                    getCurrentCodeView().setSelection(cursorPosition + 1);
+                break;
+            case 2:
+                moveCursorVertically(getCurrentCodeView(), -1);
+                break;
+            case 3:
+                moveCursorVertically(getCurrentCodeView(), 1);
+                break;
+        }
+    }
+
+    private void moveCursorVertically(EditText editText, int direction) {
+        int cursorPosition = editText.getSelectionStart();
+        Layout layout = editText.getLayout();
+
+        if (layout != null) {
+            int line = layout.getLineForOffset(cursorPosition);
+            int newLine = line + direction;
+
+            if (newLine >= 0 && newLine < layout.getLineCount()) {
+                float x = layout.getPrimaryHorizontal(cursorPosition);
+                int newPos = layout.getOffsetForHorizontal(newLine, x);
+                editText.setSelection(newPos);
+            }
+        }
+    }
+
 
 
     @Override

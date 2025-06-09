@@ -69,9 +69,12 @@ public class FilesViewModel extends ViewModel {
         updateFilesAsync();
     }
 
-    public void writeFileText(File file, String text) {
-        FileUtils.writeFileText(file, text);
+    public void saveFile(File file, String text) {
+        executor.execute(() -> {
+            FileUtils.writeFileText(file, text);
+        });
     }
+
 
     private void updateFilesAsync() {
         executor.execute(() -> {

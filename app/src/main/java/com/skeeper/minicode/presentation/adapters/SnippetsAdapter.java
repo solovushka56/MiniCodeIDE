@@ -1,10 +1,12 @@
 package com.skeeper.minicode.presentation.adapters;
 
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -17,7 +19,12 @@ import com.skeeper.minicode.domain.models.SnippetModel;
 
 import java.util.List;
 
-public class SnippetsAdapter extends RecyclerView.Adapter<SnippetsAdapter.KeySymbolViewHolder>  {
+public class SnippetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_ARROW = 0;
+    private static final int TYPE_SNIPPET = 1;
+
+
 
     Context context;
     List<SnippetModel> models;
@@ -29,41 +36,89 @@ public class SnippetsAdapter extends RecyclerView.Adapter<SnippetsAdapter.KeySym
         this.listener = listener;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position < 4 ? TYPE_ARROW : TYPE_SNIPPET;
+    }
+
     @NonNull
     @Override
-    public KeySymbolViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        var view = LayoutInflater.from(parent.getContext()).inflate(
-                R.layout.snippet_button_item, parent, false);
-        return new KeySymbolViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_ARROW) {
+            View view = inflater.inflate(R.layout.snippet_arrow_item, parent, false);
+            return new ArrowViewHolder(view);
+        } else {
+            View view = inflater.inflate(R.layout.snippet_button_item, parent, false);
+            return new KeySymbolViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(@NonNull KeySymbolViewHolder holder, int position) {
-        var currentModel = models.get(position);
-        TextView currentButton = holder.textView;
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (holder instanceof ArrowViewHolder) {
+            ((ArrowViewHolder) holder).bind(position, listener);
+            if (position == 0) {
+                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams)
+                        ((ArrowViewHolder) holder).arrowButton.getLayoutParams();
+                params.leftMargin = 22;
+                ((ArrowViewHolder) holder).arrowButton.setLayoutParams(params);
 
-        currentButton.setText(currentModel.getSymbolKey());
-        currentButton.setContentDescription(currentModel.getSymbolValue());
+            }
 
-        holder.rect.setOnClickListener(v -> {
-            VibrationManager.vibrate(40L, currentButton.getContext());
-            listener.onKeyPressed(currentModel);
 
-        });
+        } else if (holder instanceof KeySymbolViewHolder) {
+            int snippetPosition = position - 4;
+            SnippetModel currentModel = models.get(snippetPosition);
+            ((KeySymbolViewHolder) holder).bind(currentModel, listener);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return models.size();
+        return models.size() + 4;
+    }
+
+    public static class ArrowViewHolder extends RecyclerView.ViewHolder {
+        CardView arrowButton;
+        TextView arrowTextView;
+
+
+        public ArrowViewHolder(@NonNull View itemView) {
+            super(itemView);
+            arrowButton = itemView.findViewById(R.id.keyTextRect);
+            arrowTextView = itemView.findViewById(R.id.textButton);
+        }
+
+        public void bind(int position, IKeyPressedListener listener) {
+            String[] arrows = {"←", "→", "↑", "↓"};
+            arrowTextView.setText(arrows[position]);
+
+            arrowButton.setOnClickListener(v -> {
+                VibrationManager.vibrate(40L, itemView.getContext());
+                listener.onArrowPressed(position);
+            });
+        }
     }
 
     public static final class KeySymbolViewHolder extends RecyclerView.ViewHolder {
-        public TextView textView;
-        public CardView rect;
+        TextView textView;
+        CardView rect;
+
         public KeySymbolViewHolder(@NonNull View itemView) {
             super(itemView);
             rect = itemView.findViewById(R.id.keyTextRect);
             textView = itemView.findViewById(R.id.textButton);
+        }
+
+        public void bind(SnippetModel currentModel, IKeyPressedListener listener) {
+            textView.setText(currentModel.getSymbolKey());
+            textView.setContentDescription(currentModel.getSymbolValue());
+
+            rect.setOnClickListener(v -> {
+                VibrationManager.vibrate(40L, itemView.getContext());
+                listener.onKeyPressed(currentModel);
+            });
         }
     }
 }
