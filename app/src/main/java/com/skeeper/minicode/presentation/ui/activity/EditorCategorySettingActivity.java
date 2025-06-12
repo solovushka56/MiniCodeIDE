@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.utils.helpers.SystemBarsHelper;
 
 public class EditorCategorySettingActivity extends AppCompatActivity {
 
@@ -22,5 +23,7 @@ public class EditorCategorySettingActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+
     }
 }

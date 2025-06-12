@@ -214,9 +214,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@drawable/button_rect_common"
-            app:layout_constraintBottom_toBottomOf="@id/symbols_panel"
+            app:layout_constraintBottom_toTopOf="@id/symbols_panel"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.32"
             android:scaleX="0.8"
             android:scaleY="0.8"
@@ -229,7 +228,7 @@
                 android:layout_margin="1dp"
                 android:contentDescription="null"
                 android:backgroundTint="@color/violet"
-                app:srcCompat="@drawable/undo" />
+                app:srcCompat="@drawable/back" />
 
             <ImageButton
                 android:id="@+id/buttonRedo"
@@ -238,7 +237,8 @@
                 android:layout_margin="1dp"
                 android:contentDescription="null"
                 android:backgroundTint="@color/violet"
-                app:srcCompat="@drawable/redo" />
+                android:rotation="180"
+                app:srcCompat="@drawable/back" />
 
 
         </LinearLayout>
@@ -262,13 +262,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <!--  FILESYSTEM  -->
     <RelativeLayout
         android:id="@+id/left_drawer"
-        android:layout_width="300dp"
+        android:layout_width="400dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="none"
+        android:elevation="100dp"
         android:clickable="true"
         android:background="#FFFFFF"
         xmlns:android="http://schemas.android.com/apk/res/android" />

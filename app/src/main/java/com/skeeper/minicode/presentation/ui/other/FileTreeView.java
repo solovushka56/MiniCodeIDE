@@ -25,6 +25,7 @@ public class FileTreeView extends RelativeLayout {
 
     public RecyclerView filesRecyclerView;
     public ImageButton createFileButton;
+    public ImageButton exitButton;
 
     public File directory;
     List<FileItem> fileItems;
@@ -50,6 +51,7 @@ public class FileTreeView extends RelativeLayout {
 
         filesRecyclerView = view.findViewById(R.id.recycler_view);
         createFileButton = view.findViewById(R.id.createFileButton);
+        exitButton = view.findViewById(R.id.panelCloseButton);
 
         filesRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         this.directory = directory;
@@ -64,6 +66,12 @@ public class FileTreeView extends RelativeLayout {
     public void setOnCreateFileButtonListener(OnClickListener listener) {
         if (createFileButton != null) {
             createFileButton.setOnClickListener(listener);
+        }
+    }
+
+    public void setOnClickCloseListener(OnClickListener listener) {
+        if (exitButton != null) {
+            exitButton.setOnClickListener(listener);
         }
     }
 

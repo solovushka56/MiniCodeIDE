@@ -4,7 +4,7 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.Gson;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
-import com.skeeper.minicode.domain.models.ProjectModel;
+import com.skeeper.minicode.data.models.ProjectModelParcelable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -36,7 +36,7 @@ public class ProjectManager {
 
 
 
-    public List<ProjectModel> loadAllProjectModels() {
+    public List<ProjectModelParcelable> loadAllProjectModels() {
         var innerFiles = getProjectsStoreFolder().listFiles();
         if (innerFiles == null) return new ArrayList<>();
 
@@ -47,7 +47,7 @@ public class ProjectManager {
                 .collect(Collectors.toList());
 
 
-        List<ProjectModel> models = new ArrayList<>();
+        List<ProjectModelParcelable> models = new ArrayList<>();
         for (String projectName : allProjectNames) {
             models.add(loadProjectModel(projectName));
         }
@@ -56,7 +56,7 @@ public class ProjectManager {
 
 
     @Nullable
-    public ProjectModel loadProjectModel(String projectName) {
+    public ProjectModelParcelable loadProjectModel(String projectName) {
         File configDir = getProjectConfigDir(projectName);
         try {
             StringBuilder content = new StringBuilder();
@@ -68,7 +68,7 @@ public class ProjectManager {
                 }
             }
 
-            return new Gson().fromJson(content.toString().trim(), ProjectModel.class);
+            return new Gson().fromJson(content.toString().trim(), ProjectModelParcelable.class);
         }
         catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -79,11 +79,7 @@ public class ProjectManager {
     }
 
 
-
-
-
-
-    public boolean createProject(ProjectModel model, boolean overwrite) {
+    public boolean createProject(ProjectModelParcelable model, boolean overwrite) {
         File projectDir = getProjectDir(model.getProjectName());
         if (projectDir.exists()) {
             if (overwrite) {
@@ -107,7 +103,7 @@ public class ProjectManager {
     }
 
 
-    public void generateMetadata(File projectDir, ProjectModel model) throws IOException {
+    public void generateMetadata(File projectDir, ProjectModelParcelable model) throws IOException {
         model.setProjectPath(projectDir.getAbsolutePath());
         File ideFilesPath = new File(projectDir, METADATA_DIR_NAME);
 

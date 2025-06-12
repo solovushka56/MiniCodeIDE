@@ -1,5 +1,7 @@
 package com.skeeper.minicode.presentation.ui.activity;
 
+import static android.view.View.GONE;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -14,8 +16,10 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
-import com.skeeper.minicode.domain.models.ProjectModel;
+import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.core.singleton.ProjectManager;
+
+import java.util.Arrays;
 
 import javax.inject.Inject;
 
@@ -29,7 +33,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
     private ActivityProjectOpenViewBinding binding;
 
 //    ProjectItemView projectItemView = null;
-    ProjectModel boundModel = null;
+    ProjectModelParcelable boundModel = null;
     String time;
 
 
@@ -61,15 +65,16 @@ public class ProjectOpenActivity extends AppCompatActivity {
         binding.buttonPanelRemove.setOnClickListener(v -> {
             projectManager.deleteProject(boundModel.getProjectName());
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
-//            overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         });
         binding.buttonPanelEditName.setOnClickListener( v -> {
             Toast.makeText(this, "In development...", Toast.LENGTH_SHORT).show();
         });
 
+        if (!Arrays.asList(boundModel.getTags()).contains("git") ) {
+            binding.commitAndPushButton.setVisibility(GONE);
+        }
         binding.commitAndPushButton.setOnClickListener(v -> {
             var intent = new Intent(ProjectOpenActivity.this, ProjectPushActivity.class);
-//            intent.putExtra("PROJECT_MODEL", boundModel);
             intent.putExtra("PROJECT_NAME", boundModel.getProjectName());
             startActivity(intent);
         });
@@ -78,12 +83,11 @@ public class ProjectOpenActivity extends AppCompatActivity {
     }
 
     private void initByModel() {
-        boundModel = (ProjectModel) getIntent().getParcelableExtra("projectModel");
+        boundModel = (ProjectModelParcelable) getIntent().getParcelableExtra("projectModel");
         String projectFilepath = boundModel.getProjectPath();
         String projectName = boundModel.getProjectName();
         String mainRectColor = boundModel.getMainRectColorHex();
         String innerRectColor = boundModel.getInnerRectColorHex();
-        String creationDateTime = boundModel.getCreationDateTime();
         binding.projectCard.setMainRectColor(Color.parseColor(mainRectColor));
         binding.projectCard.setInnerRectColor(Color.parseColor(innerRectColor));
         binding.projectCard.setProjectName(projectName);

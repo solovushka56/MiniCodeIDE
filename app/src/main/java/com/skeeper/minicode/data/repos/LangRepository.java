@@ -3,7 +3,6 @@ package com.skeeper.minicode.data.repos;
 import android.content.Context;
 
 import com.skeeper.minicode.R;
-import com.skeeper.minicode.data.mappers.LangSyntaxParser;
 import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.contracts.repos.ILangRepository;
 import com.skeeper.minicode.domain.models.LangModel;

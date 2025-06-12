@@ -4,6 +4,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityProjectCloneBinding;
 import com.skeeper.minicode.presentation.viewmodels.GitViewModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.presentation.viewmodels.SecurePrefViewModel;
 import com.skeeper.minicode.utils.helpers.NetworkConnectionHelper;
 
 import java.io.File;
@@ -30,13 +32,12 @@ import dagger.hilt.android.AndroidEntryPoint;
 public class ProjectCloneActivity extends AppCompatActivity {
     ActivityProjectCloneBinding binding;
 
-    GitViewModel gitViewModel;
-
     @Inject
     ProjectManager projectManager;
-
-
+    GitViewModel gitViewModel;
     File projectDir = null;
+    SecurePrefViewModel securePrefViewModel;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,17 +49,33 @@ public class ProjectCloneActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
 
         gitViewModel = new ViewModelProvider(this).get(GitViewModel.class);
+        securePrefViewModel = new ViewModelProvider(this).get(SecurePrefViewModel.class);
+
+        securePrefViewModel.getUsername().observe(this, username -> {
+            if (username != null) gitViewModel.setUsername(username);
+        });
+        securePrefViewModel.getToken().observe(this, token -> {
+            if (token != null) gitViewModel.setToken(token);
+        });
+
+        securePrefViewModel.loadUsername();
+        securePrefViewModel.loadToken();
+
+
         gitViewModel.getCloningState().observe(this, state -> {
             switch (state) {
                 case START ->
                         Toast.makeText(this, "Start cloning...", Toast.LENGTH_LONG).show();
-                case FAILED ->
-                        Toast.makeText(this, "Failed to Clone! :_(", Toast.LENGTH_SHORT).show();
-                case END -> {
+                case FAILED -> {
+                    Toast.makeText(this, "Failed to Clone!", Toast.LENGTH_LONG).show();
+                    returnToMenu();
+                }
+                case COMPLETE -> {
                     Toast.makeText(this, "Cloning end!", Toast.LENGTH_LONG).show();
-                    onRepoCloned();
+                    returnToMenu();
                 }
             }
         });
@@ -75,9 +92,9 @@ public class ProjectCloneActivity extends AppCompatActivity {
             String repoUrl = binding.projectUrlEditText
                     .getText().toString().replaceAll("\\s", "");
 
-
             if (repoUrl.isEmpty() || projectName.isEmpty()) {
-                Toast.makeText(this, "Fill in the missing fields!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Fill in the missing fields!",
+                        Toast.LENGTH_SHORT).show();
                 return;
             }
             if (projectManager.projectExists(projectName)) {
@@ -105,17 +122,19 @@ public class ProjectCloneActivity extends AppCompatActivity {
                     editText.setText(pasteData);
                 }
                 else {
-                    Toast.makeText(this, "Буфер обмена пуст", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Buffer is empty!",
+                            Toast.LENGTH_SHORT).show();
                 }
             }
             else {
-                Toast.makeText(this, "Нет данных в буфере", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "No data in Buffer!",
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
 
-    public void onRepoCloned() {
+    public void returnToMenu() {
         Intent intent = new Intent(ProjectCloneActivity.this, MenuActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

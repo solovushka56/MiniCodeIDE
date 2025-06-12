@@ -26,7 +26,7 @@
             android:fontFamily="@font/cascadia_code_semi_bold_origin"
             android:text="@string/app_title"
             android:textColor="@color/white"
-            android:textSize="44dp" />
+            android:textSize="38dp" />
 
         <TextView
             android:id="@+id/textView"
@@ -37,7 +37,7 @@
             android:text="@string/app_description"
             android:textAlignment="center"
             android:textColor="#D9D9D9"
-            android:textSize="22dp" />
+            android:textSize="18sp" />
 
         <ImageButton
             android:id="@+id/___startButton"
@@ -68,16 +68,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="15dp"
+                android:layout_margin="11dp"
                 android:fontFamily="@font/cascadia_code_semi_bold_origin"
                 android:gravity="start"
                 android:text="@string/start_text"
                 android:textAlignment="gravity"
                 android:textColor="@color/white"
 
-                android:textSize="22dp"
-
-
+                android:textSize="18sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -87,8 +85,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:layout_margin="15dp"
-                android:layout_marginEnd="25dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="5dp"
                 android:scaleX="0.8"
                 android:scaleY="0.8"
                 android:src="@drawable/ic_run_mini"
@@ -128,5 +126,34 @@
             android:text="@string/source_code"
             android:textColor="@color/white" />
     </LinearLayout>
+
+    <LinearLayout
+
+        android:layout_margin="25dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageButton
+            android:clickable="true"
+            android:id="@+id/dataResetButton"
+            style="@style/CustomImageButtonActive"
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:contentDescription="null"
+            app:srcCompat="@drawable/trash"
+            android:backgroundTint="#591A89"
+            app:rippleColor="@color/orange_light"
+            app:tint="@color/orange" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/remove_all_data"
+            android:textColor="@color/white" />
+    </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,6 +36,9 @@
     <string name="app_title">MiniCode IDE</string>
     <string name="app_description">A modern mobile \ncode editor</string>
     <string name="source_code">Source Code</string>
+    <string name="remove_all_data">Data reset</string>
+    <string name="pat_username_tip">TIP: Without a username and Personal Access Token (PAT), you can only clone public repositories. Push operations will also be unavailable</string>
+
 
     <string name="operator_color">#DCF5FF</string>
     <string name="keyword_color">#4B70F5</string>
@@ -49,6 +52,10 @@
     public static void main(String[] args) {
         System.out.println("Hello, World!");
     }
-}</string>
+}
+    </string>
+
+    <string name="python_template">print("Hello, World!")
+    </string>
 
 </resources>

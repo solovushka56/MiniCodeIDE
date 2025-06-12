@@ -9,8 +9,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityTestBinding;
-import com.skeeper.minicode.domain.models.ProjectModel;
-import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
+import com.skeeper.minicode.data.models.ProjectModelParcelable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +19,7 @@ public class TestActivity extends AppCompatActivity {
     private ActivityTestBinding binding;
 
 
-    public List<ProjectModel> models = new ArrayList<>();
+    public List<ProjectModelParcelable> models = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

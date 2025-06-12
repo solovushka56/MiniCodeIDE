@@ -86,9 +86,6 @@ public class MenuActivity extends AppCompatActivity {
 
 
 
-
-
-
     private void setActiveButton(ImageButton button) {
         activeButton = button;
         button.setScaleX(1.0f);

@@ -11,7 +11,7 @@
         android:id="@+id/dialogTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Remove"
+        android:text="Are you sure?"
         android:textSize="20sp"
 
         android:textColor="@color/blue_light"

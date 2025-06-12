@@ -19,7 +19,10 @@ public class ViewScaleComponent {
     public TimeInterpolator interpolator;
 
 
-    public ViewScaleComponent(View actor, long scaleTimeMsec, float scaleX, float scaleY, @Nullable Runnable onFinishedAction, @Nullable TimeInterpolator interpolator) {
+    public ViewScaleComponent(View actor, long scaleTimeMsec,
+                              float scaleX, float scaleY,
+                              @Nullable Runnable onFinishedAction,
+                              @Nullable TimeInterpolator interpolator) {
         this.actor = actor;
         this.scaleX = scaleX;
         this.scaleY = scaleY;

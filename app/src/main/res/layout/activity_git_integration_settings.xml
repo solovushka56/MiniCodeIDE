@@ -43,16 +43,18 @@
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
+                android:layout_marginBottom="10dp"
                 android:hint="Enter your git username"
-                app:endIconDrawable="@drawable/editor">
+                app:endIconDrawable="@drawable/editor"
+                android:textColorHint="@color/violet_light"
+                app:hintTextColor="@color/pale_blue">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/gitUsernameTextEdit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_rect_common"
-                    android:backgroundTint="@color/blue_grey"
+                    android:backgroundTint="@color/violet"
                     android:fontFamily="@font/cascadia_code"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences|textAutoCorrect"
@@ -69,7 +71,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:hint="Enter your email"
-                app:endIconDrawable="@drawable/editor">
+                app:endIconDrawable="@drawable/editor"
+                android:visibility="gone"
+                >
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/userEmailEditText"
@@ -93,6 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:hint="Enter your git PAT"
+                android:textColorHint="@color/violet_light"
+                app:hintTextColor="@color/pale_blue"
                 app:endIconDrawable="@drawable/editor">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -100,16 +106,57 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_rect_common"
-                    android:backgroundTint="@color/blue_grey"
+                    android:backgroundTint="@color/violet"
                     android:fontFamily="@font/cascadia_code"
                     android:imeOptions="actionDone"
                     android:inputType="textPassword"
                     android:maxLength="500"
                     android:maxLines="1"
-                    android:textColor="@color/white"
-
-                    />
+                    android:layout_marginBottom="15dp"
+                    android:textColor="@color/white" />
             </com.google.android.material.textfield.TextInputLayout>
+
+
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+
+                android:layout_marginBottom="20dp"
+                app:dividerColor="@color/blue_grey" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/yellow_pale"
+                        android:paddingHorizontal="10dp"
+                        android:layout_gravity="center"
+                        android:textAlignment="center"
+                        android:text="@string/pat_username_tip"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"></LinearLayout>
+            </LinearLayout>
+
+
         </LinearLayout>
     </ScrollView>
 

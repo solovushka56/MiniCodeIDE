@@ -1,5 +1,7 @@
 package com.skeeper.minicode.presentation.ui.fragment;
 
+import static android.view.View.VISIBLE;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,16 +19,12 @@ import android.view.ViewGroup;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.adapters.ProjectAdapter;
 import com.skeeper.minicode.databinding.FragmentProjectsBinding;
-import com.skeeper.minicode.domain.models.ProjectModel;
-import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.presentation.ui.activity.ProjectCloneActivity;
 import com.skeeper.minicode.presentation.ui.activity.ProjectCreateActivity;
 import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -59,7 +57,17 @@ public class ProjectsFragment extends Fragment {
 
         projectsViewModel.getModels().observe(
                 requireActivity(),
-                this::setProjectsRecycler);
+                models -> {
+                    setProjectsRecycler(models);
+                    if (models == null || models.isEmpty()) {
+                        binding.tipView.setVisibility(VISIBLE);
+                        binding.projectsRecyclerView.setVisibility(View.GONE);
+                    }
+                    else {
+                        binding.tipView.setVisibility(View.GONE);
+                        binding.projectsRecyclerView.setVisibility(VISIBLE);
+                    }
+                });
 
         projectsViewModel.loadModelsAsync();
 
@@ -78,15 +86,13 @@ public class ProjectsFragment extends Fragment {
 
     }
 
-    private void setProjectsRecycler(List<ProjectModel> models) {
+    private void setProjectsRecycler(List<ProjectModelParcelable> models) {
         var recyclerView = binding.projectsRecyclerView;
         var adapter = new ProjectAdapter(requireActivity(), models);
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 requireActivity(), RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(adapter);
     }
-
-
 
 
     @Override

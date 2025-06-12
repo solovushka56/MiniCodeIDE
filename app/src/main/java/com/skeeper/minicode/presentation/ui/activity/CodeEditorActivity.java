@@ -25,12 +25,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -49,6 +51,7 @@ import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
 import com.skeeper.minicode.presentation.viewmodels.SnippetViewModel;
 import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
+import com.skeeper.minicode.utils.helpers.SystemBarsHelper;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
 import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
@@ -149,6 +152,7 @@ public class CodeEditorActivity extends AppCompatActivity
         FileTreeView fileSystemView = new FileTreeView(this);
         fileSystemView.init(this, binding.leftDrawer, projectDir);
         binding.leftDrawer.addView(fileSystemView);
+        var drawerLayout = binding.drawerLayout;
 
         TextView projNameView = findViewById(R.id.projectNameTextView);
         projNameView.setText(projectName);
@@ -160,6 +164,10 @@ public class CodeEditorActivity extends AppCompatActivity
                     0
             ));
         });
+        fileSystemView.setOnClickCloseListener(v -> {
+            drawerLayout.close();
+        });
+
 
 
         filesViewModel = new ViewModelProvider(
@@ -191,6 +199,24 @@ public class CodeEditorActivity extends AppCompatActivity
         fragmentTransaction.replace(binding.codeViewFrame.getId(), newFragment);
         fragmentTransaction.commit();
     }
+
+    /// todo
+    private void setFilesystemDrawerListener(DrawerLayout drawerLayout) {
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerOpened(@NonNull View drawerView) {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull View drawerView) {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+            @Override public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
+            @Override public void onDrawerStateChanged(int newState) {}
+        });
+    }
+
 
     private CodeView getCurrentCodeView() {
         return currentCodeFragment.codeView;
@@ -362,30 +388,6 @@ public class CodeEditorActivity extends AppCompatActivity
 
     @Override
     public void onMoveSelected(FileItem item) {
-//        var builder = new MaterialAlertDialogBuilder(this);
-//        builder.setTitle("Move " + item.getName());
-//
-//        EditText input = new EditText(this);
-//        input.setInputType(InputType.TYPE_CLASS_TEXT);
-//        input.setHint("New directory path");
-//        builder.setView(input);
-//
-//        builder.setPositiveButton("Move", (dialog, w) -> {
-//            String newPath = input.getText().toString().trim();
-//            File newDir = new File(newPath);
-//            if (newDir.isDirectory()) {
-//                filesViewModel.moveFile(item.getDirectory(), new File(newPath));
-//            }
-//            else {
-//                Toast.makeText(this,
-//                        "The folder directory is entered incorrectly!",
-//                        Toast.LENGTH_SHORT).show();
-//                input.setText("");
-//                onMoveSelected(item);
-//            }
-//        });
-//        builder.setNegativeButton("Cancel", null);
-//        builder.show();
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.dialog_move_file, null);
         Button positiveButton = dialogView.findViewById(R.id.positiveButton);

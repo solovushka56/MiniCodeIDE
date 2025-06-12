@@ -21,6 +21,7 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.ui.component.SnippetPanelViewItem;
 import com.skeeper.minicode.databinding.ActivityCodeEditorSettingsBinding;
+import com.skeeper.minicode.utils.helpers.SystemBarsHelper;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
 import com.skeeper.minicode.utils.helpers.animations.ViewAnimator;
 import com.skeeper.minicode.domain.models.SnippetModel;
@@ -59,6 +60,7 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
 
         keyInputView = binding.keyTextEdit;
         valueInputView = binding.valueTextEdit;

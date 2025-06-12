@@ -92,7 +92,6 @@
                         android:fontFamily="@font/cascadia_code"
                         android:imeOptions="actionDone"
                         android:inputType="textCapSentences|textAutoCorrect"
-                        android:maxLength="50"
                         android:maxLines="1"
 
                         android:textColor="@color/white" />

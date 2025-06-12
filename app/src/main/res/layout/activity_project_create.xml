@@ -47,6 +47,8 @@
                 android:hint="Project Name"
                 app:endIconDrawable="@drawable/editor"
                 android:layout_marginBottom="15dp"
+                android:textColorHint="@color/violet_light"
+                app:hintTextColor="@color/pale_blue"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -54,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_rect_common"
-                    android:backgroundTint="@color/blue_grey"
+                    android:backgroundTint="@color/violet"
                     android:fontFamily="@font/cascadia_code"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences|textAutoCorrect"
@@ -71,6 +73,8 @@
                 android:hint="Project description"
                 app:endIconDrawable="@drawable/editor"
                 android:layout_marginBottom="15dp"
+                android:textColorHint="@color/violet_light"
+                app:hintTextColor="@color/pale_blue"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -78,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_rect_common"
-                    android:backgroundTint="@color/blue_grey"
+                    android:backgroundTint="@color/violet"
                     android:fontFamily="@font/cascadia_code"
                     android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
                     android:scrollHorizontally="false"
@@ -147,12 +151,54 @@
             </com.google.android.material.card.MaterialCardView>
 
             <ExpandableListView
+                android:visibility="gone"
                 android:id="@+id/projectTemplateLang"
                 android:layout_marginTop="15dp"
 
                 android:background="@drawable/ripple_shape"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="16dp"
+                tools:context=".MainActivity">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Create Template"
+
+                    android:textColor="@color/pale_blue"
+                    android:textStyle="bold"
+                    android:gravity="left"
+                    android:layout_marginBottom="24dp"/>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:hint="Template Type">
+
+                    <AutoCompleteTextView
+
+                        android:id="@+id/templateTypeSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:backgroundTint="@color/soft_blue"
+                        android:textColor="@color/blue_light"
+                        android:padding="16dp"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </LinearLayout>
 
 
 

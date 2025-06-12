@@ -43,14 +43,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
-                    android:hint="Commit name">
+                    android:hint="Commit name"
+                    android:textColorHint="@color/violet_light"
+                    app:hintTextColor="@color/pale_blue"
+                    >
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/commitEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/button_rect_common"
-                        android:backgroundTint="@color/blue_grey"
+                        android:backgroundTint="@color/violet"
                         android:fontFamily="@font/cascadia_code"
                         android:imeOptions="actionDone"
                         android:inputType="textCapSentences|textAutoCorrect"
@@ -65,6 +68,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
+                    android:textColorHint="@color/violet_light"
+                    app:hintTextColor="@color/pale_blue"
                     android:hint="Commit message">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -73,13 +78,16 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/button_rect_common"
-                        android:backgroundTint="@color/blue_grey"
+                        android:backgroundTint="@color/violet"
                         android:fontFamily="@font/cascadia_code"
                         android:imeOptions="actionDone"
                         android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
                         android:maxLength="1000"
                         android:maxLines="20"
-                        android:textColor="@color/white" />
+                        android:textColor="@color/white"
+
+
+                        />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -96,6 +104,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="15dp"
+                    android:textColorHint="@color/violet_light"
+                    app:hintTextColor="@color/pale_blue"
                     android:hint="Push URI">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -103,11 +113,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/button_rect_common"
-                        android:backgroundTint="@color/blue_grey"
+                        android:backgroundTint="@color/violet"
                         android:fontFamily="@font/cascadia_code"
                         android:imeOptions="actionDone"
                         android:inputType="textUri|textCapSentences"
-                        android:maxLength="50"
                         android:maxLines="1"
                         android:textColor="@color/white" />
                 </com.google.android.material.textfield.TextInputLayout>

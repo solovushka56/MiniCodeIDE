@@ -14,7 +14,7 @@
 
     <LinearLayout
 
-        android:layout_marginStart="6dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="12dp"
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"
@@ -63,6 +63,22 @@
 
                 />
 
+            <ImageButton
+                android:clickable="true"
+                android:layout_marginStart="15dp"
+                app:rippleColor="@color/violet_average"
+                android:id="@+id/panelCloseButton"
+                android:layout_gravity="center"
+                android:background="@drawable/button_rect_common"
+                android:backgroundTint="@color/violet_muted"
+                android:padding="10dp"
+                android:src="@drawable/back"
+                android:layout_width="30dp"
+                android:layout_height="50dp"
+                android:scaleType="centerInside"
+
+                />
+
 
         </LinearLayout>
 
@@ -81,15 +97,26 @@
                 android:orientation="vertical">
 
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/recycler_view"
+                <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="0dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_marginBottom="8dp" />
+                    android:scrollbars="horizontal"
+                    android:fadeScrollbars="true"
+                    android:scrollbarSize="6dp"
+                    android:scrollbarAlwaysDrawHorizontalTrack="true"
+                    android:scrollbarThumbHorizontal="@drawable/custom_scroll_thumb">
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycler_view"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginEnd="2dp"
+                        android:layout_marginBottom="8dp" />
+                </HorizontalScrollView>
+
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>

@@ -37,6 +37,7 @@
             android:orientation="horizontal">
 
             <Button
+                android:drawableLeft="@drawable/ic_project_create_mini"
                 android:layout_weight="1"
                 android:id="@+id/createProjectButton"
                 android:layout_width="match_parent"
@@ -47,14 +48,14 @@
                 android:clickable="true"
                 android:contentDescription="@string/app_name"
                 android:fontFamily="@font/cascadia_code"
-                android:padding="15dp"
-                android:src="@drawable/save_icon"
+                android:paddingHorizontal="22dp"
                 android:text="@string/create_project"
                 app:backgroundTint="@null"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="5dp"
                 />
 
             <Button
+                android:drawableLeft="@drawable/ic_git_clone_mini"
                 android:layout_weight="1"
                 android:id="@+id/cloneFromGitButton"
                 android:layout_width="match_parent"
@@ -65,12 +66,54 @@
                 android:clickable="true"
                 android:contentDescription="@string/app_name"
                 android:fontFamily="@font/cascadia_code"
-                android:padding="15dp"
-                android:src="@drawable/save_icon"
+                android:paddingHorizontal="15dp"
                 android:text="@string/clone_from_git"
                 app:backgroundTint="@null"
+                android:layout_marginLeft="5dp"
 
                 />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_marginTop="30dp"
+            android:id="@+id/tipView"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+
+            >
+
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="65dp"
+                android:layout_height="60dp"
+                android:layout_margin="5dp"
+                android:padding="10dp"
+                android:background="@drawable/ripple_shape"
+                android:backgroundTint="@color/violet"
+                android:src="@drawable/ic_file"
+                app:rippleColor="#4F3DC2EC"
+                app:tint="@color/violet_light"
+                />
+
+            <TextView
+                android:layout_marginTop="3dp"
+                android:textColor="@color/violet_light"
+                android:textSize="16dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="There are no created projects yet. Create new or clone one from a remote Git repository!"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"/>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="170dp" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
@@ -81,6 +124,11 @@
             android:contentDescription="recycler view for project rects"
             android:clipToOutline="true"
             />
+
+
+
+
+
     </LinearLayout>
 
 
