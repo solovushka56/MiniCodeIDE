@@ -39,7 +39,8 @@ public class ProjectCreateActivity extends AppCompatActivity {
     ProjectsViewModel projectsViewModel;
     TemplateViewModel templateViewModel;
     private final String currentDateTime = DateTimeHelper.getCurrentTime();
-    TemplateType selectedType =
+    TemplateType selectedType = TemplateType.NONE;
+    private String projName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +68,10 @@ public class ProjectCreateActivity extends AppCompatActivity {
         });
 
 
+
+
         binding.buttonCreate.setOnClickListener(v -> {
-            String projName = binding.projectNameEditText.getText().toString();
+            projName = binding.projectNameEditText.getText().toString();
             String projDescription = binding.projectDescripton.getText().toString();
 
             if (projName.isEmpty()) {
@@ -83,8 +86,21 @@ public class ProjectCreateActivity extends AppCompatActivity {
                 return;
             }
 
+            int selectedId = binding.templateTypeGroup.getCheckedRadioButtonId();
+
+
+
+            if (selectedId == R.id.optionJava) {
+                selectedType = TemplateType.JAVA;
+            } else if (selectedId == R.id.optionPython) {
+                selectedType = TemplateType.PYTHON;
+            }
+
+
             projectsViewModel.createProjectAsync(
-                    projName, projDescription, new String[] {"local"});            templateViewModel.createTemplate();
+                    projName, projDescription, new String[] {"local"}, selectedType);
+
+//            templateViewModel.createTemplate();
 
 //            var rectPalette = new ProjectRectColorBinding();
 //            ProjectModelParcelable model = new ProjectModelParcelable(

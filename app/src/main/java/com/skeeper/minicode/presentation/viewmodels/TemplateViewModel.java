@@ -6,29 +6,39 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.domain.enums.TemplateType;
 
 import java.io.File;
 import java.io.FileWriter;
 
+import javax.inject.Inject;
+
+import hilt_aggregated_deps._com_skeeper_minicode_presentation_ui_activity_ProjectCloneActivity_GeneratedInjector;
+
+
 public class TemplateViewModel extends AndroidViewModel {
 
     private final MutableLiveData<String> fileCreationStatus = new MutableLiveData<>();
+
+    @Inject
+    ProjectManager projectManager;
+
 
     public TemplateViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public void createTemplate(TemplateType type) {
+    public void createTemplate(TemplateType type, File path) {
         new Thread(() -> {
             try {
                 String content = getTemplateContent(type);
                 String fileName = generateFileName(type);
-                File file = createFile(fileName, content);
+                File file = createFile(path, fileName, content);
 
-                fileCreationStatus.postValue("File created: " + file.getAbsolutePath());
+                fileCreationStatus.setValue("File created: " + file.getAbsolutePath());
             } catch (Exception e) {
-                fileCreationStatus.postValue("Error: " + e.getMessage());
+                fileCreationStatus.setValue("Error: " + e.getMessage());
             }
         }).start();
     }
@@ -44,19 +54,18 @@ public class TemplateViewModel extends AndroidViewModel {
     }
 
     private String generateFileName(TemplateType type) {
-        String baseName = "Template_" + System.currentTimeMillis();
+        String baseName = "main";
         return (type == TemplateType.JAVA)
                 ? baseName + ".java"
                 : baseName + ".py";
     }
 
-    private File createFile(String fileName, String content) throws Exception {
-        File templatesDir = new File(getApplication().getFilesDir(), "templates");
-        if (!templatesDir.exists() && !templatesDir.mkdirs()) {
+    private File createFile(File dir, String fileName, String content) throws Exception {
+        if (!dir.exists() && !dir.mkdirs()) {
             throw new Exception("Failed to create directory");
         }
 
-        File file = new File(templatesDir, fileName);
+        File file = new File(dir, fileName);
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(content);
         }

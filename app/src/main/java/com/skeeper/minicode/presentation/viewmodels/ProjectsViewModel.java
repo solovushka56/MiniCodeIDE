@@ -1,11 +1,20 @@
 package com.skeeper.minicode.presentation.viewmodels;
 
+import static dagger.hilt.android.internal.Contexts.getApplication;
+
+import android.app.Application;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
+import com.skeeper.minicode.domain.enums.TemplateType;
+import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
 import java.io.File;
@@ -20,7 +29,7 @@ import javax.inject.Inject;
 import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
-public class ProjectsViewModel extends ViewModel {
+public class ProjectsViewModel extends AndroidViewModel {
 
     private static final String THREAD_POOL_NAME = "projects-vm-pool";
     private final ExecutorService executor = Executors.newFixedThreadPool(
@@ -37,7 +46,13 @@ public class ProjectsViewModel extends ViewModel {
     @Inject ProjectManager projectManager;
 
     @Inject
-    public ProjectsViewModel() {}
+    public ProjectsViewModel(
+            @NonNull Application application,
+            ProjectManager projectManager
+    ) {
+        super(application);
+        this.projectManager = projectManager;
+    }
 
     @Override
     protected void onCleared() {
@@ -59,8 +74,8 @@ public class ProjectsViewModel extends ViewModel {
     }
 
     public void createProjectAsync(String projectName,
-                              String projectDescription,
-                              String[] tags) {
+                                   String projectDescription,
+                                   String[] tags, TemplateType tempType) {
 
         if (projectName == null || projectName.trim().isEmpty()) {
             projectCreationState.setValue(ProjectCreationState.error(
@@ -94,13 +109,16 @@ public class ProjectsViewModel extends ViewModel {
                         rectPalette.getMainRectColor(),
                         rectPalette.getInnerRectColor()
                 );
-
+                createTemplate(projectName, tempType);
                 projectCreationState.postValue(ProjectCreationState.SUCCESS);
+
                 loadModelsAsync();
+
             } catch (Exception e) {
                 projectCreationState.postValue(ProjectCreationState.error(
                         "Error creating project: " + e.getMessage()));
             }
+
         });
     }
 
@@ -143,6 +161,37 @@ public class ProjectsViewModel extends ViewModel {
         );
         projectManager.generateMetadata(projectDir, projectModel);
     }
+    
+    private void createTemplate(String projName, TemplateType tempType) {
+        if (tempType == TemplateType.NONE) return;
+
+        String baseName = "main";
+        String fullFileName = (tempType == TemplateType.JAVA)
+                ? baseName + ".java"
+                : baseName + ".py";
+
+        String javaTemp = "public class Main {\n" +
+                                "\n" +
+                                "    public static void main(String[] args) {\n" +
+                                "        System.out.println(\"Hello, World!\");\n" +
+                                "    }\n" +
+                                "}";
+        String pyTemp = "print(1)";
+        try {
+            projectManager.saveFile(projName, fullFileName, tempType == TemplateType.JAVA ? javaTemp : pyTemp);
+        } catch (IOException e) {
+        }
+    }
+
+    private String getTemplateContent(TemplateType type) {
+        int resId;
+        if (type == TemplateType.JAVA) {
+            resId = R.string.java_template;
+        } else {
+            resId = R.string.python_template;
+        }
+        return getApplication().getString(resId);
+    }
 
     public enum ProjectCreationState {
         IDLE,
@@ -167,4 +216,9 @@ public class ProjectsViewModel extends ViewModel {
             return state;
         }
     }
+
+
+
+
+
 }

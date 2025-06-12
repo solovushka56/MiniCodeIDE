@@ -140,6 +140,7 @@ public class CodeEditorActivity extends AppCompatActivity
             recreate();
         });
         binding.saveButton.setOnClickListener(v -> {
+            if (currentCodeFragment == null) return;
             Toast.makeText(this, "File Saved!", Toast.LENGTH_SHORT).show();
             filesViewModel.saveFile(
                     currentCodeFragment.getBoundFileItem().getDirectory(),
