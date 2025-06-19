@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.databinding.ActivityProjectPushBinding;
-import com.skeeper.minicode.presentation.viewmodels.GitViewModel;
+import com.skeeper.minicode.presentation.viewmodels.GitPushViewModel;
 import com.skeeper.minicode.presentation.viewmodels.SecurePrefViewModel;
 import com.skeeper.minicode.presentation.viewmodels.SharedPrefsViewModel;
 import com.skeeper.minicode.utils.helpers.NetworkConnectionHelper;
@@ -28,7 +28,7 @@ public class ProjectPushActivity extends AppCompatActivity {
 
     @Inject ProjectManager projectManager;
     ActivityProjectPushBinding binding;
-    GitViewModel gitViewModel;
+    GitPushViewModel gitPushViewModel;
     SecurePrefViewModel securePrefViewModel;
     SharedPrefsViewModel sharedPrefsViewModel;
 
@@ -45,17 +45,19 @@ public class ProjectPushActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+
 
         projectName = getIntent().getStringExtra("PROJECT_NAME");
 
-        gitViewModel = new ViewModelProvider(this).get(GitViewModel.class);
+        gitPushViewModel = new ViewModelProvider(this).get(GitPushViewModel.class);
         securePrefViewModel = new ViewModelProvider(this).get(SecurePrefViewModel.class);
 
         securePrefViewModel.getUsername().observe(this, username -> {
-            if (username != null) gitViewModel.setUsername(username);
+            if (username != null) gitPushViewModel.setUsername(username);
         });
         securePrefViewModel.getToken().observe(this, token -> {
-            if (token != null) gitViewModel.setToken(token);
+            if (token != null) gitPushViewModel.setToken(token);
         });
 
         securePrefViewModel.loadUsername();
@@ -68,7 +70,7 @@ public class ProjectPushActivity extends AppCompatActivity {
                 return;
             }
 
-            if (gitViewModel.username == null || gitViewModel.token == null) {
+            if (gitPushViewModel.username == null || gitPushViewModel.token == null) {
                 Toast.makeText(this, "Credentials not loaded!",
                         Toast.LENGTH_SHORT).show();
                 return;
@@ -88,14 +90,14 @@ public class ProjectPushActivity extends AppCompatActivity {
             else
                 fullMessage = commitName;
 
-            gitViewModel.createCommitAndPush(
+            gitPushViewModel.createCommitAndPush(
                     projectManager.getProjectDir(projectName),
                     fullMessage);
             disableUI();
         });
 
 
-        gitViewModel.getPushResult().observe(this, result -> {
+        gitPushViewModel.getPushResult().observe(this, result -> {
             Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
             finish();
         });

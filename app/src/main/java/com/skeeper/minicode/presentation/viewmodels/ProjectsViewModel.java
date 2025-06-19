@@ -3,6 +3,7 @@ package com.skeeper.minicode.presentation.viewmodels;
 import static dagger.hilt.android.internal.Contexts.getApplication;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +14,7 @@ import androidx.lifecycle.ViewModel;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
+import com.skeeper.minicode.data.repos.ProjectRepository;
 import com.skeeper.minicode.domain.enums.TemplateType;
 import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
@@ -43,6 +45,8 @@ public class ProjectsViewModel extends AndroidViewModel {
     private final MutableLiveData<ProjectCreationState> projectCreationState =
             new MutableLiveData<>(ProjectCreationState.IDLE);
 
+//    private final ProjectRepository projectRepository = new ProjectRepository(); // TODO
+
     @Inject ProjectManager projectManager;
 
     @Inject
@@ -69,7 +73,9 @@ public class ProjectsViewModel extends AndroidViewModel {
 
     public void loadModelsAsync() {
         executor.execute(() -> {
-            models.postValue(projectManager.loadAllProjectModels());
+            var projects = projectManager.loadAllProjectModels();
+            models.postValue(projects);
+
         });
     }
 
@@ -122,6 +128,8 @@ public class ProjectsViewModel extends AndroidViewModel {
         });
     }
 
+
+
     private @Nullable File createProjectFolder(String name) {
         if (!isCorrectProjectName(name))
             return null;
@@ -165,20 +173,12 @@ public class ProjectsViewModel extends AndroidViewModel {
     private void createTemplate(String projName, TemplateType tempType) {
         if (tempType == TemplateType.NONE) return;
 
-        String baseName = "main";
         String fullFileName = (tempType == TemplateType.JAVA)
-                ? baseName + ".java"
-                : baseName + ".py";
-
-        String javaTemp = "public class Main {\n" +
-                                "\n" +
-                                "    public static void main(String[] args) {\n" +
-                                "        System.out.println(\"Hello, World!\");\n" +
-                                "    }\n" +
-                                "}";
-        String pyTemp = "print(1)";
+                ? "Main" + ".java"
+                : "main" + ".py";
         try {
-            projectManager.saveFile(projName, fullFileName, tempType == TemplateType.JAVA ? javaTemp : pyTemp);
+            projectManager.saveFile(projectManager.getProjectDir(projName), fullFileName,
+                    getTemplateContent(tempType));
         } catch (IOException e) {
         }
     }
@@ -190,7 +190,9 @@ public class ProjectsViewModel extends AndroidViewModel {
         } else {
             resId = R.string.python_template;
         }
-        return getApplication().getString(resId);
+        return getApplication()
+                .getString(resId)
+                .replace("\t", "   ");
     }
 
     public enum ProjectCreationState {

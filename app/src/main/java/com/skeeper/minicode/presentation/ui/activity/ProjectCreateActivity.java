@@ -39,8 +39,8 @@ public class ProjectCreateActivity extends AppCompatActivity {
     ProjectsViewModel projectsViewModel;
     TemplateViewModel templateViewModel;
     private final String currentDateTime = DateTimeHelper.getCurrentTime();
-    TemplateType selectedType = TemplateType.NONE;
     private String projName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,7 +88,7 @@ public class ProjectCreateActivity extends AppCompatActivity {
 
             int selectedId = binding.templateTypeGroup.getCheckedRadioButtonId();
 
-
+            TemplateType selectedType = TemplateType.NONE;
 
             if (selectedId == R.id.optionJava) {
                 selectedType = TemplateType.JAVA;
@@ -96,36 +96,9 @@ public class ProjectCreateActivity extends AppCompatActivity {
                 selectedType = TemplateType.PYTHON;
             }
 
+            projectsViewModel.createProjectAsync(projName, projDescription,
+                    new String[] {"local"}, selectedType);
 
-            projectsViewModel.createProjectAsync(
-                    projName, projDescription, new String[] {"local"}, selectedType);
-
-//            templateViewModel.createTemplate();
-
-//            var rectPalette = new ProjectRectColorBinding();
-//            ProjectModelParcelable model = new ProjectModelParcelable(
-//                    projName,
-//                    projDescription,
-//                    "projFilepath",
-//                    new String[] {"s", "jiva", "kotlet"},
-//                    rectPalette.getMainRectColor(),
-//                    rectPalette.getInnerRectColor()
-//            );
-//
-//            projectManager.createProject(model, false);
-//            try {
-//                projectManager.saveFile(
-//                        model.getProjectName(),
-//                        "main.java",
-//                        "public class Main {\n" +
-//                                "\n" +
-//                                "    public static void main(String[] args) {\n" +
-//                                "        System.out.println(\"Hello, World!\");\n" +
-//                                "    }\n" +
-//                                "}");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
         });
 
 

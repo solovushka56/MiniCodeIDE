@@ -8,10 +8,10 @@ import com.skeeper.minicode.utils.CallbackFileUtils;
 
 import java.io.File;
 
-public class AsyncLocalFileRepository implements ICallbackFileRepository {
+public class CallbackFileRepository implements ICallbackFileRepository {
     private final File file;
 
-    public AsyncLocalFileRepository(File file) {
+    public CallbackFileRepository(File file) {
         this.file = file;
     }
 

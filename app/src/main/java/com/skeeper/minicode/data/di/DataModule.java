@@ -3,13 +3,18 @@ package com.skeeper.minicode.data.di;
 import android.content.Context;
 
 import com.google.gson.Gson;
-import com.skeeper.minicode.core.singleton.SnippetsManager;
+import com.google.gson.GsonBuilder;
 import com.skeeper.minicode.data.local.FileDirectoryProvider;
 import com.skeeper.minicode.data.local.ResourcesProvider;
 import com.skeeper.minicode.data.local.SharedPreferencesProvider;
+import com.skeeper.minicode.data.operations.ProjectOperations;
+import com.skeeper.minicode.data.repos.ProjectRepository;
 import com.skeeper.minicode.data.repos.UserRepository;
+import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
+import com.skeeper.minicode.domain.contracts.repos.file.IFileRepository;
+import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
 
 import java.io.File;
 
@@ -55,17 +60,6 @@ public abstract class DataModule {
     }
 
 
-//    @Provides
-//    @Singleton
-//    static ResourcesProvider provideResourcesProvider(Context context) {
-//        return new ResourcesProvider(context);
-//    }
-//    @Provides
-//    @Singleton
-//    static ResourcesProvider provideResourcesProvider(Context context) {
-//        return new ResourcesProvider(context);
-//    }
-
     @Provides
     @Singleton
     static IResourcesProvider provideIResourcesProvider(Context context) {
@@ -78,6 +72,29 @@ public abstract class DataModule {
     static File provideStorageDir(@ApplicationContext Context context) {
         return context.getFilesDir();
     }
+
+    @Provides
+    @Singleton
+    static Gson provideGson() {
+        return new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+    }
+
+
+    @Provides
+    @Singleton
+    static IProjectOperations provideProjectOperations(IFileDirectoryProvider fileDirectoryProvider) {
+        return new ProjectOperations(fileDirectoryProvider);
+    }
+
+    @Provides
+    @Singleton
+    static IProjectRepository provideProjectRepository(IProjectOperations projectOperations,
+                                                       Gson gson) {
+        return new ProjectRepository(projectOperations, gson);
+    }
+
 
 
 }

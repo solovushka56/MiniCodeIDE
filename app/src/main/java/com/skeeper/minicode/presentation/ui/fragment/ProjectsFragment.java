@@ -59,6 +59,7 @@ public class ProjectsFragment extends Fragment {
                 requireActivity(),
                 models -> {
                     setProjectsRecycler(models);
+
                     if (models == null || models.isEmpty()) {
                         binding.tipView.setVisibility(VISIBLE);
                         binding.projectsRecyclerView.setVisibility(View.GONE);

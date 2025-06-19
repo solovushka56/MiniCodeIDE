@@ -1,52 +1,76 @@
 package com.skeeper.minicode.data.repos.filerepos;
 
-import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
+import com.skeeper.minicode.domain.contracts.repos.file.IFileRepository;
+import com.skeeper.minicode.domain.exceptions.DomainIOException;
 import com.skeeper.minicode.utils.FileUtils;
 
 import java.io.File;
 
-import javax.inject.Inject;
-
 public class LocalFileRepository implements IFileRepository {
     protected final File file;
+    protected final String path;
 
-    public LocalFileRepository(File file) {
-        this.file = file;
+    public LocalFileRepository(String path) {
+        this.path = path;
+        this.file = new File(path);
     }
 
-    @Override
-    public File getFile() {
-        return file;
+    public String getFilePath() {
+        return file.getPath();
     }
 
-    @Override
     public void createFile() {
         FileUtils.createFile(file);
     }
 
-    @Override
     public void deleteFile() {
         FileUtils.deleteFile(file);
     }
 
-    @Override
     public void renameFile(String newName) {
         FileUtils.renameFile(file, newName);
     }
 
-    @Override
-    public void moveFile(File targetDir) {
-        FileUtils.moveFile(file, targetDir);
+    public void moveFile(String targetPath) {
+        FileUtils.moveFile(file, new File(targetPath));
     }
 
-    @Override
     public String readFileText() {
         return FileUtils.readFileText(file);
     }
 
-    @Override
     public void writeFileText(String text) {
         FileUtils.writeFileText(file, text);
+    }
+
+
+    @Override
+    public boolean exists(String path) {
+        return new File(path).exists();
+    }
+
+    @Override
+    public void createFile(String path) throws DomainIOException {
+        createFile(file.getPath());
+    }
+
+    @Override
+    public String readFileText(String path) throws DomainIOException {
+        return "";
+    }
+
+    @Override
+    public void writeFileText(String path, String content) throws DomainIOException {
+
+    }
+
+    @Override
+    public void deleteFile(String path) throws DomainIOException {
+
+    }
+
+    @Override
+    public void moveFile(String sourcePath, String targetPath) throws DomainIOException {
+
     }
 }

@@ -1,6 +1,4 @@
-package com.skeeper.minicode.data.repos;
-
-import android.content.Context;
+package com.skeeper.minicode.data.repos.highlight;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.domain.enums.ExtensionType;

@@ -1,14 +1,10 @@
 package com.skeeper.minicode.presentation.adapters;
 
 import android.animation.ObjectAnimator;
-import android.content.Context;
-import android.text.InputType;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -17,9 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.skeeper.minicode.R;
-import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
+import com.skeeper.minicode.domain.contracts.other.callbacks.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
 
 import java.lang.reflect.Field;
@@ -104,6 +99,15 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
                 : R.drawable.ic_file);
 
         var itemView = holder.itemView;
+
+//        holder.scrollView.setOnTouchListener((v, event) -> {
+//            if (event.getAction() == MotionEvent.ACTION_UP) {
+//                holder.panel.performClick();
+//
+//            }
+//            return false;
+//        });
+
 
         if (item.isDirectory()) {
             holder.arrow.setVisibility(View.VISIBLE);

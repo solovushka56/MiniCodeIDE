@@ -1,4 +1,4 @@
-package com.skeeper.minicode.data.mappers;
+package com.skeeper.minicode.data.parsers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -6,7 +6,7 @@ import com.skeeper.minicode.domain.models.SnippetModel;
 import com.skeeper.minicode.domain.serialization.ISerializer;
 
 
-public class SnippetJsonMapper implements ISerializer<SnippetModel> {
+public class SnippetJsonParser implements ISerializer<SnippetModel> {
     Gson gson = new Gson();
 
     @Override

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 
 public class SnippetRepository extends LocalFileRepository {
@@ -31,7 +30,7 @@ public class SnippetRepository extends LocalFileRepository {
 
     @Inject
     public SnippetRepository(File storageDir) {
-        super(new File(storageDir, FILENAME));
+        super(new File(storageDir, FILENAME).getPath());
     }
 
     public void addSnippet(String key, String value) {
@@ -56,7 +55,7 @@ public class SnippetRepository extends LocalFileRepository {
     public void saveList(List<SnippetModel> models) {
         List<SerializablePair> serializableList = convertToSerializable(toPairList(models));
         String json = gson.toJson(serializableList);
-        try (FileOutputStream fos = new FileOutputStream(getFile());
+        try (FileOutputStream fos = new FileOutputStream(getFilePath());
              OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             writer.write(json);
         } catch (IOException e) {
@@ -65,7 +64,7 @@ public class SnippetRepository extends LocalFileRepository {
     }
 
     public List<SnippetModel> loadList() {
-        File file = getFile();
+        File file = new File(getFilePath());
         if (!file.exists()) return new ArrayList<>();
 
         try (FileInputStream fis = new FileInputStream(file);

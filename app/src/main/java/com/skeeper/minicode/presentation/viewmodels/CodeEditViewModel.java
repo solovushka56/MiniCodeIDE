@@ -5,10 +5,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
-import com.skeeper.minicode.domain.contracts.repos.IFileRepository;
 import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
-import com.skeeper.minicode.utils.FileUtils;
 
 
 public class CodeEditViewModel extends ViewModel {
@@ -16,12 +14,12 @@ public class CodeEditViewModel extends ViewModel {
     private final MutableLiveData<FileItem> editingFile = new MutableLiveData<>();
     private final MutableLiveData<String> preloadedFileText = new MutableLiveData<>();
 
-    private IFileRepository fileRepository; // git or local
+    private LocalFileRepository fileRepository; // git or local
 
     public CodeEditViewModel(@Nullable FileItem fileItem, FileOpenMode fileOpenMode) {
         if (fileItem != null) {
             editingFile.setValue(fileItem);
-            fileRepository = new LocalFileRepository(fileItem.getDirectory());
+            fileRepository = new LocalFileRepository(fileItem.getDirectory().getPath());
         }
 
     }

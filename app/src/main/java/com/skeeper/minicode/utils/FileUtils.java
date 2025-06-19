@@ -19,7 +19,6 @@ import hilt_aggregated_deps._com_skeeper_minicode_presentation_ui_activity_CodeE
 
 public class FileUtils {
 
-
     public static boolean createFolder(File directory, String name) {
         boolean success;
 
@@ -34,64 +33,64 @@ public class FileUtils {
 
     public static boolean createFile(File file) {
         boolean success;
-            try {
-                if (file.exists()) throw new IOException();
+        try {
+            if (file.exists()) throw new IOException();
 
-                File parent = file.getParentFile();
-                if (parent != null && !parent.exists() && !parent.mkdirs()) {
-                    throw new IOException();
-                }
-
-                if (!file.createNewFile()) {
-                    throw new IOException();
-                }
-                success = true;
-            } catch (Exception e) {
-                success = false;
+            File parent = file.getParentFile();
+            if (parent != null && !parent.exists() && !parent.mkdirs()) {
+                throw new IOException();
             }
-            return success;
+
+            if (!file.createNewFile()) {
+                throw new IOException();
+            }
+            success = true;
+
+        } catch (Exception e) {
+            success = false;
+        }
+        return success;
     }
     public static boolean deleteFile(File file) {
         boolean success;
-
         try {
-                if (!file.exists()) throw new FileNotFoundException();
-                deleteRecursive(file);
-                success = true;
-            } catch (Exception e) {
-                success = false;
-            }
+            if (!file.exists()) throw new FileNotFoundException();
+            deleteRecursive(file);
+            success = true;
+        } catch (Exception e) {
+            success = false;
+        }
         return success;
     }
     public static boolean renameFile(File source, String newName) {
         boolean success;
-            try {
-                File target = new File(source.getParent(), newName);
-                if (target.exists()) throw new IOException();
+        try {
+            File target = new File(source.getParent(), newName);
+            if (target.exists()) throw new IOException();
 
-                if (!source.renameTo(target)) {
-                    performMoveOperation(source, target);
-                }
-                success = true;
-            } catch (Exception e) {
-                success = false;
+            if (!source.renameTo(target)) {
+                performMoveOperation(source, target);
             }
-            return success;
+            success = true;
+        } catch (Exception e) {
+            success = false;
+        }
+        return success;
     }
     public static boolean moveFile(File source, File targetDir) {
         boolean success;
-            try {
-                File target = new File(targetDir, source.getName());
-                if (target.exists()) throw new IOException();
+        try {
+            File target = new File(targetDir, source.getName());
+            if (target.exists()) throw new IOException();
 
-                if (!source.renameTo(target)) {
-                    performMoveOperation(source, target);
-                }
-                success = true;
-            } catch (Exception e) {
-                success = false;
+            if (!source.renameTo(target)) {
+                performMoveOperation(source, target);
             }
-            return success;
+            success = true;
+        } catch (Exception e) {
+            success = false;
+        }
+        return success;
     }
 
 
@@ -126,7 +125,8 @@ public class FileUtils {
     }
 
 
-    private static void performMoveOperation(File source, File target) throws IOException {
+    private static void performMoveOperation(
+            File source, File target) throws IOException {
         if (source.isDirectory()) {
             if (!target.mkdirs()) throw new IOException();
             File[] files = source.listFiles();
@@ -141,43 +141,60 @@ public class FileUtils {
         deleteRecursive(source);
     }
     public static String readFileText(File file) {
-            try {
-                if (!file.exists()) throw new FileNotFoundException();
-                if (!file.isFile()) throw new IOException();
+        try {
+            if (!file.exists()) throw new FileNotFoundException();
+            if (!file.isFile()) throw new IOException();
 
-                StringBuilder content = new StringBuilder();
-                try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        content.append(line).append("\n");
-                    }
+            StringBuilder content = new StringBuilder();
+            try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    content.append(line).append("\n");
                 }
-
-                if (content.length() > 0) {
-                    content.setLength(content.length() - 1);
-                }
-
-                return content.toString();
-            } catch (Exception e) {
-                return "";
             }
+
+            if (content.length() > 0) {
+                content.setLength(content.length() - 1);
+            }
+
+            return content.toString();
+        } catch (Exception e) {
+            return "";
+        }
 
     }
     public static boolean writeFileText(File file, String text) {
         boolean success;
-            try {
-                if (!file.exists()) {
-                    createFileSync(file);
-                }
-                try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                    writer.write(text);
-                }
-                success = true;
-            } catch (Exception e) {
-                success = false;
+        try {
+            if (!file.exists()) {
+                createFileSync(file);
             }
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(text);
+            }
+            success = true;
+        } catch (Exception e) {
+            success = false;
+        }
         return success;
     }
+
+    public static boolean writeFileTextWithOverwrite(File file, String text) {
+        boolean success;
+        try {
+            if (!file.exists()) {
+                createFileSync(file);
+            }
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                writer.write(text);
+            }
+            success = true;
+        } catch (Exception e) {
+            success = false;
+        }
+        return success;
+    }
+
     private static void createFileSync(File file) throws IOException {
         File parent = file.getParentFile();
         if (parent != null && !parent.exists() && !parent.mkdirs()) {

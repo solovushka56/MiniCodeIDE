@@ -48,14 +48,12 @@
     <string name="bracket_color">#569CD6</string>
     <string name="string_color">#CE9178</string>
 
-    <string name="java_template">public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, World!");
-    }
-}
-    </string>
+    <string name="java_template">public class Main {\n\t
+        public static void main(String[] args) {\n\t \t
+              System.out.println(\"Hello, World!\");\n\t
+        }\n}</string>
 
-    <string name="python_template">print("Hello, World!")
+    <string name="python_template">print(\"Hello, World!\")
     </string>
 
 </resources>

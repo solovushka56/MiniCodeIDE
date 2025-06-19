@@ -4,7 +4,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityProjectCloneBinding;
-import com.skeeper.minicode.presentation.viewmodels.GitViewModel;
+import com.skeeper.minicode.presentation.viewmodels.GitCloneViewModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.SecurePrefViewModel;
 import com.skeeper.minicode.utils.helpers.NetworkConnectionHelper;
@@ -34,7 +33,7 @@ public class ProjectCloneActivity extends AppCompatActivity {
 
     @Inject
     ProjectManager projectManager;
-    GitViewModel gitViewModel;
+    GitCloneViewModel gitViewModel;
     File projectDir = null;
     SecurePrefViewModel securePrefViewModel;
 
@@ -51,7 +50,7 @@ public class ProjectCloneActivity extends AppCompatActivity {
         });
         getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
 
-        gitViewModel = new ViewModelProvider(this).get(GitViewModel.class);
+        gitViewModel = new ViewModelProvider(this).get(GitCloneViewModel .class);
         securePrefViewModel = new ViewModelProvider(this).get(SecurePrefViewModel.class);
 
         securePrefViewModel.getUsername().observe(this, username -> {
@@ -67,17 +66,25 @@ public class ProjectCloneActivity extends AppCompatActivity {
 
         gitViewModel.getCloningState().observe(this, state -> {
             switch (state) {
-                case START ->
-                        Toast.makeText(this, "Start cloning...", Toast.LENGTH_LONG).show();
+                case START -> {
+                    Toast.makeText(this, "Start cloning...", Toast.LENGTH_LONG).show();
+                    setUiMode(false);
+                }
                 case FAILED -> {
                     Toast.makeText(this, "Failed to Clone!", Toast.LENGTH_LONG).show();
+                    setUiMode(true);
                     returnToMenu();
                 }
                 case COMPLETE -> {
                     Toast.makeText(this, "Cloning end!", Toast.LENGTH_LONG).show();
+                    setUiMode(true);
                     returnToMenu();
                 }
             }
+        });
+
+        gitViewModel.getClonedPercent().observe(this, value -> {
+            binding.progressbar.setProgress(value);
         });
 
         binding.buttonClone.setOnClickListener(v -> {
@@ -86,7 +93,6 @@ public class ProjectCloneActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-            disableUI();
             String projectName = binding.projectNameEditText
                     .getText().toString().replaceAll("\\s", "");
             String repoUrl = binding.projectUrlEditText
@@ -104,13 +110,14 @@ public class ProjectCloneActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-            gitViewModel.cloneProject(repoUrl, projectName);
+
+            gitViewModel.cloneProject(repoUrl, projectName, -1);
+            setUiMode(false);
         });
 
 
         ClipboardManager clipboardManager = (ClipboardManager)
                 getSystemService(Context.CLIPBOARD_SERVICE);
-
         binding.buttonPaste.setOnClickListener(v -> {
             if (clipboardManager != null && clipboardManager.hasPrimaryClip()) {
                 CharSequence pasteData = clipboardManager
@@ -143,12 +150,12 @@ public class ProjectCloneActivity extends AppCompatActivity {
     }
 
 
-    private void disableUI() {
-        binding.buttonClone.setEnabled(false);
-        binding.buttonPaste.setEnabled(false);
-        binding.projectNameEditText.setEnabled(false);
-        binding.projectUrlEditText.setEnabled(false);
-        binding.buttonClone.setAlpha(0.5f);
+    private void setUiMode(boolean enabled) {
+        binding.buttonClone.setEnabled(enabled);
+        binding.buttonPaste.setEnabled(enabled);
+        binding.projectNameEditText.setEnabled(enabled);
+        binding.projectUrlEditText.setEnabled(enabled);
+        binding.buttonClone.setAlpha(enabled ? 1f : 0.5f);
     }
 
 

@@ -18,7 +18,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -51,19 +50,15 @@ import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
 import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
 import com.skeeper.minicode.presentation.viewmodels.SnippetViewModel;
 import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
-import com.skeeper.minicode.utils.helpers.SystemBarsHelper;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
-import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
+import com.skeeper.minicode.domain.contracts.other.callbacks.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.SnippetModel;
 
-import com.skeeper.minicode.core.singleton.SnippetsManager;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -175,8 +170,9 @@ public class CodeEditorActivity extends AppCompatActivity
                 this, new FileViewModelFactory(projectManager
                 .getProjectDir(projectName)))
                 .get(FilesViewModel.class);
-        filesViewModel.getFiles().observe(this, (fileItems) ->
-                fileSystemView.updateFileItems(this, fileItems));
+        filesViewModel.getFiles().observe(this, (fileItems) -> {
+            fileSystemView.updateFileItems(this, fileItems);
+        });
 
     }
 
@@ -243,7 +239,7 @@ public class CodeEditorActivity extends AppCompatActivity
             int keyboardHeight = screenHeight - rect.bottom;
 
             if (keyboardHeight > convertDpToPx(minKeyboardHeight)) {
-                int fillerTab = 40;
+                int fillerTab = convertDpToPx(21);
                 bottomPanel.getLayoutParams().height = keyboardHeight + fillerTab;
                 bottomPanel.setVisibility(VISIBLE);
 
@@ -267,7 +263,8 @@ public class CodeEditorActivity extends AppCompatActivity
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager)
+                    getSystemService(Context.INPUT_METHOD_SERVICE);
             if (imm != null) {
                 imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             }
@@ -402,8 +399,13 @@ public class CodeEditorActivity extends AppCompatActivity
 
         positiveButton.setOnClickListener(v -> {
             String newPath = pathInput.getText().toString().trim();
-            if (!new File(newPath).exists()) {
+            File newPathFile = new File(newPath);
+            if (!newPathFile.exists()) {
                 pathInput.setError("Directory is incorrect");
+                return;
+            }
+            if (new File(newPathFile, item.getName()).exists()) {
+                pathInput.setError("File with the same name already exists in the new folder");
                 return;
             }
             filesViewModel.moveFile(item.getDirectory(), new File(newPath));

@@ -47,6 +47,8 @@
                 android:hint="Enter project name"
                 app:endIconDrawable="@drawable/editor"
                 android:layout_marginBottom="15dp"
+                android:textColorHint="@color/violet_light"
+                app:hintTextColor="@color/pale_blue"
                 >
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -54,7 +56,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/button_rect_common"
-                    android:backgroundTint="@color/blue_grey"
+                    android:backgroundTint="@color/violet"
                     android:fontFamily="@font/cascadia_code"
                     android:imeOptions="actionDone"
                     android:inputType="textCapSentences|textAutoCorrect"
@@ -79,7 +81,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Enter project url"
-                    app:endIconDrawable="@drawable/editor">
+                    app:endIconDrawable="@drawable/editor"
+                    android:textColorHint="@color/violet_light"
+                    app:hintTextColor="@color/pale_blue"
+                    >
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/projectUrlEditText"
@@ -87,7 +92,7 @@
                         android:layout_height="match_parent"
 
                         android:background="@drawable/button_rect_common"
-                        android:backgroundTint="@color/blue_grey"
+                        android:backgroundTint="@color/violet"
                         android:fontFamily="@font/cascadia_code"
                         android:imeOptions="actionDone"
                         android:inputType="textCapSentences|textAutoCorrect"
@@ -136,6 +141,49 @@
                 </LinearLayout>
             </LinearLayout>
 
+            <ProgressBar
+
+                style="?android:attr/progressBarStyleHorizontal"
+                android:progressBackgroundTint="@color/violet_light"
+                android:secondaryProgress="@android:integer/config_longAnimTime"
+                android:progressTint="@color/violet_light"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/progressbar"
+                android:layout_marginVertical="15dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:max="100"
+                android:progress="89"/>
+
+            <LinearLayout
+                android:background="@drawable/button_rect_common"
+                android:paddingHorizontal="12dp"
+                android:backgroundTint="@color/violet"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/materialCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Material CheckBox"
+                    android:textColor="@color/soft_blue"
+                    app:buttonTint="@color/pale_blue"
+                    android:textAlignment="textStart"
+                    app:buttonIconTint="@color/blue_light"
+                    android:padding="5dp"
+                    android:textSize="16sp"
+                    android:checked="true"
+                    />
+
+
+
+            </LinearLayout>
+
 
         </LinearLayout>
     </ScrollView>
@@ -143,6 +191,24 @@
     <Button
         android:layout_margin="25dp"
         android:id="@+id/buttonClone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@drawable/ripple_shape"
+        android:backgroundTint="@color/violet_light"
+        android:clickable="true"
+        android:contentDescription="@string/app_name"
+        android:fontFamily="@font/cascadia_code"
+        android:padding="15dp"
+        android:src="@drawable/save_icon"
+        android:text="Clone"
+        app:backgroundTint="@null"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <Button
+        android:visibility="gone"
+        android:layout_margin="25dp"
+        android:id="@+id/buttonCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

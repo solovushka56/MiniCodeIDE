@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.adapters.FileTreeAdapter;
-import com.skeeper.minicode.domain.contracts.other.IFileTreeListener;
+import com.skeeper.minicode.domain.contracts.other.callbacks.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
 
 import java.io.File;

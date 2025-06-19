@@ -1,8 +1,6 @@
-package com.skeeper.minicode.domain.contracts.other;
+package com.skeeper.minicode.domain.contracts.other.callbacks;
 
 import com.skeeper.minicode.domain.models.FileItem;
-
-import java.io.File;
 
 public interface IFileTreeListener {
     void onFileClick(FileItem fileItem);
