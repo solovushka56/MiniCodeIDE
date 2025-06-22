@@ -1,10 +1,11 @@
-package com.skeeper.minicode.data.repos;
+package com.skeeper.minicode.data.repos.project;
 
 
 import com.google.gson.Gson;
-import com.skeeper.minicode.data.models.ProjectModelParcelable;
+import com.skeeper.minicode.data.parsers.MetadataParser;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.models.ProjectModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +17,9 @@ import javax.inject.Inject;
 
 public class ProjectRepository implements IProjectRepository {
 
+    private final MetadataParser metadataParser = new MetadataParser();
     private final IProjectOperations operations;
     private final Gson gson;
-
 
     @Inject
     public ProjectRepository(IProjectOperations operations, Gson gson) {
@@ -33,7 +34,7 @@ public class ProjectRepository implements IProjectRepository {
     }
 
     @Override
-    public List<ProjectModelParcelable> loadAllProjects() {
+    public List<ProjectModel> loadAllProjects() {
         File[] projectDirs = operations.listChildDirectories(operations.getProjectsStoreFolder());
         if (projectDirs == null) return List.of();
 
@@ -43,18 +44,18 @@ public class ProjectRepository implements IProjectRepository {
     }
 
     @Override
-    public ProjectModelParcelable loadProject(String projectName) {
+    public ProjectModel loadProject(String projectName) {
         try {
             File configFile = operations.getProjectConfigFile(projectName);
             String json = operations.readFile(configFile);
-            return gson.fromJson(json, ProjectModelParcelable.class);
+            return gson.fromJson(json, ProjectModel.class);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load project: " + projectName, e);
         }
     }
 
-    public boolean createProject(ProjectModelParcelable model, boolean overwrite) {
-        File projectDir = operations.getProjectDir(model.getProjectName());
+    public boolean createProject(ProjectModel model, boolean overwrite) {
+        File projectDir = operations.getProjectDir(model.name());
         if (projectDir.exists()) {
             if (overwrite) {
                 if (!operations.deleteRecursive(projectDir)) {
@@ -67,7 +68,7 @@ public class ProjectRepository implements IProjectRepository {
         }
         if (!projectDir.mkdirs()) return false;
         try {
-            operations.generateMetadata(projectDir, model);
+            operations.generateMetadata(model);
         }
         catch (IOException e) {
             throw new RuntimeException(e);

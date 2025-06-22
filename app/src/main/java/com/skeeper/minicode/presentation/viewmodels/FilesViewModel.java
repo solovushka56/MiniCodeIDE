@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 public class FilesViewModel extends ViewModel {
 
     private File rootDirectory;
+    private final Map<String, Boolean> expandedStateMap = new HashMap<>();
 
     private final MutableLiveData<List<FileItem>> files = new MutableLiveData<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(4);
@@ -78,9 +79,37 @@ public class FilesViewModel extends ViewModel {
 
     private void updateFilesAsync() {
         executor.execute(() -> {
-            var updatedList = fileTreeMapper.buildFileTree(rootDirectory, 0);
+            List<FileItem> updatedList = fileTreeMapper.buildFileTree(rootDirectory, 0);
+            restoreExpandedState(updatedList);
             files.postValue(updatedList);
         });
+    }
+
+
+    public void updateFolderExpandedState(File folder, boolean isExpanded) {
+        expandedStateMap.put(folder.getAbsolutePath(), isExpanded);
+    }
+
+    private void restoreExpandedState(List<FileItem> items) {
+        for (FileItem item : items) {
+            if (item.isDirectory()) {
+                String path = item.getDirectory().getAbsolutePath();
+                if (expandedStateMap.containsKey(path)) {
+                    item.setExpanded(expandedStateMap.get(path));
+                }
+                restoreExpandedState(item.getChildren());
+            }
+        }
+    }
+
+
+    private FileItem findItemByFile(List<FileItem> list, File file) {
+        for (FileItem item : list) {
+            if (item.getDirectory().equals(file)) {
+                return item;
+            }
+        }
+        return null;
     }
 
 }

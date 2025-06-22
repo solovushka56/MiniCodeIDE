@@ -1,4 +1,4 @@
-package com.skeeper.minicode.presentation.ui.fragment;
+package com.skeeper.minicode.presentation.ui.fragment.menu;
 
 import android.os.Bundle;
 

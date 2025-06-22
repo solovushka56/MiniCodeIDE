@@ -1,8 +1,9 @@
 package com.skeeper.minicode.core.singleton;
 
-import com.skeeper.minicode.domain.contracts.repos.file.IFileRepository;
-
-import java.io.File;
+import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
+import com.skeeper.minicode.domain.contracts.repos.file.IFileStoreRepository;
+import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
+import com.skeeper.minicode.domain.exceptions.file.FileReadException;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -10,41 +11,40 @@ import javax.inject.Singleton;
 
 @Singleton
 public class FileManager {
-    IFileRepository fileRepository;
+    IFileContentRepository fileContentRepository;
+    IFileStoreRepository fileStoreRepository;
 
     @Inject
-    public FileManager(IFileRepository fileRepository) {
-        this.fileRepository = fileRepository;
+    public FileManager(IFileContentRepository fileContentRepository,
+                       IFileStoreRepository fileStoreRepository) {
+        this.fileContentRepository = fileContentRepository;
+        this.fileStoreRepository = fileStoreRepository;
     }
 
 
-    public File getFile() {
-        return null;
+    public void createFile(String path) throws DomainIOException {
+        fileStoreRepository.createFile(path);
     }
 
-    public void createFile() {
-
+    public void deleteFile(String path) throws DomainIOException {
+        fileStoreRepository.deleteFile(path);
     }
 
-    public void deleteFile() {
-
+    public void renameFile(String filePath, String newName) throws DomainIOException {
+        fileStoreRepository.renameFile(filePath, newName);
     }
 
-    public void renameFile(String newName) {
-
+    public void moveFile(String sourcePath, String targetDir) throws DomainIOException {
+        fileStoreRepository.moveFile(sourcePath, targetDir);
     }
 
-    public void moveFile(File targetDir) {
-
-    }
-
-    public String readFileText(File file) {
-        return "";
+    public String readFileText(String filePath) throws FileReadException {
+        return fileContentRepository.readFileText(filePath);
     }
 
 
-    public void writeFileText(String text) {
-
+    public void writeFileText(String path, String content) throws DomainIOException {
+        fileContentRepository.writeFileText(path, content);
     }
 
 }

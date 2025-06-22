@@ -18,10 +18,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.skeeper.minicode.presentation.ui.fragment.ProjectsFragment;
+import com.skeeper.minicode.presentation.ui.fragment.menu.ProjectsFragment;
 import com.skeeper.minicode.R;
-import com.skeeper.minicode.presentation.ui.fragment.SettingsFragment;
-import com.skeeper.minicode.presentation.ui.fragment.TutorialsFragment;
+import com.skeeper.minicode.presentation.ui.fragment.menu.SettingsFragment;
+import com.skeeper.minicode.presentation.ui.fragment.menu.TutorialsFragment;
 import com.skeeper.minicode.databinding.ActivityMenuBinding;
 import com.skeeper.minicode.utils.helpers.animations.BackInterpolations;
 

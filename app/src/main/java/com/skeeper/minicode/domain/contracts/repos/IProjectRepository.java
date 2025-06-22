@@ -9,10 +9,11 @@ import java.util.List;
 
 public interface IProjectRepository {
     IProjectOperations getOperations();
-    List<ProjectModelParcelable> loadAllProjects();
-    ProjectModelParcelable loadProject(String projectName);
-    boolean createProject(ProjectModelParcelable model, boolean overwrite);
+    List<ProjectModel> loadAllProjects();
+    ProjectModel loadProject(String projectName);
+    boolean createProject(ProjectModel model, boolean overwrite);
     boolean deleteProject(String projectName);
     boolean renameProject(String oldName, String newName);
     boolean projectExists(String projectName);
+
 }

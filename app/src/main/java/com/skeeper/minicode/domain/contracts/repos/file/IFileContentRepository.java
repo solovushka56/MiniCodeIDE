@@ -1,7 +1,7 @@
 package com.skeeper.minicode.domain.contracts.repos.file;
 
-import com.skeeper.minicode.domain.exceptions.DomainIOException;
-import com.skeeper.minicode.domain.exceptions.FileReadException;
+import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
+import com.skeeper.minicode.domain.exceptions.file.FileReadException;
 
 public interface IFileContentRepository {
     String readFileText(String path) throws FileReadException;

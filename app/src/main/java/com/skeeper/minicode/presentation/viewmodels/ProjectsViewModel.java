@@ -1,22 +1,17 @@
 package com.skeeper.minicode.presentation.viewmodels;
 
-import static dagger.hilt.android.internal.Contexts.getApplication;
-
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.data.models.ProjectModelParcelable;
-import com.skeeper.minicode.data.repos.ProjectRepository;
+import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
 import com.skeeper.minicode.domain.enums.TemplateType;
-import com.skeeper.minicode.utils.FileUtils;
+import com.skeeper.minicode.domain.models.ProjectModel;
+import com.skeeper.minicode.domain.usecases.project.management.CreateTemplateUseCase;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
 import java.io.File;
@@ -39,23 +34,25 @@ public class ProjectsViewModel extends AndroidViewModel {
             r -> new Thread(r, THREAD_POOL_NAME)
     );
 
-    private final MutableLiveData<List<ProjectModelParcelable>> models =
+    private final MutableLiveData<List<ProjectModel>> models =
             new MutableLiveData<>(new ArrayList<>());
 
     private final MutableLiveData<ProjectCreationState> projectCreationState =
             new MutableLiveData<>(ProjectCreationState.IDLE);
 
-//    private final ProjectRepository projectRepository = new ProjectRepository(); // TODO
+    private final IProjectRepository projectRepository; // TODO
 
     @Inject ProjectManager projectManager;
 
     @Inject
     public ProjectsViewModel(
             @NonNull Application application,
-            ProjectManager projectManager
+            ProjectManager projectManager,
+            IProjectRepository projectRepository
     ) {
         super(application);
         this.projectManager = projectManager;
+        this.projectRepository = projectRepository;
     }
 
     @Override
@@ -64,7 +61,7 @@ public class ProjectsViewModel extends AndroidViewModel {
         executor.shutdownNow();
     }
 
-    public MutableLiveData<List<ProjectModelParcelable>> getModels() {
+    public MutableLiveData<List<ProjectModel>> getModels() {
         return models;
     }
     public MutableLiveData<ProjectCreationState> getProjectCreationState() {
@@ -115,9 +112,13 @@ public class ProjectsViewModel extends AndroidViewModel {
                         rectPalette.getMainRectColor(),
                         rectPalette.getInnerRectColor()
                 );
-                createTemplate(projectName, tempType);
-                projectCreationState.postValue(ProjectCreationState.SUCCESS);
 
+                new CreateTemplateUseCase(projectRepository).execute(
+                        getApplication(),
+                        projectName,
+                        tempType);
+
+                projectCreationState.postValue(ProjectCreationState.SUCCESS);
                 loadModelsAsync();
 
             } catch (Exception e) {
@@ -159,7 +160,7 @@ public class ProjectsViewModel extends AndroidViewModel {
                                          String[] tags,
                                          String mainRectColorHex,
                                          String innerRectColorHex) throws IOException {
-        ProjectModelParcelable projectModel = new ProjectModelParcelable(
+        var projectModel = new ProjectModel(
                 projectName,
                 projectDescription,
                 projectDir.getPath(),
@@ -167,33 +168,9 @@ public class ProjectsViewModel extends AndroidViewModel {
                 mainRectColorHex,
                 innerRectColorHex
         );
-        projectManager.generateMetadata(projectDir, projectModel);
-    }
-    
-    private void createTemplate(String projName, TemplateType tempType) {
-        if (tempType == TemplateType.NONE) return;
-
-        String fullFileName = (tempType == TemplateType.JAVA)
-                ? "Main" + ".java"
-                : "main" + ".py";
-        try {
-            projectManager.saveFile(projectManager.getProjectDir(projName), fullFileName,
-                    getTemplateContent(tempType));
-        } catch (IOException e) {
-        }
+        projectManager.generateMetadata(projectModel);
     }
 
-    private String getTemplateContent(TemplateType type) {
-        int resId;
-        if (type == TemplateType.JAVA) {
-            resId = R.string.java_template;
-        } else {
-            resId = R.string.python_template;
-        }
-        return getApplication()
-                .getString(resId)
-                .replace("\t", "   ");
-    }
 
     public enum ProjectCreationState {
         IDLE,

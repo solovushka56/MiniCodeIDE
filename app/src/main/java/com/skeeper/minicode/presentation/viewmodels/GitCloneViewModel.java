@@ -11,6 +11,7 @@ import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.enums.RepoCloningState;
+import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
 import org.eclipse.jgit.api.CloneCommand;
@@ -70,6 +71,7 @@ public class GitCloneViewModel extends ViewModel {
                         @Override
                         public void start(int totalTasks) {
                             this.totalTasks = totalTasks;
+
                         }
 
                         @Override
@@ -127,16 +129,16 @@ public class GitCloneViewModel extends ViewModel {
 
     public void onRepoCloned() {
         var rectPalette = new ProjectRectColorBinding();
-        ProjectModelParcelable model = new ProjectModelParcelable(
+        var model = new ProjectModel(
                 projectName,
                 "cloned from git",
-                "projFilepath",
+                projectDir.getPath(),
                 new String[] {"git"},
                 rectPalette.getMainRectColor(),
                 rectPalette.getInnerRectColor()
         );
         try {
-            projectManager.generateMetadata(projectDir, model);
+            projectManager.generateMetadata(model);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

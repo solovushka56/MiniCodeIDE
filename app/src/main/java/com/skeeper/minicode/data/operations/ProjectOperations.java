@@ -5,6 +5,7 @@ import static com.skeeper.minicode.core.constants.ProjectConstants.METADATA_DIR_
 
 import com.google.gson.Gson;
 import com.skeeper.minicode.core.constants.ProjectConstants;
+import com.skeeper.minicode.data.mappers.ProjectMapper;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.data.parsers.MetadataParser;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
@@ -18,12 +19,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 public class ProjectOperations implements IProjectOperations {
 
     private final IFileDirectoryProvider fileDirProvider;
+    private final Gson gson;
 
-    public ProjectOperations(IFileDirectoryProvider fileDirProvider) {
+    @Inject
+    public ProjectOperations(IFileDirectoryProvider fileDirProvider, Gson gson) {
         this.fileDirProvider = fileDirProvider;
+        this.gson = gson;
     }
 
     @Override
@@ -136,19 +142,14 @@ public class ProjectOperations implements IProjectOperations {
         return dir.listFiles(File::isDirectory);
     }
 
-
-    public void generateMetadata(File projectDir, ProjectModelParcelable model) throws IOException {
-        model.setProjectPath(projectDir.getAbsolutePath());
+    @Override
+    public void generateMetadata(ProjectModel model) throws IOException {
+        File projectDir = new File(model.path());
         File ideFilesPath = new File(projectDir, METADATA_DIR_NAME);
-
         if (!ideFilesPath.exists()) ideFilesPath.mkdirs();
-
-        Gson gson = new Gson();
-        String content = gson.toJson(model);
-
+        String content = gson.toJson(model, ProjectModel.class);
         saveFile(ideFilesPath, IDE_PROJECT_CONFIG_FILENAME, content);
     }
-
 
     public File getMetadataDir(String projectName) {
         return new File(getProjectDir(projectName), METADATA_DIR_NAME);

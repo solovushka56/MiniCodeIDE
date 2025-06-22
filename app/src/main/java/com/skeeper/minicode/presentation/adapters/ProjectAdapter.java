@@ -17,6 +17,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.data.mappers.ProjectMapper;
+import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.presentation.ui.activity.ProjectOpenActivity;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.utils.helpers.animations.QuartInterpolations;
@@ -29,10 +32,10 @@ import java.util.List;
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder> {
 
     Context context;
-    List<ProjectModelParcelable> projects;
+    List<ProjectModel> projects;
 
 
-    public ProjectAdapter(Context context, List<ProjectModelParcelable> projects) {
+    public ProjectAdapter(Context context, List<ProjectModel> projects) {
         this.context = context;
         this.projects = projects;
     }
@@ -49,11 +52,11 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
     @Override
     public void onBindViewHolder(@NonNull ProjectViewHolder holder, int position) {
-        holder.projectNameView.setText(projects.get(position).getProjectName());
-        holder.filepathView.setText(projects.get(position).getProjectPath());
+        holder.projectNameView.setText(projects.get(position).name());
+        holder.filepathView.setText(projects.get(position).path());
 
 
-        ProjectModelParcelable currentModel = projects.get(position);
+        var currentModel = projects.get(position);
         bindProjectVisuals(holder, currentModel);
 
         holder.parentRectView.setAlpha(0f);
@@ -84,18 +87,18 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     }
 
 
-    private void bindProjectVisuals(@NonNull ProjectViewHolder holder, ProjectModelParcelable currentModel) {
-        holder.projectNameView.setText(currentModel.getProjectName());
-        holder.filepathView.setText(currentModel.getProjectPath());
+    private void bindProjectVisuals(@NonNull ProjectViewHolder holder, ProjectModel currentModel) {
+        holder.projectNameView.setText(currentModel.name());
+        holder.filepathView.setText(currentModel.path());
 
         holder.parentRectView.setBackgroundTintList(
-                ColorStateList.valueOf(Color.parseColor(currentModel.getMainRectColorHex())));
+                ColorStateList.valueOf(Color.parseColor(currentModel.mainRectColorHex())));
         holder.filepathView.setBackgroundTintList(
-                ColorStateList.valueOf(Color.parseColor(currentModel.getInnerRectColorHex())));
+                ColorStateList.valueOf(Color.parseColor(currentModel.innerRectColorHex())));
     }
 
 
-    private void bindProjectOnClickListener(@NonNull ProjectViewHolder holder, ProjectModelParcelable currentModel) {
+    private void bindProjectOnClickListener(@NonNull ProjectViewHolder holder, ProjectModel currentModel) {
 
         var intent = new Intent(holder.parentRectView.getContext(), ProjectOpenActivity.class);
 
@@ -104,7 +107,8 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
                 new Pair<View, String>(holder.parentRectView, "projectTransition")
         );
 
-        intent.putExtra("projectModel", currentModel);
+        var dataModel = new ProjectMapper().mapFromDomain(currentModel);
+        intent.putExtra("projectModel", dataModel);
         context.startActivity(intent, options.toBundle());
     }
 

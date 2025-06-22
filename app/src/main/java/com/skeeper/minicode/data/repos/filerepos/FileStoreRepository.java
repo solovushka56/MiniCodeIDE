@@ -1,16 +1,14 @@
 package com.skeeper.minicode.data.repos.filerepos;
 
 import com.skeeper.minicode.domain.contracts.repos.file.IFileStoreRepository;
-import com.skeeper.minicode.domain.exceptions.DomainIOException;
-import com.skeeper.minicode.domain.exceptions.FileCopyException;
-import com.skeeper.minicode.domain.exceptions.FileCreateException;
-import com.skeeper.minicode.domain.exceptions.FileDeleteException;
-import com.skeeper.minicode.domain.exceptions.FileAlreadyExistsException;
-import com.skeeper.minicode.domain.exceptions.FileRenameException;
+import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
+import com.skeeper.minicode.domain.exceptions.file.FileCopyException;
+import com.skeeper.minicode.domain.exceptions.file.FileCreateException;
+import com.skeeper.minicode.domain.exceptions.file.FileDeleteException;
+import com.skeeper.minicode.domain.exceptions.file.FileAlreadyExistsException;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,8 +62,9 @@ public class FileStoreRepository implements IFileStoreRepository {
     }
 
 
-
-    public void renameFile(File source, String newName) throws DomainIOException {
+    @Override
+    public void renameFile(String filePath, String newName) throws DomainIOException {
+        File source = new File(filePath);
         File target = new File(source.getParent(), newName);
         if (target.exists()) {
             throw new FileAlreadyExistsException("Target file already exists: "
@@ -73,11 +72,7 @@ public class FileStoreRepository implements IFileStoreRepository {
         }
 
         if (!source.renameTo(target)) {
-            try {
-                performMoveOperation(source, target);
-            } catch (DomainIOException e) {
-                throw new RuntimeException(e);
-            }
+            performMoveOperation(source, target);
         }
     }
 

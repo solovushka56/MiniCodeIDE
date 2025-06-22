@@ -1,25 +1,14 @@
 package com.skeeper.minicode.core.singleton;
 
 
-import androidx.annotation.Nullable;
-
-import com.google.gson.Gson;
 import com.skeeper.minicode.core.constants.ProjectConstants;
-import com.skeeper.minicode.data.repos.ProjectRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
-import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.models.ProjectModel;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,15 +26,15 @@ public class ProjectManager {
         this.fileDirectoryProvider = fileDirectoryProvider;
     }
 
-    public List<ProjectModelParcelable> loadAllProjectModels() {
+    public List<ProjectModel> loadAllProjectModels() {
         return repository.loadAllProjects();
     }
 
-    public ProjectModelParcelable loadProjectModel(String projectName) {
+    public ProjectModel loadProjectModel(String projectName) {
         return repository.loadProject(projectName);
     }
 
-    public boolean createProject(ProjectModelParcelable model, boolean overwrite) {
+    public boolean createProject(ProjectModel model, boolean overwrite) {
         return repository.createProject(model, overwrite);
     }
 
@@ -78,8 +67,8 @@ public class ProjectManager {
         repository.getOperations().saveFile(projDir, fileName, content);
     }
 
-    public void generateMetadata(File projDir, ProjectModelParcelable model) throws IOException {
-        repository.getOperations().generateMetadata(projDir, model);
+    public void generateMetadata(ProjectModel model) throws IOException {
+        repository.getOperations().generateMetadata(model);
     }
 
 }

@@ -1,8 +1,8 @@
 package com.skeeper.minicode.data.repos.filerepos;
 
 import com.skeeper.minicode.domain.contracts.repos.file.IFileRepository;
-import com.skeeper.minicode.domain.exceptions.DomainIOException;
-import com.skeeper.minicode.domain.exceptions.FileCreateException;
+import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
+import com.skeeper.minicode.domain.exceptions.file.FileCreateException;
 import com.skeeper.minicode.utils.FileUtils;
 
 import java.io.File;

@@ -1,4 +1,4 @@
-package com.skeeper.minicode.presentation.ui.fragment;
+package com.skeeper.minicode.presentation.ui.fragment.menu;
 
 import static android.view.View.VISIBLE;
 
@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.presentation.adapters.ProjectAdapter;
 import com.skeeper.minicode.databinding.FragmentProjectsBinding;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
@@ -87,7 +88,7 @@ public class ProjectsFragment extends Fragment {
 
     }
 
-    private void setProjectsRecycler(List<ProjectModelParcelable> models) {
+    private void setProjectsRecycler(List<ProjectModel> models) {
         var recyclerView = binding.projectsRecyclerView;
         var adapter = new ProjectAdapter(requireActivity(), models);
         recyclerView.setLayoutManager(new LinearLayoutManager(

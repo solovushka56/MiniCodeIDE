@@ -1,22 +1,15 @@
 package com.skeeper.minicode.domain.usecases.project;
 
-import com.skeeper.minicode.data.local.FileDirectoryProvider;
-import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
-
-import java.io.File;
+import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
 
 public class GetProjectsListUseCase {
-    IFileDirectoryProvider fileDirProvider;
+    private final IProjectRepository projectRepository;
 
-    public GetProjectsListUseCase(IFileDirectoryProvider fileDirProvider) {
-        this.fileDirProvider = fileDirProvider;
+    public GetProjectsListUseCase(IProjectRepository projectRepository) {
+        this.projectRepository = projectRepository;
     }
 
     public void execute() {
-
-    }
-
-    private File getProjectsDir() {
-        return new File(fileDirProvider.getFilesDir(), "projects");
+        projectRepository.loadAllProjects();
     }
 }

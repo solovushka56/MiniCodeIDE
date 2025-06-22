@@ -281,29 +281,13 @@ public class CodeEditorActivity extends AppCompatActivity
 
     @Override
     public void onFolderClick(FileItem fileItem) {
-    }
-
-    @Override
-    public void onFileRename(FileItem fileItem) {
 
     }
 
-    @Override
-    public void onFolderLongClick(FileItem fileItem) {
-    }
 
     @Override
-    public void onFileLongClick(FileItem fileItem) {
-    }
-
-    @Override
-    public void onFolderAdd(FileItem fileItem) {
-
-    }
-
-    @Override
-    public void onFileAdd(FileItem fileItem) {
-
+    public void onFolderExpandedStateChanged(File folder, boolean isExpanded) {
+        filesViewModel.updateFolderExpandedState(folder, isExpanded);
     }
 
     @Override

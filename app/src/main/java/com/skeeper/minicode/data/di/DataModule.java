@@ -8,13 +8,16 @@ import com.skeeper.minicode.data.local.FileDirectoryProvider;
 import com.skeeper.minicode.data.local.ResourcesProvider;
 import com.skeeper.minicode.data.local.SharedPreferencesProvider;
 import com.skeeper.minicode.data.operations.ProjectOperations;
-import com.skeeper.minicode.data.repos.ProjectRepository;
+import com.skeeper.minicode.data.repos.project.ProjectRepository;
 import com.skeeper.minicode.data.repos.UserRepository;
+import com.skeeper.minicode.data.repos.filerepos.FileContentRepository;
+import com.skeeper.minicode.data.repos.filerepos.FileStoreRepository;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
-import com.skeeper.minicode.domain.contracts.repos.file.IFileRepository;
+import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
 import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.contracts.repos.file.IFileStoreRepository;
 
 import java.io.File;
 
@@ -84,8 +87,9 @@ public abstract class DataModule {
 
     @Provides
     @Singleton
-    static IProjectOperations provideProjectOperations(IFileDirectoryProvider fileDirectoryProvider) {
-        return new ProjectOperations(fileDirectoryProvider);
+    static IProjectOperations provideProjectOperations(
+            IFileDirectoryProvider fileDirectoryProvider, Gson gson) {
+        return new ProjectOperations(fileDirectoryProvider, gson);
     }
 
     @Provides
@@ -95,6 +99,16 @@ public abstract class DataModule {
         return new ProjectRepository(projectOperations, gson);
     }
 
+    @Provides
+    @Singleton
+    static IFileStoreRepository provideFileStoreRepository() {
+        return new FileStoreRepository();
+    }
 
+    @Provides
+    @Singleton
+    static IFileContentRepository provideFileContentRepository() {
+        return new FileContentRepository();
+    }
 
 }

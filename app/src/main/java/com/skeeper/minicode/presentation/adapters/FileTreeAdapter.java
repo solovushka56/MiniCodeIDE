@@ -25,6 +25,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
     private List<FileItem> visibleItems;
     private final List<FileItem> allItems;
     private final IFileTreeListener listener;
+
     private static final int FILE_TREE_TAB_PIXELS = 19;
 
     public FileTreeAdapter(List<FileItem> items, IFileTreeListener changesListener) {
@@ -100,15 +101,6 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
 
         var itemView = holder.itemView;
 
-//        holder.scrollView.setOnTouchListener((v, event) -> {
-//            if (event.getAction() == MotionEvent.ACTION_UP) {
-//                holder.panel.performClick();
-//
-//            }
-//            return false;
-//        });
-
-
         if (item.isDirectory()) {
             holder.arrow.setVisibility(View.VISIBLE);
             holder.arrow.setRotation(item.isExpanded() ? 90 : 0);
@@ -118,7 +110,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
                 listener.onFolderClick(item);
             });
             itemView.setOnLongClickListener(v -> {
-                listener.onFolderLongClick(item);
+                //listener.onFolderLongClick(item);
                 showContextMenu(v, item);
                 return true;
             });
@@ -128,7 +120,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
             holder.arrow.setRotation(0);
             itemView.setOnClickListener(v -> listener.onFileClick(item));
             itemView.setOnLongClickListener(v -> {
-                listener.onFileLongClick(item);
+                //listener.onFileLongClick(item);
                 showContextMenu(v, item);
                 return true;
             });
@@ -154,6 +146,7 @@ public class FileTreeAdapter extends RecyclerView.Adapter<FileTreeAdapter.ViewHo
 
         diffResult.dispatchUpdatesTo(this);
         listener.onFolderClick(item);
+        listener.onFolderExpandedStateChanged(item.getDirectory(), item.isExpanded());
     }
 
     @Override

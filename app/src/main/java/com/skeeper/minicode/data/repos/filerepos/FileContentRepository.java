@@ -1,13 +1,12 @@
 package com.skeeper.minicode.data.repos.filerepos;
 
 import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
-import com.skeeper.minicode.domain.exceptions.DomainIOException;
-import com.skeeper.minicode.domain.exceptions.FileReadException;
+import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
+import com.skeeper.minicode.domain.exceptions.file.FileReadException;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
