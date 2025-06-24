@@ -100,7 +100,7 @@ public class ProjectOperations implements IProjectOperations {
         File projectConfig = getProjectConfig(oldName);
         if (!metadata.exists() || !projectConfig.exists()) return false;
 
-        var parser = new MetadataParser();
+        var parser = new MetadataParser(gson);
         try {
             ProjectModel model = parser.deserialize(readFile(metadata));
             var renamedModel = new ProjectModel(newName,

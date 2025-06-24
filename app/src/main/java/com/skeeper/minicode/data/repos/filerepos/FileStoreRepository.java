@@ -29,11 +29,10 @@ public class FileStoreRepository implements IFileStoreRepository {
     }
 
     @Override
-    public void createFile(String path) throws DomainIOException {
+    public void saveFile(String path) throws DomainIOException {
         File file = new File(path);
         if (file.exists()) {
-            throw new FileAlreadyExistsException("File already exists: "
-                    + file.getAbsolutePath());
+            return;
         }
 
         File parent = file.getParentFile();

@@ -6,6 +6,7 @@ import com.skeeper.minicode.data.parsers.MetadataParser;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
 import com.skeeper.minicode.domain.models.ProjectModel;
+import com.skeeper.minicode.domain.serialization.ISerializer;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,14 +18,16 @@ import javax.inject.Inject;
 
 public class ProjectRepository implements IProjectRepository {
 
-    private final MetadataParser metadataParser = new MetadataParser();
+    private final ISerializer<ProjectModel> metadataParser;
     private final IProjectOperations operations;
     private final Gson gson;
 
     @Inject
-    public ProjectRepository(IProjectOperations operations, Gson gson) {
+    public ProjectRepository(IProjectOperations operations, ISerializer<ProjectModel> metadataParser, Gson gson) {
         this.operations = operations;
         this.gson = gson;
+        this.metadataParser = metadataParser;
+
     }
 
 
@@ -88,7 +91,9 @@ public class ProjectRepository implements IProjectRepository {
     public boolean renameProject(String oldName, String newName) {
         File oldDir = operations.getProjectDir(oldName);
         File newDir = operations.getProjectDir(newName);
-        return operations.exists(oldDir) && !operations.exists(newDir) && operations.rename(oldDir, newDir);
+        return operations.exists(oldDir) &&
+                !operations.exists(newDir) &&
+                operations.rename(oldDir, newDir);
     }
 
     @Override

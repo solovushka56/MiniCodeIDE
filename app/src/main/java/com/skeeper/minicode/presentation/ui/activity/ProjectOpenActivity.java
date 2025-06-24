@@ -6,19 +6,28 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
 
+import java.io.File;
 import java.util.Arrays;
 
 import javax.inject.Inject;
@@ -31,7 +40,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
     @Inject ProjectManager projectManager;
 
     private ActivityProjectOpenViewBinding binding;
-
+    ProjectsViewModel projectsViewModel;
 //    ProjectItemView projectItemView = null;
     ProjectModelParcelable boundModel = null;
     String time;
@@ -52,6 +61,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
             return insets;
         });
 
+        projectsViewModel = new ViewModelProvider(this).get(ProjectsViewModel.class);
         initByModel();
 
 
@@ -67,7 +77,9 @@ public class ProjectOpenActivity extends AppCompatActivity {
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
         });
         binding.buttonPanelEditName.setOnClickListener( v -> {
-            Toast.makeText(this, "In development...", Toast.LENGTH_SHORT).show();
+            showRenamePopup();
+//            Toast.makeText(this, "In development...", Toast.LENGTH_SHORT).show();
+
         });
 
         if (!Arrays.asList(boundModel.getTags()).contains("git") ) {
@@ -96,6 +108,34 @@ public class ProjectOpenActivity extends AppCompatActivity {
         if (!boundModel.getProjectDescription().isEmpty()){
             binding.projectDescriptonText.setText(boundModel.getProjectDescription());
         }
+    }
+
+    private void showRenamePopup() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_rename_file, null);
+
+        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
+        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
+        TextInputEditText input = dialogView.findViewById(R.id.newNameTextEdit);
+
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+
+        positiveButton.setOnClickListener(v -> {
+            String newName = input.getText().toString().trim();
+
+            if (projectManager.projectExists(newName)) {
+                input.setError("Project with this name already exists!");
+                return;
+            }
+            projectsViewModel.renameProject(boundModel.getProjectName(), newName);
+//            projectManager.renameProject(boundModel.getProjectName(), newName);
+            dialog.dismiss();
+        });
+
+        negativeButton.setOnClickListener(v -> dialog.dismiss());
+        dialog.show();
     }
 
 }

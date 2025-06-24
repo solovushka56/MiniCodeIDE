@@ -23,7 +23,7 @@ public class FileManager {
 
 
     public void createFile(String path) throws DomainIOException {
-        fileStoreRepository.createFile(path);
+        fileStoreRepository.saveFile(path);
     }
 
     public void deleteFile(String path) throws DomainIOException {

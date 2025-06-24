@@ -1,6 +1,7 @@
 package com.skeeper.minicode.presentation.viewmodels;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -8,10 +9,17 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.data.parsers.MetadataParser;
+import com.skeeper.minicode.data.repos.filerepos.FileContentRepository;
+import com.skeeper.minicode.data.repos.filerepos.FileStoreRepository;
 import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
 import com.skeeper.minicode.domain.enums.TemplateType;
+import com.skeeper.minicode.domain.exceptions.project.ProjectOperationException;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.domain.usecases.project.management.CreateTemplateUseCase;
+import com.skeeper.minicode.domain.usecases.project.management.RenameProjectUseCase;
+import com.skeeper.minicode.domain.usecases.project.management.metadata.GenerateMetadataUseCase;
+import com.skeeper.minicode.utils.args.ProjectCreateArgs;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
 import java.io.File;
@@ -41,6 +49,8 @@ public class ProjectsViewModel extends AndroidViewModel {
             new MutableLiveData<>(ProjectCreationState.IDLE);
 
     private final IProjectRepository projectRepository; // TODO
+    private final GenerateMetadataUseCase generateMetadataUseCase;
+    private final RenameProjectUseCase renameProjectUseCase;
 
     @Inject ProjectManager projectManager;
 
@@ -48,11 +58,14 @@ public class ProjectsViewModel extends AndroidViewModel {
     public ProjectsViewModel(
             @NonNull Application application,
             ProjectManager projectManager,
-            IProjectRepository projectRepository
-    ) {
+            IProjectRepository projectRepository,
+            GenerateMetadataUseCase generateMetadataUseCase, RenameProjectUseCase renameProjectUseCase
+            ) {
         super(application);
         this.projectManager = projectManager;
         this.projectRepository = projectRepository;
+        this.generateMetadataUseCase = generateMetadataUseCase;
+        this.renameProjectUseCase = renameProjectUseCase;
     }
 
     @Override
@@ -76,11 +89,9 @@ public class ProjectsViewModel extends AndroidViewModel {
         });
     }
 
-    public void createProjectAsync(String projectName,
-                                   String projectDescription,
-                                   String[] tags, TemplateType tempType) {
+    public void createProjectAsync(ProjectCreateArgs args) {
 
-        if (projectName == null || projectName.trim().isEmpty()) {
+        if (args.name() == null || args.name().trim().isEmpty()) {
             projectCreationState.setValue(ProjectCreationState.error(
                     "Project name cannot be empty!"));
             return;
@@ -89,46 +100,44 @@ public class ProjectsViewModel extends AndroidViewModel {
         projectCreationState.setValue(ProjectCreationState.CREATING);
         executor.execute(() -> {
             try {
-
-                if (projectManager.projectExists(projectName)) {
+                if (projectManager.projectExists(args.name())) {
                     projectCreationState.postValue(ProjectCreationState.error(
                             "Project with this name already exists"));
                     return;
                 }
 
-                File projectDir = createProjectFolder(projectName);
+                File projectDir = createProjectFolder(args.name());
                 if (projectDir == null) {
                     projectCreationState.postValue(ProjectCreationState.error(
                             "Error create project folder!"));
                     return;
                 }
 
-                ProjectRectColorBinding rectPalette = new ProjectRectColorBinding();
-                generateProjectMetadata(
-                        projectDir,
-                        projectName,
-                        projectDescription,
-                        tags,
-                        rectPalette.getMainRectColor(),
-                        rectPalette.getInnerRectColor()
-                );
+                generateMetadataUseCase.execute(new ProjectCreateArgs(
+                                args.name(),
+                                args.description(),
+                                args.tags(),
+                                args.templateType()));
 
                 new CreateTemplateUseCase(projectRepository).execute(
                         getApplication(),
-                        projectName,
-                        tempType);
+                        args.name(),
+                        args.templateType());
 
                 projectCreationState.postValue(ProjectCreationState.SUCCESS);
                 loadModelsAsync();
 
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 projectCreationState.postValue(ProjectCreationState.error(
                         "Error creating project: " + e.getMessage()));
             }
-
         });
     }
 
+    public void renameProject(String oldName, String newName) throws ProjectOperationException {
+        renameProjectUseCase.execute(oldName, newName);
+    }
 
 
     private @Nullable File createProjectFolder(String name) {
@@ -142,9 +151,9 @@ public class ProjectsViewModel extends AndroidViewModel {
         if (projectDir.exists())
             return null;
 
-
         return projectDir.mkdirs() ? projectDir : null;
     }
+
 
     private boolean isCorrectProjectName(String name) {
         return name != null &&
@@ -153,24 +162,6 @@ public class ProjectsViewModel extends AndroidViewModel {
                 !name.contains("/") &&
                 !name.contains("\\");
     }
-
-    private void generateProjectMetadata(File projectDir,
-                                         String projectName,
-                                         String projectDescription,
-                                         String[] tags,
-                                         String mainRectColorHex,
-                                         String innerRectColorHex) throws IOException {
-        var projectModel = new ProjectModel(
-                projectName,
-                projectDescription,
-                projectDir.getPath(),
-                tags,
-                mainRectColorHex,
-                innerRectColorHex
-        );
-        projectManager.generateMetadata(projectModel);
-    }
-
 
     public enum ProjectCreationState {
         IDLE,

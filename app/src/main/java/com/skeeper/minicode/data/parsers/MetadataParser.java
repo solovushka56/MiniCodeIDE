@@ -5,8 +5,16 @@ import com.google.gson.JsonSyntaxException;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.domain.serialization.ISerializer;
 
+import javax.inject.Inject;
+
 public class MetadataParser implements ISerializer<ProjectModel> {
-    Gson gson = new Gson();
+    private final Gson gson;
+
+    public MetadataParser(Gson gson) {
+        this.gson = gson;
+    }
+
+    @Inject
 
     @Override
     public String serialize(ProjectModel model) {

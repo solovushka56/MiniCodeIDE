@@ -26,6 +26,10 @@ public class ProjectManager {
         this.fileDirectoryProvider = fileDirectoryProvider;
     }
 
+    public IProjectRepository getRepository() {
+        return repository;
+    }
+
     public List<ProjectModel> loadAllProjectModels() {
         return repository.loadAllProjects();
     }

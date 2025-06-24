@@ -18,6 +18,7 @@ import com.skeeper.minicode.databinding.ActivityProjectCreateBinding;
 import com.skeeper.minicode.domain.enums.TemplateType;
 import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
 import com.skeeper.minicode.presentation.viewmodels.TemplateViewModel;
+import com.skeeper.minicode.utils.args.ProjectCreateArgs;
 import com.skeeper.minicode.utils.helpers.DateTimeHelper;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
@@ -67,9 +68,6 @@ public class ProjectCreateActivity extends AppCompatActivity {
             }
         });
 
-
-
-
         binding.buttonCreate.setOnClickListener(v -> {
             projName = binding.projectNameEditText.getText().toString();
             String projDescription = binding.projectDescripton.getText().toString();
@@ -96,8 +94,12 @@ public class ProjectCreateActivity extends AppCompatActivity {
                 selectedType = TemplateType.PYTHON;
             }
 
-            projectsViewModel.createProjectAsync(projName, projDescription,
-                    new String[] {"local"}, selectedType);
+            var args = new ProjectCreateArgs(
+                    projName,
+                    projDescription,
+                    new String[] {"local"},
+                    selectedType);
+            projectsViewModel.createProjectAsync(args);
 
         });
 
