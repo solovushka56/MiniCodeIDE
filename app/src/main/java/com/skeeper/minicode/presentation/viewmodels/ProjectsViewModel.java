@@ -19,12 +19,14 @@ import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.domain.usecases.project.management.CreateTemplateUseCase;
 import com.skeeper.minicode.domain.usecases.project.management.RenameProjectUseCase;
 import com.skeeper.minicode.domain.usecases.project.management.metadata.GenerateMetadataUseCase;
+import com.skeeper.minicode.domain.usecases.project.management.metadata.LoadMetadataUseCase;
 import com.skeeper.minicode.utils.args.ProjectCreateArgs;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,9 +40,7 @@ public class ProjectsViewModel extends AndroidViewModel {
 
     private static final String THREAD_POOL_NAME = "projects-vm-pool";
     private final ExecutorService executor = Executors.newFixedThreadPool(
-            2,
-            r -> new Thread(r, THREAD_POOL_NAME)
-    );
+            2, r -> new Thread(r, THREAD_POOL_NAME));
 
     private final MutableLiveData<List<ProjectModel>> models =
             new MutableLiveData<>(new ArrayList<>());
@@ -48,9 +48,14 @@ public class ProjectsViewModel extends AndroidViewModel {
     private final MutableLiveData<ProjectCreationState> projectCreationState =
             new MutableLiveData<>(ProjectCreationState.IDLE);
 
+
     private final IProjectRepository projectRepository; // TODO
-    private final GenerateMetadataUseCase generateMetadataUseCase;
+
     private final RenameProjectUseCase renameProjectUseCase;
+    private final GenerateMetadataUseCase generateMetadataUseCase;
+    private final LoadMetadataUseCase loadMetadataUseCase;
+
+
 
     @Inject ProjectManager projectManager;
 
@@ -59,13 +64,15 @@ public class ProjectsViewModel extends AndroidViewModel {
             @NonNull Application application,
             ProjectManager projectManager,
             IProjectRepository projectRepository,
-            GenerateMetadataUseCase generateMetadataUseCase, RenameProjectUseCase renameProjectUseCase
+            GenerateMetadataUseCase generateMetadataUseCase,
+            RenameProjectUseCase renameProjectUseCase
             ) {
         super(application);
         this.projectManager = projectManager;
         this.projectRepository = projectRepository;
         this.generateMetadataUseCase = generateMetadataUseCase;
         this.renameProjectUseCase = renameProjectUseCase;
+        loadMetadataUseCase = new LoadMetadataUseCase(projectManager.getRepository());
     }
 
     @Override
@@ -74,12 +81,6 @@ public class ProjectsViewModel extends AndroidViewModel {
         executor.shutdownNow();
     }
 
-    public MutableLiveData<List<ProjectModel>> getModels() {
-        return models;
-    }
-    public MutableLiveData<ProjectCreationState> getProjectCreationState() {
-        return projectCreationState;
-    }
 
     public void loadModelsAsync() {
         executor.execute(() -> {
@@ -88,6 +89,8 @@ public class ProjectsViewModel extends AndroidViewModel {
 
         });
     }
+
+
 
     public void createProjectAsync(ProjectCreateArgs args) {
 
@@ -163,6 +166,14 @@ public class ProjectsViewModel extends AndroidViewModel {
                 !name.contains("\\");
     }
 
+    public MutableLiveData<List<ProjectModel>> getModels() {
+        return models;
+    }
+    public MutableLiveData<ProjectCreationState> getProjectCreationState() {
+        return projectCreationState;
+    }
+
+
     public enum ProjectCreationState {
         IDLE,
         LOADING,
@@ -186,9 +197,5 @@ public class ProjectsViewModel extends AndroidViewModel {
             return state;
         }
     }
-
-
-
-
 
 }

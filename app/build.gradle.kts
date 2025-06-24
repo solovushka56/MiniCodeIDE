@@ -49,6 +49,10 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation("com.google.android.material:material:1.11.0")
 
+    // ui
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+
+
     // security
     implementation("at.favre.lib:bcrypt:0.9.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha03")

@@ -9,16 +9,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.R;
@@ -26,9 +30,12 @@ import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
+import com.skeeper.minicode.presentation.viewmodels.TagViewModel;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -41,7 +48,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
 
     private ActivityProjectOpenViewBinding binding;
     ProjectsViewModel projectsViewModel;
-//    ProjectItemView projectItemView = null;
+    TagViewModel tagViewModel;
     ProjectModelParcelable boundModel = null;
     String time;
 
@@ -62,7 +69,40 @@ public class ProjectOpenActivity extends AppCompatActivity {
         });
 
         projectsViewModel = new ViewModelProvider(this).get(ProjectsViewModel.class);
+        tagViewModel = new ViewModelProvider(this).get(TagViewModel.class);
+
         initByModel();
+
+        tagViewModel.getTags().observe(this, items -> {
+            int[] colors = { R.color.green_light, R.color.blue_ultra,
+                    R.color.orange_light, R.color.pink };
+            Random random = new Random();
+            binding.tagFlexbox.removeAllViews();
+
+            for (String tag : items) {
+                LayoutInflater inflater = LayoutInflater.from(this);
+                View tagView = inflater.inflate(R.layout.tag,
+                        binding.tagFlexbox, false);
+                TextView tagText = tagView.findViewById(R.id.tagText);
+                ImageView tagImage = tagView.findViewById(R.id.tagCircleImage);
+
+                int randIdx = random.nextInt(colors.length);
+                int randColor = colors[randIdx];
+
+                tagImage.setColorFilter(ContextCompat.getColor(this, randColor));
+
+                tagText.setText(tag);
+
+                FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                        FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                        FlexboxLayout.LayoutParams.WRAP_CONTENT
+                );
+                params.setMargins(0, 8, 8, 8);
+                tagView.setLayoutParams(params);
+                binding.tagFlexbox.addView(tagView);
+            }
+        });
+        tagViewModel.loadProjectTags(boundModel.getProjectName());
 
 
         binding.projectOpenButton.setOnClickListener(v -> {
@@ -78,8 +118,6 @@ public class ProjectOpenActivity extends AppCompatActivity {
         });
         binding.buttonPanelEditName.setOnClickListener( v -> {
             showRenamePopup();
-//            Toast.makeText(this, "In development...", Toast.LENGTH_SHORT).show();
-
         });
 
         if (!Arrays.asList(boundModel.getTags()).contains("git") ) {
@@ -130,7 +168,6 @@ public class ProjectOpenActivity extends AppCompatActivity {
                 return;
             }
             projectsViewModel.renameProject(boundModel.getProjectName(), newName);
-//            projectManager.renameProject(boundModel.getProjectName(), newName);
             dialog.dismiss();
         });
 
