@@ -1,15 +1,20 @@
 package com.skeeper.minicode.presentation.viewmodels;
 
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.mappers.ProjectMapper;
-import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
+import com.skeeper.minicode.domain.models.ProjectModel;
+import com.skeeper.minicode.domain.serialization.ISerializer;
 import com.skeeper.minicode.domain.usecases.project.management.metadata.GenerateMetadataUseCase;
 import com.skeeper.minicode.domain.usecases.project.management.metadata.LoadMetadataUseCase;
+import com.skeeper.minicode.domain.usecases.project.tags.LoadTagsUseCase;
+import com.skeeper.minicode.domain.usecases.project.tags.SaveTagsUseCase;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,6 +23,9 @@ import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
+import dagger.hilt.android.lifecycle.HiltViewModel;
+
+@HiltViewModel
 public class TagViewModel extends ViewModel {
 
     private static final String THREAD_POOL_NAME = "tag-vm-pool";
@@ -28,13 +36,21 @@ public class TagViewModel extends ViewModel {
     private final LoadMetadataUseCase loadMetadataUseCase;
     private final GenerateMetadataUseCase generateMetadataUseCase;
     private final IProjectRepository projectRepository;
-
+    private final SaveTagsUseCase saveTagsUseCase;
+    private final LoadTagsUseCase loadTagsUseCase;
     @Inject
     public TagViewModel(GenerateMetadataUseCase generateMetadataUseCase,
-                        IProjectRepository projectRepository) {
+                        IProjectRepository projectRepository,
+                        ISerializer<ProjectModel> projectModelISerializer) {
         this.generateMetadataUseCase = generateMetadataUseCase;
         this.projectRepository = projectRepository;
         this.loadMetadataUseCase = new LoadMetadataUseCase(projectRepository);
+        saveTagsUseCase = new SaveTagsUseCase(
+                loadMetadataUseCase,
+                generateMetadataUseCase,
+                projectRepository, projectModelISerializer
+                );
+        loadTagsUseCase = new LoadTagsUseCase(loadMetadataUseCase);
     }
 
     public MutableLiveData<List<String>> getTags() {
@@ -44,16 +60,33 @@ public class TagViewModel extends ViewModel {
 
     public void loadProjectTags(String projectName) {
         executor.execute(() -> {
-            var proj = loadMetadataUseCase.execute(projectName);
-            tags.postValue(Arrays.asList(proj.tags()));
+            var loadedTags = loadTagsUseCase.execute(projectName);
+            tags.postValue(loadedTags);
         });
     }
 
-    public void saveProjectTags(String[] newTags, String projectName) throws DomainIOException { // to repo or usecase
+    public void saveProjectTags(String[] newTags, String projectName) { // to repo or usecase
         var mapper = new ProjectMapper();
         var dataModel = mapper.mapFromDomain(projectRepository.loadProject(projectName));
         dataModel.setTags(newTags);
-        generateMetadataUseCase.execute(mapper.mapToDomain(dataModel));
+        try {
+            generateMetadataUseCase.execute(mapper.mapToDomain(dataModel));
+        } catch (DomainIOException e) {
+            throw new RuntimeException(e);
+        }
+        tags.setValue(Arrays.asList(newTags));
+
+
+//        executor.execute(() -> {
+//            try {
+//                saveTagsUseCase.execute(newTags, projectName);
+//                tags.postValue(Arrays.asList(newTags));
+//            } catch (DomainIOException e) {
+//                Log.e("TAGS_SAVING", "Failed saver tags in tag vm");
+//            }
+//
+//        });
+
     }
 
 }

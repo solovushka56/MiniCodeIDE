@@ -1,4 +1,4 @@
-package com.skeeper.minicode.domain.contracts.repos;
+package com.skeeper.minicode.domain.contracts.repos.project;
 
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.utils.args.ProjectCreateArgs;

@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -22,17 +22,20 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.flexbox.AlignItems;
+import com.google.android.flexbox.AlignSelf;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.core.constants.ProjectTags;
 import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
 import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
 import com.skeeper.minicode.presentation.viewmodels.TagViewModel;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -44,7 +47,8 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class ProjectOpenActivity extends AppCompatActivity {
 
-    @Inject ProjectManager projectManager;
+    @Inject
+    ProjectManager projectManager;
 
     private ActivityProjectOpenViewBinding binding;
     ProjectsViewModel projectsViewModel;
@@ -73,11 +77,26 @@ public class ProjectOpenActivity extends AppCompatActivity {
 
         initByModel();
 
+        var list = new ArrayList<>(Arrays.asList(
+                projectManager.loadProjectModel(boundModel.getProjectName()).tags()));
+        boolean starred = list.contains(ProjectTags.PROJECT_STARRED);
+        var starImage = binding.starImage;
+        int color = starred ? R.color.yellow_saturated : R.color.blue_grey;
+        starImage.setColorFilter(ContextCompat.getColor(this, color));
+
+
+
         tagViewModel.getTags().observe(this, items -> {
-            int[] colors = { R.color.green_light, R.color.blue_ultra,
-                    R.color.orange_light, R.color.pink };
+            int[] colors = {R.color.green_light, R.color.blue_ultra,
+                    R.color.orange_light, R.color.pink};
             Random random = new Random();
             binding.tagFlexbox.removeAllViews();
+
+
+            LayoutInflater _inflater = LayoutInflater.from(this);
+            View tagTitleView = _inflater.inflate(R.layout.tag_title,
+                    binding.tagFlexbox, false);
+            addViewToFlexbox(tagTitleView, 9);
 
             for (String tag : items) {
                 LayoutInflater inflater = LayoutInflater.from(this);
@@ -90,18 +109,13 @@ public class ProjectOpenActivity extends AppCompatActivity {
                 int randColor = colors[randIdx];
 
                 tagImage.setColorFilter(ContextCompat.getColor(this, randColor));
-
                 tagText.setText(tag);
-
-                FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
-                        FlexboxLayout.LayoutParams.WRAP_CONTENT,
-                        FlexboxLayout.LayoutParams.WRAP_CONTENT
-                );
-                params.setMargins(0, 8, 8, 8);
-                tagView.setLayoutParams(params);
-                binding.tagFlexbox.addView(tagView);
+                addViewToFlexbox(tagView, 9);
             }
+
         });
+
+
         tagViewModel.loadProjectTags(boundModel.getProjectName());
 
 
@@ -116,11 +130,15 @@ public class ProjectOpenActivity extends AppCompatActivity {
             projectManager.deleteProject(boundModel.getProjectName());
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
         });
-        binding.buttonPanelEditName.setOnClickListener( v -> {
+        binding.buttonPanelEditName.setOnClickListener(v -> {
             showRenamePopup();
         });
 
-        if (!Arrays.asList(boundModel.getTags()).contains("git") ) {
+        binding.buttonPanelStar.setOnClickListener(v -> {
+            updateStarButton();
+        });
+
+        if (!Arrays.asList(boundModel.getTags()).contains("git")) {
             binding.commitAndPushButton.setVisibility(GONE);
         }
         binding.commitAndPushButton.setOnClickListener(v -> {
@@ -143,7 +161,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
         binding.projectCard.setProjectName(projectName);
         binding.projectCard.setProjectFilepathText(projectFilepath);
 
-        if (!boundModel.getProjectDescription().isEmpty()){
+        if (!boundModel.getProjectDescription().isEmpty()) {
             binding.projectDescriptonText.setText(boundModel.getProjectDescription());
         }
     }
@@ -175,4 +193,39 @@ public class ProjectOpenActivity extends AppCompatActivity {
         dialog.show();
     }
 
+
+
+
+    private void updateStarButton() {
+        var list = new ArrayList<>(Arrays.asList(
+                projectManager.loadProjectModel(boundModel.getProjectName()).tags()
+        ));
+        boolean starred = list.contains(ProjectTags.PROJECT_STARRED);
+        var starImage = binding.starImage;
+        int color = starred ? R.color.blue_grey : R.color.yellow_saturated;
+        starImage.setColorFilter(ContextCompat.getColor(this, color));
+
+        if (starred) {
+            list.remove(ProjectTags.PROJECT_STARRED);
+        } else {
+            list.add(ProjectTags.PROJECT_STARRED);
+        }
+
+
+        tagViewModel.saveProjectTags(
+                list.toArray(new String[0]),
+                boundModel.getProjectName()
+        );
+
+    }
+
+    private void addViewToFlexbox(View view, int marginRight) {
+        FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
+                FlexboxLayout.LayoutParams.WRAP_CONTENT,
+                FlexboxLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.setMargins(0, 8, marginRight, 8);
+        view.setLayoutParams(params);
+        binding.tagFlexbox.addView(view);
+    }
 }

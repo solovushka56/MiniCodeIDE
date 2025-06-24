@@ -18,7 +18,7 @@ import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
-import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileStoreRepository;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.domain.serialization.ISerializer;

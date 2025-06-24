@@ -1,8 +1,6 @@
 package com.skeeper.minicode.domain.usecases.project.management;
 
-import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
-import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
-import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
+import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileStoreRepository;
 import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
 import com.skeeper.minicode.domain.exceptions.project.ProjectOperationException;

@@ -41,6 +41,7 @@ public class GetLangRegexMapUseCase {
         syntaxPatternsMap.put(Pattern.compile(typeRegex), highlightModel.typeColor);
 
         String classDeclarationRegex = "(?<=\\bclass\\s)[A-Za-z0-9_]+";
+//        String classDeclarationRegex = "(?<!\\S)@?(?!@)\\p{Lu}\\w*\\b";
         syntaxPatternsMap.put(Pattern.compile(classDeclarationRegex), highlightModel.classColor);
 
         String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";

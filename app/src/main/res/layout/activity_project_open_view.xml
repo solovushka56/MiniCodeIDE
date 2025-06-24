@@ -32,7 +32,7 @@
                 android:id="@+id/buttonPanelRemove"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:background="@drawable/ripple_shape"
                 android:clickable="true"
                 app:cardBackgroundColor="@color/orange"
@@ -75,7 +75,7 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:id="@+id/buttonPanelEditName"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -84,7 +84,8 @@
                 app:cardBackgroundColor="@color/soft_blue"
                 app:cardCornerRadius="10dp"
                 app:rippleColor="#6587C6E9"
-                app:strokeColor="@color/transparent">
+                app:strokeColor="@color/transparent"
+                android:layout_marginRight="15dp">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -114,6 +115,38 @@
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_weight="3"
+                android:id="@+id/buttonPanelStar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/ripple_shape"
+                android:clickable="true"
+                app:cardBackgroundColor="@color/violet_light"
+                app:cardCornerRadius="10dp"
+                app:rippleColor="@color/light_blue_400"
+                app:strokeColor="@color/transparent">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="2dp">
+
+                    <ImageView
+                        android:id="@+id/starImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:clickable="false"
+                        android:src="@drawable/ic_star"
+                        app:tint="@color/blue_grey" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
 
 
@@ -179,16 +212,7 @@
             app:dividerColor="@color/blue_grey" />
 
 
-        <TextView
-            android:background="@drawable/tag_rect"
-            android:textColor="@color/blue_light"
-            android:textSize="14sp"
-            android:paddingHorizontal="15dp"
-            android:paddingVertical="5dp"
-            android:layout_marginBottom="12dp"
-            android:text="Project tags:"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+
 
         <com.google.android.flexbox.FlexboxLayout
             android:layout_marginTop="0dp"

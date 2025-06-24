@@ -2,9 +2,8 @@ package com.skeeper.minicode.data.repos.project;
 
 
 import com.google.gson.Gson;
-import com.skeeper.minicode.data.parsers.MetadataParser;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
-import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.domain.serialization.ISerializer;
 

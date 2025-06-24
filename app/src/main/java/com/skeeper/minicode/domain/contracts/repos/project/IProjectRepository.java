@@ -1,10 +1,8 @@
-package com.skeeper.minicode.domain.contracts.repos;
+package com.skeeper.minicode.domain.contracts.repos.project;
 
-import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.models.ProjectModel;
 
-import java.io.File;
 import java.util.List;
 
 public interface IProjectRepository {

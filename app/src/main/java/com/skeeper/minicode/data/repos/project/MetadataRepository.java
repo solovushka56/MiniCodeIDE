@@ -1,30 +1,5 @@
 package com.skeeper.minicode.data.repos.project;
 
-import static com.skeeper.minicode.core.constants.ProjectConstants.IDE_PROJECT_CONFIG_FILENAME;
-import static com.skeeper.minicode.core.constants.ProjectConstants.METADATA_DIR_NAME;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.skeeper.minicode.core.constants.ProjectConstants;
-import com.skeeper.minicode.data.mappers.ProjectMapper;
-import com.skeeper.minicode.data.parsers.MetadataParser;
-import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
-import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
-import com.skeeper.minicode.domain.contracts.repos.IMetadataRepository;
-import com.skeeper.minicode.domain.models.ProjectModel;
-import com.skeeper.minicode.utils.args.ProjectCreateArgs;
-import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
-import com.skeeper.minicode.utils.helpers.ProjectRectColorBindings;
-
-import org.eclipse.jgit.internal.storage.file.FileRepository;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-
-import javax.inject.Inject;
-
 public class MetadataRepository { //implements IMetadataRepository {
 //    private final Gson gson;
 //    private final IFileDirectoryProvider fileDirectoryProvider;

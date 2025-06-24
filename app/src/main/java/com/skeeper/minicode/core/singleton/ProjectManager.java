@@ -3,7 +3,7 @@ package com.skeeper.minicode.core.singleton;
 
 import com.skeeper.minicode.core.constants.ProjectConstants;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
-import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.models.ProjectModel;
 
 import java.io.File;

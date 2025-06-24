@@ -1,6 +1,6 @@
 package com.skeeper.minicode.domain.usecases.project;
 
-import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.models.ProjectModel;
 
 public class LocalProjectCreateUseCase {

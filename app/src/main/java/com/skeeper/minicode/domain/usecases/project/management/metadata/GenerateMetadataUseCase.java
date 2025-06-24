@@ -1,6 +1,6 @@
 package com.skeeper.minicode.domain.usecases.project.management.metadata;
 
-import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
+import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileStoreRepository;
 import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
@@ -8,8 +8,6 @@ import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.domain.serialization.ISerializer;
 import com.skeeper.minicode.utils.args.ProjectCreateArgs;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
-
-import java.io.IOException;
 
 import javax.inject.Inject;
 

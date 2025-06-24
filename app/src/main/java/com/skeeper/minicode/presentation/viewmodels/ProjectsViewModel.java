@@ -1,7 +1,6 @@
 package com.skeeper.minicode.presentation.viewmodels;
 
 import android.app.Application;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,11 +8,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.data.parsers.MetadataParser;
-import com.skeeper.minicode.data.repos.filerepos.FileContentRepository;
-import com.skeeper.minicode.data.repos.filerepos.FileStoreRepository;
-import com.skeeper.minicode.domain.contracts.repos.IProjectRepository;
-import com.skeeper.minicode.domain.enums.TemplateType;
+import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.exceptions.project.ProjectOperationException;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.domain.usecases.project.management.CreateTemplateUseCase;
@@ -21,12 +16,9 @@ import com.skeeper.minicode.domain.usecases.project.management.RenameProjectUseC
 import com.skeeper.minicode.domain.usecases.project.management.metadata.GenerateMetadataUseCase;
 import com.skeeper.minicode.domain.usecases.project.management.metadata.LoadMetadataUseCase;
 import com.skeeper.minicode.utils.args.ProjectCreateArgs;
-import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
