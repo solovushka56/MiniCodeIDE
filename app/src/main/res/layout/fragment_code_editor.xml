@@ -6,19 +6,22 @@
     tools:context=".presentation.ui.fragment.CodeEditorFragment">
 
     <com.amrdeveloper.codeview.CodeView
-        android:inputType="text|textNoSuggestions|textMultiLine|textVisiblePassword"
-        android:importantForAutofill="no"
-        android:autofillHints=""
-        android:textIsSelectable="true"
-        android:imeOptions="actionNone"
-
         android:id="@+id/codeViewMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="2"
+        android:autofillHints=""
         android:background="@color/blue_grey"
         android:dropDownHorizontalOffset="0dp"
         android:fontFamily="@font/cascadia_code_semi_bold_origin"
-        android:gravity="top|start"
-        android:textColor="#E5DADA" />
+        android:gravity="top|left"
+        android:importantForAutofill="no"
+        android:imeOptions="actionNone"
+        android:inputType="text|textNoSuggestions|textMultiLine|textVisiblePassword"
+        android:textColor="#E5DADA"
+        android:textIsSelectable="true"
+
+        android:layerType="hardware"
+        android:scrollbars="vertical|horizontal"
+        android:scrollbarStyle="outsideOverlay" />
 </FrameLayout>

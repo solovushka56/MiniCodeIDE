@@ -17,7 +17,6 @@ public class GetLangRegexMapUseCase {
         this.langModel = langModel;
     }
 
-
     public Map<Pattern, Integer> execute() {
 
         Map<Pattern, Integer> syntaxPatternsMap = new LinkedHashMap<>();
