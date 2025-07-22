@@ -4,6 +4,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -34,7 +35,6 @@ public class ProjectCloneActivity extends AppCompatActivity {
     @Inject
     ProjectManager projectManager;
     GitCloneViewModel gitViewModel;
-    File projectDir = null;
     SecurePrefViewModel securePrefViewModel;
 
     @Override
@@ -48,7 +48,10 @@ public class ProjectCloneActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
         getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+        ClipboardManager clipboardManager = (ClipboardManager)
+                getSystemService(Context.CLIPBOARD_SERVICE);
 
         gitViewModel = new ViewModelProvider(this).get(GitCloneViewModel .class);
         securePrefViewModel = new ViewModelProvider(this).get(SecurePrefViewModel.class);
@@ -116,8 +119,9 @@ public class ProjectCloneActivity extends AppCompatActivity {
         });
 
 
-        ClipboardManager clipboardManager = (ClipboardManager)
-                getSystemService(Context.CLIPBOARD_SERVICE);
+
+
+
         binding.buttonPaste.setOnClickListener(v -> {
             if (clipboardManager != null && clipboardManager.hasPrimaryClip()) {
                 CharSequence pasteData = clipboardManager
@@ -127,6 +131,9 @@ public class ProjectCloneActivity extends AppCompatActivity {
                 if (pasteData != null) {
                     EditText editText = binding.projectUrlEditText;
                     editText.setText(pasteData);
+                    String pasteDataStr = pasteData.toString();
+                    binding.projectNameEditText.setText(
+                            extractLastWordFromUrl(pasteDataStr));
                 }
                 else {
                     Toast.makeText(this, "Buffer is empty!",
@@ -158,5 +165,26 @@ public class ProjectCloneActivity extends AppCompatActivity {
         binding.buttonClone.setAlpha(enabled ? 1f : 0.5f);
     }
 
+
+    public static String extractLastWordFromUrl(String url) {
+        if (url == null || url.isEmpty()) {
+            return "";
+        }
+        
+        String cleanedUrl = url.endsWith("/")
+                ? url.substring(0, url.length() - 1)
+                : url;
+
+        String[] parts = cleanedUrl.split("/");
+
+        for (int i = parts.length - 1; i >= 0; i--) {
+            if (!parts[i].isEmpty()) {
+                return parts[i];
+            }
+        }
+
+
+        return "";
+    }
 
 }
