@@ -78,18 +78,6 @@
                     android:src="@drawable/ic_recreate"
                     app:rippleColor="#4F3DC2EC" />
 
-                <ImageButton
-                    android:id="@+id/runCodeButton"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-
-                    android:layout_margin="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/ripple_shape"
-
-                    android:backgroundTint="@color/violet"
-                    android:src="@drawable/img_icon_run"
-                    android:visibility="gone" />
 
                 <ImageButton
                     android:id="@+id/saveButton"
@@ -104,6 +92,18 @@
                     android:src="@drawable/save_icon"
                     app:rippleColor="#4F3DC2EC" />
 
+                <ImageButton
+                    android:id="@+id/compileButton"
+                    android:layout_width="50dp"
+
+                    android:layout_height="50dp"
+                    android:layout_margin="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_shape"
+                    android:backgroundTint="@color/violet"
+                    android:src="@drawable/ic_run_mini"
+                    android:scaleType="centerInside"
+                    app:rippleColor="#4F3DC2EC" />
 
                 <ImageButton
                     android:id="@+id/optionsButton"

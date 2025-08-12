@@ -47,6 +47,7 @@ import com.skeeper.minicode.presentation.ui.other.FileTreeView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.presentation.adapters.SnippetsAdapter;
 import com.skeeper.minicode.databinding.ActivityCodeEditorBinding;
+import com.skeeper.minicode.presentation.viewmodels.CompileViewModel;
 import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
 import com.skeeper.minicode.presentation.viewmodels.SnippetViewModel;
 import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
@@ -78,13 +79,15 @@ public class CodeEditorActivity extends AppCompatActivity
     private View rootView;
     private RecyclerView bottomPanel;
     private final int minKeyboardHeight = 100;
-    private String projectName = null;
-    private CodeEditorFragment currentCodeFragment = null;
 
     private SnippetViewModel snippetViewModel;
     private FilesViewModel filesViewModel;
+    private CompileViewModel compileViewModel;
 
     private final Map<FileItem, CodeEditorFragment> cachedFragments = new HashMap<>();
+    private String projectName = null;
+    private CodeEditorFragment currentCodeFragment = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +104,9 @@ public class CodeEditorActivity extends AppCompatActivity
         });
         getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
         projectName = getIntent().getStringExtra("projectName");
+
+        compileViewModel = new ViewModelProvider(this).get(CompileViewModel.class);
+
 
 
         snippetViewModel = new ViewModelProvider(this).get(SnippetViewModel.class);
