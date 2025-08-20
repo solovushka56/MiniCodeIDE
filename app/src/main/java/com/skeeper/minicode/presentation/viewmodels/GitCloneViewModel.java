@@ -1,14 +1,12 @@
 package com.skeeper.minicode.presentation.viewmodels;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.data.models.ProjectModelParcelable;
-import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
+import com.skeeper.minicode.data.repos.file.LocalFileRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.enums.RepoCloningState;
 import com.skeeper.minicode.domain.models.ProjectModel;
@@ -18,13 +16,10 @@ import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 

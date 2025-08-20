@@ -1,4 +1,4 @@
-package com.skeeper.minicode.data.repos.filerepos;
+package com.skeeper.minicode.data.repos.file;
 
 import com.skeeper.minicode.domain.contracts.other.callbacks.FileCallback;
 import com.skeeper.minicode.domain.contracts.other.callbacks.ReadFileCallback;

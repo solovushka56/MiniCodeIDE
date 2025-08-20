@@ -14,7 +14,6 @@ import java.io.FileWriter;
 
 import javax.inject.Inject;
 
-import hilt_aggregated_deps._com_skeeper_minicode_presentation_ui_activity_ProjectCloneActivity_GeneratedInjector;
 
 
 public class TemplateViewModel extends AndroidViewModel {

@@ -1,4 +1,4 @@
-package com.skeeper.minicode.data.repos.filerepos;
+package com.skeeper.minicode.data.repos.file;
 
 import com.skeeper.minicode.domain.contracts.repos.file.IFileRepository;
 import com.skeeper.minicode.domain.exceptions.file.DomainIOException;

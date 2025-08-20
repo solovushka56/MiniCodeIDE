@@ -5,32 +5,22 @@ import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.remote.CompileApiService;
-import com.skeeper.minicode.data.remote.CompileRequest;
-import com.skeeper.minicode.data.remote.CompileResponse;
+import com.skeeper.minicode.domain.contracts.repos.compilation.ICompilerRepository;
+import com.skeeper.minicode.domain.models.CompileRequest;
+import com.skeeper.minicode.domain.models.CompileResponse;
 import com.skeeper.minicode.data.remote.CompileRetrofitClient;
+import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.Stack;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -42,102 +32,47 @@ public class CompileViewModel extends ViewModel {
 
     private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
-    private final MutableLiveData<Boolean> compiledResponse = new MutableLiveData<>(false);
+    private final MutableLiveData<CompileResponse> compileResult = new MutableLiveData<>();
+    private final MutableLiveData<String> compileException = new MutableLiveData<>();
 
-    private final MutableLiveData<String> _output = new MutableLiveData<>();
-    private final MutableLiveData<String> _error = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> _isLoading = new MutableLiveData<>();
-    private final MutableLiveData<String> _compileTime = new MutableLiveData<>();
+    private final IFileContentRepository fileContentRepository;
+    private final IDirectoryRepository directoryRepository;
+    private final ICompilerRepository compilerRepository;
 
-    IFileContentRepository fileContentRepository;
-
-    @Inject
-    ProjectManager projectManager;
+    @Inject ProjectManager projectManager;
 
     @Inject
-    public CompileViewModel(IFileContentRepository fileContentRepository) {
+    public CompileViewModel(IFileContentRepository fileContentRepository,
+                            IDirectoryRepository directoryRepository,
+                            ICompilerRepository compilerRepository) {
         this.fileContentRepository = fileContentRepository;
+        this.directoryRepository = directoryRepository;
+        this.compilerRepository = compilerRepository;
     }
 
-    public void compile(String projectName, List<File> files) {
-        _isLoading.setValue(true);
-        var client = new CompileRetrofitClient();
-        CompileApiService api = client.getClient().create(CompileApiService.class);
-
-        var metadata = projectManager.loadProjectModel(projectName);
-
-        var filesDict = getFilesContent(new File(metadata.path()));
+    public void compile(String projectName) {
+        var rootDirectory = projectManager.getProjectDir(projectName);
+        var filesMap = directoryRepository.getFilesContentMap(rootDirectory.getPath());
         var request = new CompileRequest(
                 "python",
-                filesDict,
+                filesMap,
                 "main.py",
-                new String[] {});
+                new String[] {}
+        );
 
-        Call<CompileResponse> call = api.compileCode(request);
-
-        call.enqueue(new Callback<CompileResponse>() {
-
+        compilerRepository.getCompilationResult(request, projectName,
+                new ICompilerRepository.ICompileCallback() {
             @Override
-            public void onResponse(Call<CompileResponse> call,
-                                   retrofit2.Response<CompileResponse> response) {
-                _isLoading.setValue(false);
-
-                if (response.isSuccessful() && response.body() != null) {
-                    CompileResponse result = response.body();
-                    if (result.success()) {
-                        _output.setValue(result.output());
-                    } else {
-                        _error.setValue(result.errors());
-                    }
-                } else {
-                    _error.setValue("Server error: " + response.code());
-                }
+            public void onSuccess(CompileResponse response) {
+                compileResult.postValue(response);
             }
 
             @Override
-            public void onFailure(Call<CompileResponse> call, Throwable t) {
-                _isLoading.setValue(false);
-                _error.setValue("Network error: " + t.getMessage());
+            public void onError(Exception exception) {
+                compileException.postValue(exception.getMessage());
             }
         });
     }
 
-
-
-    public static List<File> getAllFiles(File directory) {
-        List<File> fileList = new ArrayList<>();
-        if (directory == null || !directory.exists() || !directory.isDirectory())
-            return fileList;
-
-        File[] files = directory.listFiles();
-        if (files == null) return fileList;
-
-        for (File file : files) {
-            if (file.isFile()) fileList.add(file);
-            else if (file.isDirectory()) fileList.addAll(getAllFiles(file));
-        }
-        return fileList;
-    }
-
-    public static Map<String, String> getFilesContent(File rootDir) {
-        Map<String, String> resultMap = new HashMap<>();
-        List<File> allFiles = getAllFiles(rootDir);
-
-        for (File file : allFiles) {
-            if (!file.isFile()) continue;
-
-            try {
-                String content = new String(
-                        Files.readAllBytes(file.toPath()),
-                        StandardCharsets.UTF_8
-                );
-                resultMap.put(file.getName(), content);
-            }
-            catch (IOException | SecurityException e) {
-                e.printStackTrace();
-            }
-        }
-        return resultMap;
-    }
 
 }

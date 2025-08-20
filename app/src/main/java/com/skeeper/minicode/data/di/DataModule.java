@@ -10,13 +10,17 @@ import com.skeeper.minicode.data.local.ResourcesProvider;
 import com.skeeper.minicode.data.local.SharedPreferencesProvider;
 import com.skeeper.minicode.data.operations.ProjectOperations;
 import com.skeeper.minicode.data.parsers.MetadataParser;
+import com.skeeper.minicode.data.repos.compilation.CompilerRepository;
+import com.skeeper.minicode.data.repos.file.DirectoryRepository;
 import com.skeeper.minicode.data.repos.project.ProjectRepository;
 import com.skeeper.minicode.data.repos.UserRepository;
-import com.skeeper.minicode.data.repos.filerepos.FileContentRepository;
-import com.skeeper.minicode.data.repos.filerepos.FileStoreRepository;
+import com.skeeper.minicode.data.repos.file.FileContentRepository;
+import com.skeeper.minicode.data.repos.file.FileStoreRepository;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
+import com.skeeper.minicode.domain.contracts.repos.compilation.ICompilerRepository;
+import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
 import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileStoreRepository;
@@ -126,6 +130,20 @@ public abstract class DataModule {
     static ISerializer<ProjectModel> provideProjectModelSerializer(Gson gson) {
         return new MetadataParser(gson);
     }
+
+
+    @Provides
+    @Singleton
+    static ICompilerRepository provideCompilerRepository() {
+        return new CompilerRepository();
+    }
+
+    @Provides
+    @Singleton
+    static IDirectoryRepository provideDirectoryRepository() {
+        return new DirectoryRepository();
+    }
+
 
     @Provides
     @Singleton

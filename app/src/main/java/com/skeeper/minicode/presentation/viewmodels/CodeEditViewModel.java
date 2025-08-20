@@ -4,7 +4,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.skeeper.minicode.data.repos.filerepos.LocalFileRepository;
+import com.skeeper.minicode.data.repos.file.LocalFileRepository;
 import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
 

@@ -1,4 +1,4 @@
-package com.skeeper.minicode.data.remote;
+package com.skeeper.minicode.domain.models;
 
 public record CompileResponse(boolean success,
                               String output,

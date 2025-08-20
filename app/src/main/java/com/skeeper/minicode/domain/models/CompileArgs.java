@@ -1,11 +1,11 @@
-package com.skeeper.minicode.data.remote;
+package com.skeeper.minicode.domain.models;
 
-import java.util.Dictionary;
 import java.util.Map;
+import java.util.Set;
 
-public record CompileRequest(
+public record CompileArgs(
         String language,
         Map<String, String> files,
         String mainFile,
         String[] cliArguments
-) {}
+)  {}

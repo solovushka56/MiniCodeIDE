@@ -1,4 +1,4 @@
-package com.skeeper.minicode.domain.usecases;
+package com.skeeper.minicode.domain.usecases.file;
 
 import com.skeeper.minicode.domain.contracts.repos.ICallbackFileRepository;
 
