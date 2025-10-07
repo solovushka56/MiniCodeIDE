@@ -8,12 +8,11 @@ import android.widget.Toast;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.skeeper.minicode.data.repos.project.CodeLangRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
 import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.usecases.project.syntax.GetLangRegexMapUseCase;
 import com.skeeper.minicode.domain.usecases.file.GetExtensionUseCase;
-import com.skeeper.minicode.domain.usecases.project.syntax.GetLangModelUseCase;
-import com.skeeper.minicode.domain.usecases.project.syntax.GetLangRawUseCase;
 
 import java.io.File;
 import java.util.HashMap;
@@ -36,9 +35,13 @@ public class HighlightViewModel extends ViewModel {
     private final MutableLiveData<Map<Pattern, Integer>>
             currentRegexMapData = new MutableLiveData<>();
 
+    private final GetLangRegexMapUseCase getLangRegexMapUseCase;
+
     @Inject
     public HighlightViewModel(IResourcesProvider resourcesProvider) {
         this.resourcesProvider = resourcesProvider;
+        getLangRegexMapUseCase = new GetLangRegexMapUseCase(
+                new CodeLangRepository(resourcesProvider));
     }
 
 
@@ -49,11 +52,9 @@ public class HighlightViewModel extends ViewModel {
 
         if (langType == ExtensionType.OTHER) return;
 
-        int langRaw = new GetLangRawUseCase().execute(langType);
-        var langModel = new GetLangModelUseCase(resourcesProvider).execute(langRaw);
-
         // todo handle case where we have cached maps
-        var map = new GetLangRegexMapUseCase(langModel).execute();
+        var map = getLangRegexMapUseCase.execute(langType);
+
         currentRegexMapData.setValue(map);
     }
 
