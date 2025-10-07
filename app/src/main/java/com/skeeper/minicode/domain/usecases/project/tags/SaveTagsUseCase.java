@@ -18,7 +18,9 @@ public record SaveTagsUseCase(LoadMetadataUseCase loadMetadataUseCase,
                 model.description(),
                 model.path(),
                 newTags,
-                model.mainRectColorHex(), model.innerRectColorHex());
+                model.mainRectColorHex(),
+                model.innerRectColorHex(),
+                model.mainFilePath());
         generateMetadataUseCase.execute(model);
     }
 

@@ -8,7 +8,9 @@ import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
 import com.skeeper.minicode.domain.models.CompileArgs;
 import com.skeeper.minicode.domain.models.CompileRequest;
 import com.skeeper.minicode.domain.models.CompileResponse;
+import com.skeeper.minicode.domain.usecases.file.GetExtensionUseCase;
 
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -33,10 +35,6 @@ public class CompilerRepository implements ICompilerRepository {
         executorService.execute(() -> {
             var client = new CompileRetrofitClient();
             CompileApiService api = client.getClient().create(CompileApiService.class);
-
-            var metadata = projectManager.loadProjectModel(projectName);
-            var filesDict = directoryRepository.getFilesContentMap(metadata.path());
-
 
 
             Call<CompileResponse> call = api.compileCode(request);

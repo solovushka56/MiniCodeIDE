@@ -12,7 +12,8 @@ public final class ProjectMapper {
                 dataModel.getProjectPath(),
                 dataModel.getTags(),
                 dataModel.getMainRectColorHex(),
-                dataModel.getInnerRectColorHex()
+                dataModel.getInnerRectColorHex(),
+                dataModel.getMainFilePath()
         );
     }
 
@@ -23,7 +24,9 @@ public final class ProjectMapper {
                 domainEntity.path(),
                 domainEntity.tags(),
                 domainEntity.mainRectColorHex(),
-                domainEntity.innerRectColorHex()
+                domainEntity.innerRectColorHex(),
+                domainEntity.mainFilePath()
+
         );
     }
 }

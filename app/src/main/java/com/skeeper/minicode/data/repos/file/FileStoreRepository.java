@@ -13,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FileStoreRepository implements IFileStoreRepository {
 
@@ -73,6 +75,38 @@ public class FileStoreRepository implements IFileStoreRepository {
         if (!source.renameTo(target)) {
             performMoveOperation(source, target);
         }
+    }
+
+
+
+    @Override
+    public List<File> findFiles(File rootDirectory, String fileName, boolean ignoreCase) {
+        List<File> foundFiles = new ArrayList<>();
+
+        if (rootDirectory == null
+                || !rootDirectory.exists()
+                || !rootDirectory.isDirectory()) {
+            return foundFiles;
+        }
+
+        File[] files = rootDirectory.listFiles();
+        if (files == null) return foundFiles;
+
+        for (File file : files) {
+            if (file.isDirectory()) {
+                foundFiles.addAll(findFiles(file, fileName, ignoreCase));
+            } else {
+                boolean nameMatches = ignoreCase
+                        ? file.getName().equalsIgnoreCase(fileName)
+                        : file.getName().equals(fileName);
+
+                if (nameMatches) {
+                    foundFiles.add(file);
+                }
+            }
+        }
+
+        return foundFiles;
     }
 
 

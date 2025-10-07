@@ -53,7 +53,9 @@ public class RenameProjectUseCase {
                 newPath,
                 model.tags(),
                 model.mainRectColorHex(),
-                model.innerRectColorHex());
+                model.innerRectColorHex(),
+                model.mainFilePath()
+        );
         try {
             generateMetadataUseCase.execute(newModel);
         }

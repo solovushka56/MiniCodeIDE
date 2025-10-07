@@ -130,7 +130,8 @@ public class GitCloneViewModel extends ViewModel {
                 projectDir.getPath(),
                 new String[] {"git"},
                 rectPalette.getMainRectColor(),
-                rectPalette.getInnerRectColor()
+                rectPalette.getInnerRectColor(),
+                ""
         );
         try {
             projectManager.generateMetadata(model);

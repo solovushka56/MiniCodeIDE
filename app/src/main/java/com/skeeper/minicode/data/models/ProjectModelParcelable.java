@@ -21,6 +21,7 @@ public class ProjectModelParcelable implements Parcelable {
     private String[] tags;
     private String mainRectColorHex;
     private String innerRectColorHex;
+    private String mainFilePath;
 
     public ProjectModelParcelable(String projectName, String projectPath) {
         this.projectName = projectName;
@@ -33,7 +34,9 @@ public class ProjectModelParcelable implements Parcelable {
                                   String projectPath,
                                   String[] tags,
                                   String mainRectColorHex,
-                                  String innerRectColorHex) {
+                                  String innerRectColorHex,
+                                  String mainFilePath
+    ) {
 
         this.projectName = projectName;
         this.projectDescription = projectDescription;
@@ -41,6 +44,7 @@ public class ProjectModelParcelable implements Parcelable {
         this.tags = tags;
         this.mainRectColorHex = mainRectColorHex;
         this.innerRectColorHex = innerRectColorHex;
+        this.mainFilePath = mainFilePath;
     }
 
     protected ProjectModelParcelable(Parcel in) {
@@ -137,5 +141,11 @@ public class ProjectModelParcelable implements Parcelable {
         this.projectDescription = projectDescription;
     }
 
+    public String getMainFilePath() {
+        return mainFilePath;
+    }
 
+    public void setMainFilePath(String mainFilePath) {
+        this.mainFilePath = mainFilePath;
+    }
 }

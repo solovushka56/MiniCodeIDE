@@ -9,6 +9,8 @@ import com.skeeper.minicode.domain.serialization.ISerializer;
 import com.skeeper.minicode.utils.args.ProjectCreateArgs;
 import com.skeeper.minicode.utils.helpers.ProjectRectColorBinding;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
 public class GenerateMetadataUseCase {
@@ -35,12 +37,24 @@ public class GenerateMetadataUseCase {
 
         var projPath = operations.getProjectDir(args.name());
         var colorRect = new ProjectRectColorBinding();
-        var model = new ProjectModel(args.name(),
+
+        String mainFileName = "";
+
+        switch (args.templateType()) {
+            case JAVA -> mainFileName = "Main.java";
+            case PYTHON -> mainFileName = "main.py";
+        };
+
+        var model = new ProjectModel(
+                args.name(),
                 args.description(),
                 projPath.getPath(),
                 args.tags(),
                 colorRect.getMainRectColor(),
-                colorRect.getInnerRectColor());
+                colorRect.getInnerRectColor(),
+                new File(projPath, mainFileName).getPath()
+        );
+
 
         String serialized = serializer.serialize(model);
         fileContentRepository.writeFileText(

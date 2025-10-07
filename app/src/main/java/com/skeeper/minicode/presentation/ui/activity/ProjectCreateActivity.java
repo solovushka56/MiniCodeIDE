@@ -87,7 +87,6 @@ public class ProjectCreateActivity extends AppCompatActivity {
             int selectedId = binding.templateTypeGroup.getCheckedRadioButtonId();
 
             TemplateType selectedType = TemplateType.NONE;
-
             if (selectedId == R.id.optionJava) {
                 selectedType = TemplateType.JAVA;
             } else if (selectedId == R.id.optionPython) {

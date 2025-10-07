@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModel;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.remote.CompileApiService;
 import com.skeeper.minicode.domain.contracts.repos.compilation.ICompilerRepository;
+import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.models.CompileRequest;
 import com.skeeper.minicode.domain.models.CompileResponse;
 import com.skeeper.minicode.data.remote.CompileRetrofitClient;
 import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
+import com.skeeper.minicode.domain.usecases.file.GetExtensionUseCase;
 
 import java.io.File;
 import java.util.Arrays;
@@ -51,12 +53,29 @@ public class CompileViewModel extends ViewModel {
     }
 
     public void compile(String projectName) {
+        var metadata = projectManager.loadProjectModel(projectName);
         var rootDirectory = projectManager.getProjectDir(projectName);
+
         var filesMap = directoryRepository.getFilesContentMap(rootDirectory.getPath());
+        var mainFile = new File(metadata.mainFilePath());
+
+        if (metadata.mainFilePath().isEmpty() ||
+                !mainFile.exists()) {
+            compileException.setValue("Main file not selected");
+            return;
+        }
+
+        var extension = new GetExtensionUseCase().execute(mainFile);
+        if (extension != ExtensionType.PYTHON && extension != ExtensionType.JAVA) {
+            compileException.setValue("Unsupported language");
+            return;
+        }
+
+
         var request = new CompileRequest(
-                "python",
+                extension.name().toLowerCase(), // as extension
                 filesMap,
-                "main.py",
+                mainFile.getName(),
                 new String[] {}
         );
 

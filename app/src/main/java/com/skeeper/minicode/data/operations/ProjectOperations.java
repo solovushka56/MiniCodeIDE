@@ -5,8 +5,6 @@ import static com.skeeper.minicode.core.constants.ProjectConstants.METADATA_DIR_
 
 import com.google.gson.Gson;
 import com.skeeper.minicode.core.constants.ProjectConstants;
-import com.skeeper.minicode.data.mappers.ProjectMapper;
-import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.data.parsers.MetadataParser;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
@@ -88,7 +86,7 @@ public class ProjectOperations implements IProjectOperations {
         }
     }
 
-    public boolean renameProject(String oldName, String newName) {
+    public boolean renameProject(String oldName, String newName) { // todo model.mainFilePath()
         File oldDir = getProjectDir(oldName);
         File newDir = getProjectDir(newName);
 
@@ -108,7 +106,8 @@ public class ProjectOperations implements IProjectOperations {
                     model.path(),
                     model.tags(),
                     model.mainRectColorHex(),
-                    model.innerRectColorHex());
+                    model.innerRectColorHex(),
+                    model.mainFilePath());
             String json = parser.serialize(model);
             FileUtils.writeFileText(getProjectConfig(oldName), json);
         }

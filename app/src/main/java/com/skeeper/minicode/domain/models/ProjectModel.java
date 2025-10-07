@@ -6,4 +6,6 @@ public record ProjectModel(String name,
                            String path,
                            String[] tags,
                            String mainRectColorHex,
-                           String innerRectColorHex) { }
+                           String innerRectColorHex,
+                           String mainFilePath
+) { }
