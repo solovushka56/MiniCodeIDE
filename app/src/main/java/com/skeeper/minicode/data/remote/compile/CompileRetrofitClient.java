@@ -1,6 +1,4 @@
-package com.skeeper.minicode.data.remote;
-
-import javax.inject.Singleton;
+package com.skeeper.minicode.data.remote.compile;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -8,7 +6,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CompileRetrofitClient {
-    private final String BASE_URL = "http://localhost:5030"; //
+    private final String BASE_URL = "http://192.168.0.74:5030/"; //
     private Retrofit retrofit = null;
 
     public Retrofit getClient() {

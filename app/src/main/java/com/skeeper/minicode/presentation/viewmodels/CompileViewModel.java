@@ -4,27 +4,21 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.data.remote.CompileApiService;
 import com.skeeper.minicode.domain.contracts.repos.compilation.ICompilerRepository;
 import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.models.CompileRequest;
 import com.skeeper.minicode.domain.models.CompileResponse;
-import com.skeeper.minicode.data.remote.CompileRetrofitClient;
 import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
 import com.skeeper.minicode.domain.usecases.file.GetExtensionUseCase;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 // todo integrate api keys
 //

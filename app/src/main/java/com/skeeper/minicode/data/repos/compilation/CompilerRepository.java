@@ -1,16 +1,13 @@
 package com.skeeper.minicode.data.repos.compilation;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.data.remote.CompileApiService;
-import com.skeeper.minicode.data.remote.CompileRetrofitClient;
+import com.skeeper.minicode.data.remote.compile.CompileApiService;
+import com.skeeper.minicode.data.remote.compile.CompileRetrofitClient;
 import com.skeeper.minicode.domain.contracts.repos.compilation.ICompilerRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
-import com.skeeper.minicode.domain.models.CompileArgs;
 import com.skeeper.minicode.domain.models.CompileRequest;
 import com.skeeper.minicode.domain.models.CompileResponse;
-import com.skeeper.minicode.domain.usecases.file.GetExtensionUseCase;
 
-import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

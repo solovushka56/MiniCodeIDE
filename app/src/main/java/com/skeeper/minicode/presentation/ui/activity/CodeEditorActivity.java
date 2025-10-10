@@ -191,6 +191,7 @@ public class CodeEditorActivity extends AppCompatActivity
 
 
         compileViewModel.getCompileResult().observe(this, compileResponse -> {
+
             showCompilePanel();
             binding.compileText.setText(
                     compileResponse.output() + "\n" + compileResponse.errors());
@@ -208,6 +209,11 @@ public class CodeEditorActivity extends AppCompatActivity
 
 
     private void showCompilePanel() {
+        hideKeyboard();
+        if (currentCodeFragment != null)
+            getCurrentCodeView().clearFocus();
+
+
         if (binding.compileResultPanel.getVisibility() == VISIBLE) return;
         binding.compileResultPanel.measure(
                 View.MeasureSpec.makeMeasureSpec(binding.compileResultPanel.getWidth(), View.MeasureSpec.EXACTLY),
