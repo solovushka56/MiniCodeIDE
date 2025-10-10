@@ -61,7 +61,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setNavigationBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
 
 
         binding = ActivityProjectOpenViewBinding.inflate(getLayoutInflater());

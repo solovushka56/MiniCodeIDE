@@ -47,7 +47,8 @@ public class CompilerRepository implements ICompilerRepository {
                     if (response.isSuccessful() && response.body() != null) {
                         CompileResponse result = response.body();
                         callback.onSuccess(result);
-                    } else {
+                    }
+                    else {
                         callback.onError(new Exception(
                                 "Server error: " + String.valueOf(response.code())));
                     }

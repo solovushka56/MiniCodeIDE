@@ -93,5 +93,11 @@ public class CompileViewModel extends ViewModel {
         });
     }
 
+    public MutableLiveData<CompileResponse> getCompileResult() {
+        return compileResult;
+    }
 
+    public MutableLiveData<String> getCompileException() {
+        return compileException;
+    }
 }

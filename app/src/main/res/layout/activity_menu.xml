@@ -71,7 +71,6 @@
             <ImageButton
                 android:id="@+id/projectsButton"
                 style="@style/CustomImageButtonActive"
-
                 android:contentDescription="null"
                 app:srcCompat="@drawable/projects_home_menu" />
         </LinearLayout>

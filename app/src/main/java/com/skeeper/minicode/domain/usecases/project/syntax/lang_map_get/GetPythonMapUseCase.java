@@ -48,8 +48,8 @@ public class GetPythonMapUseCase extends GetLangRegexMapUseCase {
         String classDeclarationRegex = "(?<=\\bclass\\s)[A-Za-z_][A-Za-z0-9_]*";
         syntaxPatternsMap.put(Pattern.compile(classDeclarationRegex), highlightModel.classColor);
 
-        String functionDeclarationRegex = "(?<=\\bdef\\s)[a-z_][a-zA-Z0-9_]*";
-        syntaxPatternsMap.put(Pattern.compile(functionDeclarationRegex), highlightModel.methodColor);
+        String methodCallRegex = "\\b([a-z][a-zA-Z0-9_]*)\\s*(?=\\()";
+        syntaxPatternsMap.put(Pattern.compile(methodCallRegex), highlightModel.methodColor);
 
         String decoratorRegex = "@[A-Za-z_][A-Za-z0-9_]*(?:\\.[A-Za-z_][A-Za-z0-9_]*)*";
         syntaxPatternsMap.put(Pattern.compile(decoratorRegex), Color.parseColor("#DCDCAA"));

@@ -3,6 +3,7 @@ package com.skeeper.minicode.presentation.ui.activity;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.animation.ValueAnimator;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -15,6 +16,10 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -102,7 +107,7 @@ public class CodeEditorActivity extends AppCompatActivity
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.transparent));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
         projectName = getIntent().getStringExtra("projectName");
 
         compileViewModel = new ViewModelProvider(this).get(CompileViewModel.class);
@@ -147,6 +152,10 @@ public class CodeEditorActivity extends AppCompatActivity
                     currentCodeFragment.getBoundFileItem().getDirectory(),
                     getCurrentCodeView().getText().toString());
         });
+        binding.compileButton.setOnClickListener(v -> {
+            compileViewModel.compile(projectName);
+        });
+
         setupKeyboardListener();
 
         // filesys setup
@@ -180,8 +189,96 @@ public class CodeEditorActivity extends AppCompatActivity
             fileSystemView.updateFileItems(this, fileItems);
         });
 
+
+        compileViewModel.getCompileResult().observe(this, compileResponse -> {
+            showCompilePanel();
+            binding.compileText.setText(
+                    compileResponse.output() + "\n" + compileResponse.errors());
+        });
+
+        compileViewModel.getCompileException().observe(this, error -> {
+            showCompilePanel();
+            binding.compileText.setText(error);
+        });
+
+        binding.hideCompileResultBtn.setOnClickListener(v -> {
+            hideCompilePanel();
+        });
     }
 
+
+    private void showCompilePanel() {
+        if (binding.compileResultPanel.getVisibility() == VISIBLE) return;
+        binding.compileResultPanel.measure(
+                View.MeasureSpec.makeMeasureSpec(binding.compileResultPanel.getWidth(), View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        );
+        final int targetHeight = binding.compileResultPanel.getMeasuredHeight();
+
+        binding.compileResultPanel.setVisibility(VISIBLE);
+        binding.compileResultPanel.setAlpha(0f);
+        ViewGroup.LayoutParams layoutParams = binding.compileResultPanel.getLayoutParams();
+        layoutParams.height = 0;
+        binding.compileResultPanel.setLayoutParams(layoutParams);
+
+        ValueAnimator heightAnimator = ValueAnimator.ofInt(0, targetHeight);
+        heightAnimator.setDuration(400);
+        heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        heightAnimator.addUpdateListener(animation -> {
+            int value = (int) animation.getAnimatedValue();
+            ViewGroup.LayoutParams params = binding.compileResultPanel.getLayoutParams();
+            params.height = value;
+            binding.compileResultPanel.setLayoutParams(params);
+        });
+        ValueAnimator alphaAnimator = ValueAnimator.ofFloat(0f, 1f);
+        alphaAnimator.setDuration(400);
+        alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaAnimator.addUpdateListener(animation -> {
+            float value = (float) animation.getAnimatedValue();
+            binding.compileResultPanel.setAlpha(value);
+        });
+        heightAnimator.start();
+        alphaAnimator.start();
+    }
+
+    private void hideCompilePanel() {
+        if (binding.compileResultPanel.getVisibility() != VISIBLE) return;
+
+        final int initialHeight = binding.compileResultPanel.getHeight();
+        ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, 0);
+        heightAnimator.setDuration(400);
+        heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        heightAnimator.addUpdateListener(animation -> {
+            int value = (int) animation.getAnimatedValue();
+            ViewGroup.LayoutParams params = binding.compileResultPanel.getLayoutParams();
+            params.height = value;
+            binding.compileResultPanel.setLayoutParams(params);
+        });
+        ValueAnimator alphaAnimator = ValueAnimator.ofFloat(1f, 0f);
+        alphaAnimator.setDuration(400);
+        alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
+        alphaAnimator.addUpdateListener(animation -> {
+            float value = (float) animation.getAnimatedValue();
+            binding.compileResultPanel.setAlpha(value);
+        });
+        heightAnimator.addListener(new android.animation.Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(android.animation.Animator animation) {}
+
+            @Override
+            public void onAnimationEnd(android.animation.Animator animation) {
+                binding.compileResultPanel.setVisibility(INVISIBLE);
+            }
+
+            @Override
+            public void onAnimationCancel(android.animation.Animator animation) {}
+
+            @Override
+            public void onAnimationRepeat(android.animation.Animator animation) {}
+        });
+        heightAnimator.start();
+        alphaAnimator.start();
+    }
 
     public void setNewCodeEditorFragment(FileItem fileItem) {
         if (cachedFragments.get(fileItem) == null) {
@@ -203,22 +300,6 @@ public class CodeEditorActivity extends AppCompatActivity
         fragmentTransaction.commit();
     }
 
-    /// todo
-    private void setFilesystemDrawerListener(DrawerLayout drawerLayout) {
-        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerOpened(@NonNull View drawerView) {
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_OPEN);
-            }
-
-            @Override
-            public void onDrawerClosed(@NonNull View drawerView) {
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            }
-            @Override public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {}
-            @Override public void onDrawerStateChanged(int newState) {}
-        });
-    }
 
 
     private CodeView getCurrentCodeView() {
@@ -266,6 +347,8 @@ public class CodeEditorActivity extends AppCompatActivity
     }
 
 
+
+
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -289,7 +372,6 @@ public class CodeEditorActivity extends AppCompatActivity
     public void onFolderClick(FileItem fileItem) {
 
     }
-
 
     @Override
     public void onFolderExpandedStateChanged(File folder, boolean isExpanded) {
