@@ -112,8 +112,6 @@ public class CodeEditorActivity extends AppCompatActivity
 
         compileViewModel = new ViewModelProvider(this).get(CompileViewModel.class);
 
-
-
         snippetViewModel = new ViewModelProvider(this).get(SnippetViewModel.class);
         snippetViewModel.getSnippets().observe(this, snippets -> {
             var recyclerView = binding.symbolsPanel;
@@ -152,9 +150,12 @@ public class CodeEditorActivity extends AppCompatActivity
                     currentCodeFragment.getBoundFileItem().getDirectory(),
                     getCurrentCodeView().getText().toString());
         });
-        binding.compileButton.setOnClickListener(v -> {
-            compileViewModel.compile(projectName);
+        binding.compilePanelShowButton.setOnClickListener(v -> {
+            showCompilePanel();
         });
+
+
+
 
         setupKeyboardListener();
 
@@ -190,15 +191,19 @@ public class CodeEditorActivity extends AppCompatActivity
         });
 
 
-        compileViewModel.getCompileResult().observe(this, compileResponse -> {
+        binding.runCodeButton.setOnClickListener(v -> {
+            compileViewModel.compileAsync(projectName);
+            binding.compileProgress.setVisibility(VISIBLE);
+        });
 
-            showCompilePanel();
+        compileViewModel.getCompileResult().observe(this, compileResponse -> {
+            binding.compileProgress.setVisibility(INVISIBLE);
             binding.compileText.setText(
                     compileResponse.output() + "\n" + compileResponse.errors());
         });
 
         compileViewModel.getCompileException().observe(this, error -> {
-            showCompilePanel();
+            binding.compileProgress.setVisibility(INVISIBLE);
             binding.compileText.setText(error);
         });
 

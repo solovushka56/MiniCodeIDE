@@ -28,13 +28,6 @@ public class GitPushViewModel extends ViewModel {
 
     IFileDirectoryProvider fileDirectoryProvider;
 
-    private File projectDir;
-
-    private String projectName;
-    private String projectDescription;
-    private String projectPath;
-    private String[] tags;
-
     private final MutableLiveData<String> pushResult = new MutableLiveData<>();
 
     public String username = null;
@@ -46,14 +39,6 @@ public class GitPushViewModel extends ViewModel {
     @Inject
     public GitPushViewModel(IFileDirectoryProvider fileDirectoryProvider) {
         this.fileDirectoryProvider = fileDirectoryProvider;
-    }
-
-
-    public File genProjectFolder(String name) {
-        projectDir = new File(projectManager.getProjectsStoreFolder(), name);
-        boolean created = projectDir.mkdirs();
-        projectPath = projectDir.getAbsolutePath();
-        return projectDir;
     }
 
 

@@ -7,10 +7,12 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +26,7 @@ import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.presentation.ui.activity.ProjectCloneActivity;
 import com.skeeper.minicode.presentation.ui.activity.ProjectCreateActivity;
 import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
+import com.skeeper.minicode.presentation.viewmodels.TagViewModel;
 
 import java.util.List;
 
@@ -34,6 +37,7 @@ public class ProjectsFragment extends Fragment {
 
     private FragmentProjectsBinding binding;
     private ProjectsViewModel projectsViewModel;
+    private ProjectAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,8 +57,15 @@ public class ProjectsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         projectsViewModel = new ViewModelProvider(this).get(ProjectsViewModel.class);
+
+        binding.swipeRefreshLayout.setColorSchemeResources(
+                R.color.violet_muted,
+                R.color.violet
+        );
+        binding.swipeRefreshLayout.setProgressBackgroundColorSchemeColor(
+                ContextCompat.getColor(requireContext(), R.color.violet_light)
+        );
 
         projectsViewModel.getModels().observe(
                 requireActivity(),
@@ -69,6 +80,8 @@ public class ProjectsFragment extends Fragment {
                         binding.tipView.setVisibility(View.GONE);
                         binding.projectsRecyclerView.setVisibility(VISIBLE);
                     }
+                    binding.swipeRefreshLayout.setRefreshing(false);
+
                 });
 
         projectsViewModel.loadModelsAsync();
@@ -85,8 +98,12 @@ public class ProjectsFragment extends Fragment {
             startActivity(intent);
         });
 
-
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            projectsViewModel.loadModelsAsync();
+        });
     }
+
+
 
     private void setProjectsRecycler(List<ProjectModel> models) {
         var recyclerView = binding.projectsRecyclerView;
@@ -94,6 +111,7 @@ public class ProjectsFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(
                 requireActivity(), RecyclerView.VERTICAL, false));
         recyclerView.setAdapter(adapter);
+        this.adapter = adapter;
     }
 
 

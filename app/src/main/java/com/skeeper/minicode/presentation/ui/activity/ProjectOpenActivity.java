@@ -1,7 +1,10 @@
 package com.skeeper.minicode.presentation.ui.activity;
 
 import static android.view.View.GONE;
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -84,7 +87,8 @@ public class ProjectOpenActivity extends AppCompatActivity {
         int color = starred ? R.color.yellow_saturated : R.color.blue_grey;
         starImage.setColorFilter(ContextCompat.getColor(this, color));
 
-
+        findViewById(R.id.projectPanelStar).setVisibility(
+                starred ? VISIBLE : INVISIBLE);
 
         tagViewModel.getTags().observe(this, items -> {
             int[] colors = {R.color.green_light, R.color.blue_ultra,
@@ -228,4 +232,5 @@ public class ProjectOpenActivity extends AppCompatActivity {
         view.setLayoutParams(params);
         binding.tagFlexbox.addView(view);
     }
+
 }

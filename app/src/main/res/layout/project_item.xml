@@ -37,14 +37,41 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/projectTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/cascadia_code_semi_bold_origin"
-                android:textColor="#FFFFFF"
-                android:textSize="24sp"
-                tools:text="Project Title" />
+                android:layout_marginBottom="5dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/projectTitle"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cascadia_code_semi_bold_origin"
+                    android:textColor="#FFFFFF"
+                    android:textSize="24sp"
+                    tools:text="Project Title" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <ImageView
+                    android:layout_gravity="top"
+                    android:visibility="invisible"
+                    android:id="@+id/projectPanelStar"
+                    android:background="@drawable/button_rect_common"
+                    android:backgroundTint="@color/violet_average"
+                    android:src="@drawable/ic_star"
+                    android:padding="10dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
+
+
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/projectFilepath"

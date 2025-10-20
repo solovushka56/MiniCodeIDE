@@ -26,7 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class CompileViewModel extends ViewModel {
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private final MutableLiveData<CompileResponse> compileResult = new MutableLiveData<>();
     private final MutableLiveData<String> compileException = new MutableLiveData<>();
@@ -46,7 +46,11 @@ public class CompileViewModel extends ViewModel {
         this.compilerRepository = compilerRepository;
     }
 
-    public void compile(String projectName) {
+    public void compileAsync(String projectName) {
+        executor.execute(() -> compile(projectName));
+    }
+
+    private void compile(String projectName) {
         var metadata = projectManager.loadProjectModel(projectName);
         var rootDirectory = projectManager.getProjectDir(projectName);
 
@@ -55,13 +59,13 @@ public class CompileViewModel extends ViewModel {
 
         if (metadata.mainFilePath().isEmpty() ||
                 !mainFile.exists()) {
-            compileException.setValue("Main file not selected");
+            compileException.postValue("Main file not selected");
             return;
         }
 
         var extension = new GetExtensionUseCase().execute(mainFile);
         if (extension != ExtensionType.PYTHON && extension != ExtensionType.JAVA) {
-            compileException.setValue("Unsupported language");
+            compileException.postValue("Unsupported language");
             return;
         }
 
@@ -93,5 +97,11 @@ public class CompileViewModel extends ViewModel {
 
     public MutableLiveData<String> getCompileException() {
         return compileException;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        executor.shutdown();
     }
 }

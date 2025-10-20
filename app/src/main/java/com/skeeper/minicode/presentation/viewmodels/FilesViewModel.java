@@ -23,7 +23,7 @@ public class FilesViewModel extends ViewModel {
     private final Map<String, Boolean> expandedStateMap = new HashMap<>();
 
     private final MutableLiveData<List<FileItem>> files = new MutableLiveData<>();
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final FileTreeMapper fileTreeMapper = new FileTreeMapper();
 
     public FilesViewModel(File rootDirectory) {
@@ -102,7 +102,6 @@ public class FilesViewModel extends ViewModel {
         }
     }
 
-
     private FileItem findItemByFile(List<FileItem> list, File file) {
         for (FileItem item : list) {
             if (item.getDirectory().equals(file)) {
@@ -112,4 +111,9 @@ public class FilesViewModel extends ViewModel {
         return null;
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        executor.shutdown();
+    }
 }

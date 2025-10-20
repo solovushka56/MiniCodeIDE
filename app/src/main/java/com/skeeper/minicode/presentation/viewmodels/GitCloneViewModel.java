@@ -41,7 +41,6 @@ public class GitCloneViewModel extends ViewModel {
     public String username = null;
     public String token = null;
 
-    private Thread cloneThread;
 
     @Inject
     ProjectManager projectManager;

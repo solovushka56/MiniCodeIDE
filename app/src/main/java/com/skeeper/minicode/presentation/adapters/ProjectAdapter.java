@@ -1,5 +1,8 @@
 package com.skeeper.minicode.presentation.adapters;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -11,6 +14,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +31,7 @@ import com.skeeper.minicode.utils.helpers.animations.ViewAnimator;
 import com.skeeper.minicode.utils.helpers.animations.ViewScaleComponent;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder> {
@@ -95,6 +100,9 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
                 ColorStateList.valueOf(Color.parseColor(currentModel.mainRectColorHex())));
         holder.filepathView.setBackgroundTintList(
                 ColorStateList.valueOf(Color.parseColor(currentModel.innerRectColorHex())));
+
+        boolean isStarred = Arrays.asList(currentModel.tags()).contains("starred");
+        holder.star.setVisibility(isStarred ? VISIBLE : INVISIBLE);
     }
 
 
@@ -120,10 +128,10 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
     public static final class ProjectViewHolder extends RecyclerView.ViewHolder {
 
-        TextView filepathView;
-        TextView projectNameView;
-
-        View parentRectView;
+        public TextView filepathView;
+        public TextView projectNameView;
+        public ImageView star;
+        public View parentRectView;
 
         public ProjectViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -131,6 +139,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
             filepathView = itemView.findViewById(R.id.projectFilepath);
             projectNameView = itemView.findViewById(R.id.projectTitle);
             parentRectView = itemView.findViewById(R.id.parentRectView);
+            star = itemView.findViewById(R.id.projectPanelStar);
         }
     }
 

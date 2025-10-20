@@ -30,9 +30,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class ProjectsViewModel extends AndroidViewModel {
 
-    private static final String THREAD_POOL_NAME = "projects-vm-pool";
-    private final ExecutorService executor = Executors.newFixedThreadPool(
-            2, r -> new Thread(r, THREAD_POOL_NAME));
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private final MutableLiveData<List<ProjectModel>> models =
             new MutableLiveData<>(new ArrayList<>());

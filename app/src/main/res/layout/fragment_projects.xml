@@ -116,14 +116,26 @@
                 android:layout_height="170dp" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/projectsRecyclerView"
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/swipeRefreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
             android:layout_marginTop="22dp"
-            android:contentDescription="recycler view for project rects"
-            android:clipToOutline="true"
-            />
+
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/projectsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="recycler view for project rects"
+                android:clipToOutline="true"
+                />
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
 
 
 

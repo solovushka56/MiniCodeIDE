@@ -1,5 +1,7 @@
 package com.skeeper.minicode.data.remote.compile;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -15,12 +17,14 @@ public class CompileRetrofitClient {
                     .setLevel(HttpLoggingInterceptor.Level.BODY);
 
             OkHttpClient client = new OkHttpClient.Builder()
+                    .callTimeout(30, TimeUnit.SECONDS)
                     .addInterceptor(interceptor)
                     .build();
 
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(client)
+
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
