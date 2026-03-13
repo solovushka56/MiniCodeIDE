@@ -57,6 +57,7 @@ public class ProjectOperations implements IProjectOperations {
 
     @Override
     public boolean deleteRecursive(File fileOrDirectory) {
+
         if (fileOrDirectory.isDirectory()) {
             File[] children = fileOrDirectory.listFiles();
             if (children != null) {
@@ -142,7 +143,7 @@ public class ProjectOperations implements IProjectOperations {
     }
 
     @Override
-    public void generateMetadata(ProjectModel model) throws IOException {
+    public void saveMetadata(ProjectModel model) throws IOException {
         File projectDir = new File(model.path());
         File ideFilesPath = new File(projectDir, METADATA_DIR_NAME);
         if (!ideFilesPath.exists()) ideFilesPath.mkdirs();

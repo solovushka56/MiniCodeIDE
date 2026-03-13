@@ -67,12 +67,11 @@ public class ProjectManager {
         return new File(getProjectsStoreFolder(), projectName);
     }
 
-    public void saveFile(File projDir, String fileName, String content) throws IOException {
-        repository.getOperations().saveFile(projDir, fileName, content);
-    }
 
     public void generateMetadata(ProjectModel model) throws IOException {
-        repository.getOperations().generateMetadata(model);
+        repository.saveMetadata(model);
     }
+
+
 
 }

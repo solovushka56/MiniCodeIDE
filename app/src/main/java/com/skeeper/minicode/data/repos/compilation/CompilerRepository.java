@@ -1,5 +1,8 @@
 package com.skeeper.minicode.data.repos.compilation;
 
+import android.provider.SyncStateContract;
+
+import com.skeeper.minicode.core.constants.ProjectConstants;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.remote.compile.CompileApiService;
 import com.skeeper.minicode.data.remote.compile.CompileRetrofitClient;
@@ -30,9 +33,9 @@ public class CompilerRepository implements ICompilerRepository {
                                      String projectName,
                                      ICompileCallback callback) {
         executorService.execute(() -> {
-            var client = new CompileRetrofitClient();
-            CompileApiService api = client.getClient().create(CompileApiService.class);
 
+            var client = new CompileRetrofitClient(ProjectConstants.SERVER_URL); // todo to prefs
+            CompileApiService api = client.getClient().create(CompileApiService.class);
 
             Call<CompileResponse> call = api.compileCode(request);
 

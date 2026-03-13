@@ -41,10 +41,9 @@ public class RenameProjectUseCase {
             throw new ProjectOperationException(
                     "Error: Project with entered name already exists!");
         }
-        var operations = projectRepository.getOperations();
 
         var model = loadMetadataUseCase.execute(oldName);
-        var projPath = operations.getProjectDir(model.name());
+        var projPath = projectRepository.getProjectDir(model.name());
         var projParent = projPath.getParentFile(); // todo to file repos
         var newPath = new File(projParent, newName).toString();
 
@@ -63,7 +62,7 @@ public class RenameProjectUseCase {
             throw new ProjectOperationException(e.getMessage());
         }
 
-        var file = projectRepository.getOperations().getProjectDir(oldName).getPath();
+        var file = projectRepository.getProjectDir(oldName).getPath();
         try {
             fileStoreRepository.renameFile(file, newName);
         }

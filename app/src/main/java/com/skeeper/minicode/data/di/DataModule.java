@@ -108,8 +108,8 @@ public abstract class DataModule {
     @Provides
     @Singleton
     static IProjectRepository provideProjectRepository(
-            IProjectOperations projectOperations, ISerializer<ProjectModel> serializer, Gson gson) {
-        return new ProjectRepository(projectOperations, serializer, gson);
+            FileDirectoryProvider fileDirectoryProvider, Gson gson) {
+        return new ProjectRepository(fileDirectoryProvider, gson);
     }
 
     @Provides

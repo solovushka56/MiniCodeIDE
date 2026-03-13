@@ -99,6 +99,7 @@ public class CompileViewModel extends ViewModel {
         return compileException;
     }
 
+
     @Override
     protected void onCleared() {
         super.onCleared();

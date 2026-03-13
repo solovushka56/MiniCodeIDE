@@ -18,8 +18,6 @@ public class ProjectItemView extends ConstraintLayout {
     private TextView projectTitleView;
     private TextView projectFilepathView;
     private ImageButton btnDeleteView;
-//    public View mainRectView;
-//    public View innerRectView;
 
     public ProjectItemView(Context context) {
         super(context);
@@ -37,16 +35,6 @@ public class ProjectItemView extends ConstraintLayout {
         projectTitleView = findViewById(R.id.projectTitle);
         projectFilepathView = findViewById(R.id.projectFilepath);
         btnDeleteView = findViewById(R.id.btn_delete);
-
-
-
-//        setOnClickListener(v -> {
-//            Toast.makeText(getContext(), "amigo", Toast.LENGTH_LONG).show();
-//
-//        });
-
-
-
 
         btnDeleteView.setOnClickListener(v -> {
             if (listener != null) listener.onDeleteClicked(this);

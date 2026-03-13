@@ -17,8 +17,19 @@
         android:background="@color/violet_average"
         >
 
+<!--        <com.skeeper.minicode.presentation.ui.component.CompilePanelView-->
+<!--            android:id="@+id/compilePanel"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/symbols_panel"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/linearLayout3"-->
+<!--            android:visibility="invisible"-->
+<!--            />-->
+
         <androidx.cardview.widget.CardView
-            android:id="@+id/compileResultPanel"
+            android:id="@+id/compilePanel"
             android:visibility="invisible"
 
             app:cardCornerRadius="15dp"
@@ -73,7 +84,7 @@
                         android:layout_height="match_parent"/>
 
                     <ImageButton
-                        android:id="@+id/hideCompileResultBtn"
+                        android:id="@+id/hideCompilePanelBtn"
                         android:scaleX="0.8"
                         android:scaleY="0.8"
                         app:rippleColor="@color/orange_light"
@@ -106,9 +117,6 @@
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
-
-
 
 
 

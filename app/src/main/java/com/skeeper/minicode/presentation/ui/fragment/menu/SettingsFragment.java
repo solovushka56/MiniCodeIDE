@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.FragmentSettingsBinding;
 import com.skeeper.minicode.presentation.ui.activity.CodeEditorSettingsActivity;
+import com.skeeper.minicode.presentation.ui.activity.CompilationSettingsActivity;
 import com.skeeper.minicode.presentation.ui.activity.GitIntegrationSettingsActivity;
 
 import java.util.ArrayList;
@@ -64,18 +65,22 @@ public class SettingsFragment extends Fragment {
 
         binding.codeEditorSetting.setIcon(R.drawable.editor);
         binding.codeEditorSetting.setText("Code editor");
-        binding.codeEditorSetting.setClickIntent(new Intent(getContext(), CodeEditorSettingsActivity.class));
+        binding.codeEditorSetting.setClickIntent(new Intent(getContext(),
+                CodeEditorSettingsActivity.class));
 
 
         binding.gitSettings.setIcon(R.drawable.git_icon);
         binding.gitSettings.setText("Git Integration");
-        binding.gitSettings.setClickIntent(new Intent(getContext(), GitIntegrationSettingsActivity.class));
+        binding.gitSettings.setClickIntent(new Intent(getContext(),
+                GitIntegrationSettingsActivity.class));
 
         binding.langSettings.setIcon(R.drawable.redo);
         binding.langSettings.setText("Language and Font");
 
         binding.compilationSettings.setIcon(R.drawable.terminal);
         binding.compilationSettings.setText("Compilation");
+        binding.compilationSettings.setClickIntent(new Intent(getContext(),
+                CompilationSettingsActivity.class));
 
         binding.themeSettings.setText("Edit Theme");
         binding.themeSettings.setIcon(R.drawable.tutorials);

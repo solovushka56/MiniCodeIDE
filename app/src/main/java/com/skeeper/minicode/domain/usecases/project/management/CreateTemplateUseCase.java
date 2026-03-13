@@ -3,6 +3,8 @@ package com.skeeper.minicode.domain.usecases.project.management;
 import android.app.Application;
 
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
+import com.skeeper.minicode.domain.contracts.repos.file.IFileStoreRepository;
 import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.enums.TemplateType;
 
@@ -28,11 +30,10 @@ public class CreateTemplateUseCase {
                 ? "Main" + ".java"
                 : "main" + ".py";
 
-        File projectRootDirectory = projectRepository
-                .getOperations()
+        var projectRootDirectory = projectRepository
                 .getProjectDir(projName);
 
-        projectRepository.getOperations().saveFile(
+        projectRepository.saveFile(
                 projectRootDirectory,
                 fullFileName,
                 getTemplateContent(tempType, application));

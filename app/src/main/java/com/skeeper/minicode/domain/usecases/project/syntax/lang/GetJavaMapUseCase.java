@@ -1,15 +1,13 @@
-package com.skeeper.minicode.domain.usecases.project.syntax.lang_map_get;
+package com.skeeper.minicode.domain.usecases.project.syntax.lang;
 
 import android.graphics.Color;
 
 import com.skeeper.minicode.domain.contracts.repos.project.ICodeLangRepository;
 import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.models.HighlightThemeModel;
-import com.skeeper.minicode.domain.models.LangModel;
 import com.skeeper.minicode.domain.usecases.project.syntax.GetLangRegexMapUseCase;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 

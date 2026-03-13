@@ -1,15 +1,10 @@
 package com.skeeper.minicode.domain.usecases.project.syntax;
 
-import android.graphics.Color;
-
 import com.skeeper.minicode.domain.contracts.repos.project.ICodeLangRepository;
 import com.skeeper.minicode.domain.enums.ExtensionType;
-import com.skeeper.minicode.domain.models.HighlightThemeModel;
-import com.skeeper.minicode.domain.models.LangModel;
-import com.skeeper.minicode.domain.usecases.project.syntax.lang_map_get.GetJavaMapUseCase;
-import com.skeeper.minicode.domain.usecases.project.syntax.lang_map_get.GetPythonMapUseCase;
+import com.skeeper.minicode.domain.usecases.project.syntax.lang.GetJavaMapUseCase;
+import com.skeeper.minicode.domain.usecases.project.syntax.lang.GetPythonMapUseCase;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

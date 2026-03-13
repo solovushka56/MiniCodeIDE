@@ -3,8 +3,8 @@ package com.skeeper.minicode.core.singleton;
 import android.content.Context;
 import android.util.Pair;
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.skeeper.minicode.core.constants.ProjectConstants;
 import com.skeeper.minicode.utils.helpers.SerializablePair;
 import com.skeeper.minicode.domain.models.SnippetModel;
 
@@ -20,12 +20,11 @@ import javax.inject.Singleton;
 
 import dagger.hilt.android.qualifiers.ApplicationContext;
 
-@Singleton
+@Singleton // todo @ActivityScoped
 public class SnippetsManager {
 
     private final Context context;
     private final Gson gson = new Gson();
-    private static final String FILENAME = "keySymbolsData.json";
 
 
     @Inject
@@ -59,14 +58,15 @@ public class SnippetsManager {
     public void saveList(List<SnippetModel> models) throws IOException {
         List<SerializablePair> serializableList = convertToSerializable(toPairList(models));
         String json = gson.toJson(serializableList);
-        try (FileOutputStream fos = context.openFileOutput(FILENAME, Context.MODE_PRIVATE);
+        try (FileOutputStream fos = context.openFileOutput(
+                ProjectConstants.SNIPPETS_FILENAME, Context.MODE_PRIVATE);
              OutputStreamWriter writer = new OutputStreamWriter(fos)) {
             writer.write(json);
         }
     }
 
     public List<SnippetModel> loadList() throws IOException {
-        try (FileInputStream fis = context.openFileInput(FILENAME);
+        try (FileInputStream fis = context.openFileInput(ProjectConstants.SNIPPETS_FILENAME);
              InputStreamReader reader = new InputStreamReader(fis)) {
             Type type = new TypeToken<List<SerializablePair>>(){}.getType();
             List<SerializablePair> loaded = gson.fromJson(reader, type);

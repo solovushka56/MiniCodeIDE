@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.core.singleton.SnippetsManager;
-import com.skeeper.minicode.data.repos.SnippetRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.models.SnippetModel;
 import com.skeeper.minicode.utils.FileUtils;
@@ -29,7 +28,7 @@ public class SnippetViewModel extends ViewModel {
     private final ExecutorService executor = Executors.newFixedThreadPool(4);
 
     private final IFileDirectoryProvider fileDirectoryProvider;
-    private SnippetRepository snippetsFileRepository;
+
     private MutableLiveData<List<SnippetModel>> snippets = new MutableLiveData<>();
 
     @Inject

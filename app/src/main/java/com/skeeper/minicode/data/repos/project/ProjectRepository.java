@@ -2,12 +2,17 @@ package com.skeeper.minicode.data.repos.project;
 
 
 import com.google.gson.Gson;
+import com.skeeper.minicode.core.constants.ProjectConstants;
+import com.skeeper.minicode.data.local.FileDirectoryProvider;
 import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
 import com.skeeper.minicode.domain.contracts.repos.project.IProjectRepository;
 import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.domain.serialization.ISerializer;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -16,28 +21,28 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 
 public class ProjectRepository implements IProjectRepository {
-
-    private final ISerializer<ProjectModel> metadataParser;
-    private final IProjectOperations operations;
+    private final FileDirectoryProvider fileDirProvider;
     private final Gson gson;
 
     @Inject
-    public ProjectRepository(IProjectOperations operations, ISerializer<ProjectModel> metadataParser, Gson gson) {
-        this.operations = operations;
+    public ProjectRepository(FileDirectoryProvider fileDirProvider,
+                             Gson gson) {
         this.gson = gson;
-        this.metadataParser = metadataParser;
-
+        this.fileDirProvider = fileDirProvider;
     }
 
 
     @Override
-    public IProjectOperations getOperations() {
-        return operations;
+    public File getProjectsStoreFolder() {
+        File folder = new File(fileDirProvider.getFilesDir(),
+                ProjectConstants.PROJECTS_STORE_FOLDER);
+        if (!folder.exists()) folder.mkdirs();
+        return folder;
     }
 
     @Override
     public List<ProjectModel> loadAllProjects() {
-        File[] projectDirs = operations.listChildDirectories(operations.getProjectsStoreFolder());
+        File[] projectDirs = listChildDirectories(getProjectsStoreFolder());
         if (projectDirs == null) return List.of();
 
         return Arrays.stream(projectDirs)
@@ -46,10 +51,20 @@ public class ProjectRepository implements IProjectRepository {
     }
 
     @Override
+    public File getProjectDir(String projectName) {
+        return null;
+    }
+
+    @Override
+    public File getProjectConfigFile(String projectName) {
+        return null;
+    }
+
+    @Override
     public ProjectModel loadProject(String projectName) {
         try {
-            File configFile = operations.getProjectConfigFile(projectName);
-            String json = operations.readFile(configFile);
+            File configFile = getProjectConfigFile(projectName);
+            String json = readFile(configFile);
             return gson.fromJson(json, ProjectModel.class);
         } catch (Exception e) {
             throw new RuntimeException("Failed to load project: " + projectName, e);
@@ -57,10 +72,10 @@ public class ProjectRepository implements IProjectRepository {
     }
 
     public boolean createProject(ProjectModel model, boolean overwrite) {
-        File projectDir = operations.getProjectDir(model.name());
+        File projectDir = getProjectDir(model.name());
         if (projectDir.exists()) {
             if (overwrite) {
-                if (!operations.deleteRecursive(projectDir)) {
+                if (!deleteRecursive(projectDir)) {
                     return false;
                 }
             }
@@ -69,35 +84,81 @@ public class ProjectRepository implements IProjectRepository {
             }
         }
         if (!projectDir.mkdirs()) return false;
-        try {
-            operations.generateMetadata(model);
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        saveMetadata(model);
         return true;
     }
 
 
     @Override
     public boolean deleteProject(String projectName) {
-        File projectDir = operations.getProjectDir(projectName);
-        return operations.deleteRecursive(projectDir);
+        File projectDir = getProjectDir(projectName);
+        return deleteRecursive(projectDir);
     }
 
     @Override
     public boolean renameProject(String oldName, String newName) {
-        File oldDir = operations.getProjectDir(oldName);
-        File newDir = operations.getProjectDir(newName);
-        return operations.exists(oldDir) &&
-                !operations.exists(newDir) &&
-                operations.rename(oldDir, newDir);
+        File oldDir = getProjectDir(oldName);
+        File newDir = getProjectDir(newName);
+        return oldDir.exists() &&
+                !newDir.exists() &&
+                oldDir.renameTo(newDir);
     }
 
     @Override
     public boolean projectExists(String projectName) {
-        return operations.exists(operations.getProjectDir(projectName));
+        return getProjectDir(projectName).exists();
     }
 
+
+
+    @Override
+    public boolean saveMetadata(ProjectModel model) {
+        return false;
+    }
+
+    @Override
+    public boolean deleteRecursive(File fileOrDirectory) {
+
+        if (fileOrDirectory.isDirectory()) {
+            File[] children = fileOrDirectory.listFiles();
+            if (children != null) {
+                for (File child : children) {
+                    deleteRecursive(child);
+                }
+            }
+        }
+        return fileOrDirectory.delete();
+    }
+
+
+    @Override
+    public String readFile(File file) throws IOException {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content.append(line).append("\n");
+            }
+        }
+        return content.toString().trim();
+    }
+
+
+    @Override
+    public void saveFile(File projectDir,
+                         String fileName, String content) throws IOException {
+        if (!projectDir.exists() && !projectDir.mkdirs()) {
+            throw new IOException("failed to create proj dir");
+        }
+
+        File file = new File(projectDir, fileName);
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(content);
+        }
+    }
+
+    @Override
+    public File[] listChildDirectories(File dir) {
+        return dir.listFiles(File::isDirectory);
+    }
 }

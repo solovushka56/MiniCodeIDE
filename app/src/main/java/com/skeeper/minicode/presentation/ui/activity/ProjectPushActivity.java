@@ -15,7 +15,6 @@ import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.databinding.ActivityProjectPushBinding;
 import com.skeeper.minicode.presentation.viewmodels.GitPushViewModel;
 import com.skeeper.minicode.presentation.viewmodels.SecurePrefViewModel;
-import com.skeeper.minicode.presentation.viewmodels.SharedPrefsViewModel;
 import com.skeeper.minicode.utils.helpers.NetworkConnectionHelper;
 
 import javax.inject.Inject;
@@ -30,7 +29,6 @@ public class ProjectPushActivity extends AppCompatActivity {
     ActivityProjectPushBinding binding;
     GitPushViewModel gitPushViewModel;
     SecurePrefViewModel securePrefViewModel;
-    SharedPrefsViewModel sharedPrefsViewModel;
 
     String projectName = null;
 

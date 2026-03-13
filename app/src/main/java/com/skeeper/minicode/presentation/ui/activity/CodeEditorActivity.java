@@ -1,5 +1,6 @@
 package com.skeeper.minicode.presentation.ui.activity;
 
+import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
@@ -8,35 +9,31 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.GravityCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -44,9 +41,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amrdeveloper.codeview.CodeView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
+import com.skeeper.minicode.presentation.ui.component.CompilePanelView;
+import com.skeeper.minicode.presentation.ui.dialog.CreateFileDialog;
+import com.skeeper.minicode.presentation.ui.dialog.DeleteFileDialog;
+import com.skeeper.minicode.presentation.ui.dialog.MoveFileDialog;
+import com.skeeper.minicode.presentation.ui.dialog.RenameFileDialog;
 import com.skeeper.minicode.presentation.ui.fragment.CodeEditorFragment;
 import com.skeeper.minicode.presentation.ui.other.FileTreeView;
 import com.skeeper.minicode.R;
@@ -71,10 +71,11 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
-// todo add viewmodel
 @AndroidEntryPoint
-public class CodeEditorActivity extends AppCompatActivity
-        implements IFileTreeListener, IKeyPressedListener {
+public class CodeEditorActivity extends AppCompatActivity implements
+        IFileTreeListener,
+        IKeyPressedListener {
+
 
     @Inject ProjectManager projectManager;
 
@@ -111,8 +112,9 @@ public class CodeEditorActivity extends AppCompatActivity
         projectName = getIntent().getStringExtra("projectName");
 
         compileViewModel = new ViewModelProvider(this).get(CompileViewModel.class);
-
         snippetViewModel = new ViewModelProvider(this).get(SnippetViewModel.class);
+
+
         snippetViewModel.getSnippets().observe(this, snippets -> {
             var recyclerView = binding.symbolsPanel;
             var adapter = new SnippetsAdapter(this, snippets, this);
@@ -136,9 +138,7 @@ public class CodeEditorActivity extends AppCompatActivity
             binding.drawerLayout.openDrawer(GravityCompat.START);
         });
         binding.optionsButton.setOnClickListener(v -> {
-            startActivity(new Intent(
-                    CodeEditorActivity.this,
-                    CodeEditorSettingsActivity.class));
+            showOptionsContext(binding.optionsButton);
         });
         binding.recreateButton.setOnClickListener( v-> {
             recreate();
@@ -191,7 +191,7 @@ public class CodeEditorActivity extends AppCompatActivity
         });
 
 
-        binding.runCodeButton.setOnClickListener(v -> {
+        binding.compilePanel.setOnClickListener(v -> {
             compileViewModel.compileAsync(projectName);
             binding.compileProgress.setVisibility(VISIBLE);
         });
@@ -207,7 +207,7 @@ public class CodeEditorActivity extends AppCompatActivity
             binding.compileText.setText(error);
         });
 
-        binding.hideCompileResultBtn.setOnClickListener(v -> {
+        binding.hideCompilePanelBtn.setOnClickListener(v -> {
             hideCompilePanel();
         });
     }
@@ -219,58 +219,58 @@ public class CodeEditorActivity extends AppCompatActivity
             getCurrentCodeView().clearFocus();
 
 
-        if (binding.compileResultPanel.getVisibility() == VISIBLE) return;
-        binding.compileResultPanel.measure(
-                View.MeasureSpec.makeMeasureSpec(binding.compileResultPanel.getWidth(), View.MeasureSpec.EXACTLY),
+        if (binding.compilePanel.getVisibility() == VISIBLE) return;
+        binding.compilePanel.measure(
+                View.MeasureSpec.makeMeasureSpec(binding.compilePanel.getWidth(), View.MeasureSpec.EXACTLY),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
         );
-        final int targetHeight = binding.compileResultPanel.getMeasuredHeight();
+        final int targetHeight = binding.compilePanel.getMeasuredHeight();
 
-        binding.compileResultPanel.setVisibility(VISIBLE);
-        binding.compileResultPanel.setAlpha(0f);
-        ViewGroup.LayoutParams layoutParams = binding.compileResultPanel.getLayoutParams();
+        binding.compilePanel.setVisibility(VISIBLE);
+        binding.compilePanel.setAlpha(0f);
+        ViewGroup.LayoutParams layoutParams = binding.compilePanel.getLayoutParams();
         layoutParams.height = 0;
-        binding.compileResultPanel.setLayoutParams(layoutParams);
+        binding.compilePanel.setLayoutParams(layoutParams);
 
         ValueAnimator heightAnimator = ValueAnimator.ofInt(0, targetHeight);
         heightAnimator.setDuration(400);
         heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         heightAnimator.addUpdateListener(animation -> {
             int value = (int) animation.getAnimatedValue();
-            ViewGroup.LayoutParams params = binding.compileResultPanel.getLayoutParams();
+            ViewGroup.LayoutParams params = binding.compilePanel.getLayoutParams();
             params.height = value;
-            binding.compileResultPanel.setLayoutParams(params);
+            binding.compilePanel.setLayoutParams(params);
         });
         ValueAnimator alphaAnimator = ValueAnimator.ofFloat(0f, 1f);
         alphaAnimator.setDuration(400);
         alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         alphaAnimator.addUpdateListener(animation -> {
             float value = (float) animation.getAnimatedValue();
-            binding.compileResultPanel.setAlpha(value);
+            binding.compilePanel.setAlpha(value);
         });
         heightAnimator.start();
         alphaAnimator.start();
     }
 
     private void hideCompilePanel() {
-        if (binding.compileResultPanel.getVisibility() != VISIBLE) return;
+        if (binding.compilePanel.getVisibility() != VISIBLE) return;
 
-        final int initialHeight = binding.compileResultPanel.getHeight();
+        final int initialHeight = binding.compilePanel.getHeight();
         ValueAnimator heightAnimator = ValueAnimator.ofInt(initialHeight, 0);
         heightAnimator.setDuration(400);
         heightAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         heightAnimator.addUpdateListener(animation -> {
             int value = (int) animation.getAnimatedValue();
-            ViewGroup.LayoutParams params = binding.compileResultPanel.getLayoutParams();
+            ViewGroup.LayoutParams params = binding.compilePanel.getLayoutParams();
             params.height = value;
-            binding.compileResultPanel.setLayoutParams(params);
+            binding.compilePanel.setLayoutParams(params);
         });
         ValueAnimator alphaAnimator = ValueAnimator.ofFloat(1f, 0f);
         alphaAnimator.setDuration(400);
         alphaAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         alphaAnimator.addUpdateListener(animation -> {
             float value = (float) animation.getAnimatedValue();
-            binding.compileResultPanel.setAlpha(value);
+            binding.compilePanel.setAlpha(value);
         });
         heightAnimator.addListener(new android.animation.Animator.AnimatorListener() {
             @Override
@@ -278,7 +278,7 @@ public class CodeEditorActivity extends AppCompatActivity
 
             @Override
             public void onAnimationEnd(android.animation.Animator animation) {
-                binding.compileResultPanel.setVisibility(INVISIBLE);
+                binding.compilePanel.setVisibility(INVISIBLE);
             }
 
             @Override
@@ -290,6 +290,52 @@ public class CodeEditorActivity extends AppCompatActivity
         heightAnimator.start();
         alphaAnimator.start();
     }
+    private void showOptionsContext(View anchorView) {
+        View menuView = LayoutInflater.from(anchorView.getContext())
+                .inflate(R.layout.editor_options_menu, null);
+
+        PopupWindow popupWindow = new PopupWindow(
+                menuView,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                true
+        );
+
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setElevation(16f);
+//        popupWindow.setAnimationStyle(R.style.CustomPopupAnimation);
+
+        View editor_options = menuView.findViewById(R.id.menu_code_editor_options);
+
+        editor_options.setOnClickListener(v -> {
+            startActivity(new Intent(
+                    CodeEditorActivity.this,
+                    CodeEditorSettingsActivity.class));
+            popupWindow.dismiss();
+        });
+
+        menuView.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_OUTSIDE) {
+                popupWindow.dismiss();
+                return true;
+            }
+            return false;
+        });
+
+        popupWindow.showAsDropDown(anchorView);
+
+        menuView.post(() -> {
+            popupWindow.update(
+                    anchorView,
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+        });
+    }
+
+
+
+
 
     public void setNewCodeEditorFragment(FileItem fileItem) {
         if (cachedFragments.get(fileItem) == null) {
@@ -342,7 +388,7 @@ public class CodeEditorActivity extends AppCompatActivity
                 bottomPanel.setVisibility(VISIBLE);
 
             } else {
-                bottomPanel.setVisibility(View.GONE);
+                bottomPanel.setVisibility(GONE);
             }
             bottomPanel.requestLayout();
 
@@ -356,9 +402,6 @@ public class CodeEditorActivity extends AppCompatActivity
                 getResources().getDisplayMetrics()
         );
     }
-
-
-
 
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
@@ -391,72 +434,17 @@ public class CodeEditorActivity extends AppCompatActivity
 
     @Override
     public void onRenameSelected(FileItem item) {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView = inflater.inflate(R.layout.dialog_rename_file, null);
-
-        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
-        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
-        TextInputEditText input = dialogView.findViewById(R.id.newNameTextEdit);
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-
-        input.setText(item.getName());
-
-        positiveButton.setOnClickListener(v -> {
-            String newName = input.getText().toString().trim();
-            File parentDir = item.getDirectory().getParentFile();
-
-            File renamedFile = new File(parentDir, newName);
-
-            if (renamedFile.exists()) {
-                input.setError("Item with this name already exists!");
-                return;
-            }
-
-            filesViewModel.renameFile(item.getDirectory(), newName);
-            dialog.dismiss();
-        });
-
-        negativeButton.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+        new RenameFileDialog().show(item, filesViewModel, this);
     }
 
     @Override
     public void onDeleteSelected(FileItem item) {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView = inflater.inflate(R.layout.dialog_remove_file, null);
-
-        TextView textView = dialogView.findViewById(R.id.removeFileText);
-        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
-        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-
-        textView.setText("Remove " + item.getName() + "?");
-
-        positiveButton.setOnClickListener(v -> {
-            filesViewModel.deleteFile(item.getDirectory());
-
-            if (currentCodeFragment == cachedFragments.get(item))
-            {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                if (currentCodeFragment != null) {
-                    fragmentManager.beginTransaction()
-                            .remove(currentCodeFragment)
-                            .commit();
-                }
-            }
-            cachedFragments.remove(item);
-            dialog.dismiss();
-        });
-
-        negativeButton.setOnClickListener(v -> dialog.dismiss());
-
-        dialog.show();
+        new DeleteFileDialog().show(item,
+                currentCodeFragment,
+                cachedFragments,
+                filesViewModel,
+                this
+        );
     }
 
     @Override
@@ -469,95 +457,12 @@ public class CodeEditorActivity extends AppCompatActivity
 
     @Override
     public void onMoveSelected(FileItem item) {
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView = inflater.inflate(R.layout.dialog_move_file, null);
-        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
-        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
-
-        TextInputEditText pathInput = dialogView.findViewById(R.id.enterNewDirectory);
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-
-        positiveButton.setOnClickListener(v -> {
-            String newPath = pathInput.getText().toString().trim();
-            File newPathFile = new File(newPath);
-            if (!newPathFile.exists()) {
-                pathInput.setError("Directory is incorrect");
-                return;
-            }
-            if (new File(newPathFile, item.getName()).exists()) {
-                pathInput.setError("File with the same name already exists in the new folder");
-                return;
-            }
-            filesViewModel.moveFile(item.getDirectory(), new File(newPath));
-            dialog.dismiss();
-        });
-
-        negativeButton.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
-
+        new MoveFileDialog().show(item, filesViewModel, this);
     }
-    
+
     @Override
     public void onAddFileSelected(FileItem item) {
-        if (!item.isDirectory()) return;
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView = inflater.inflate(R.layout.dialog_create_file, null);
-
-        TextView title =  dialogView.findViewById(R.id.dialogTitle);
-        TextInputEditText fileNameInput = dialogView.findViewById(R.id.enterName);
-        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
-        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
-        RadioButton optionFile = dialogView.findViewById(R.id.optionFileCreate);
-        RadioButton optionFolder = dialogView.findViewById(R.id.optionFolderCreate);
-        RadioGroup radioGroup = dialogView.findViewById(R.id.radioGroup);
-
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this);
-        builder.setView(dialogView);
-        AlertDialog dialog = builder.create();
-
-        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == optionFile.getId()) {
-                title.setText("Create new File");
-            } else if (checkedId == optionFolder.getId()) {
-                title.setText("Create new Folder");
-            }
-        });
-
-        positiveButton.setOnClickListener(v -> {
-            String fileName = fileNameInput.getText().toString().trim();
-            String path = item.getDirectory().getPath();
-
-            if (fileName.isEmpty()) {
-                fileNameInput.setError("Enter file name");
-                return;
-            }
-
-            if (optionFile.isChecked() && !fileName.contains(".")) {
-                fileNameInput.setError("Add file extension");
-                return;
-            }
-
-            if (optionFile.isChecked())
-                filesViewModel.createFile(new File(path, fileName));
-            else if(optionFolder.isChecked())
-                filesViewModel.createFolder(new File(path), fileName);
-
-            dialog.dismiss();
-        });
-
-        negativeButton.setOnClickListener(v -> dialog.dismiss());
-
-        dialog.show();
-
-        fileNameInput.requestFocus();
-        fileNameInput.postDelayed(() -> {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(fileNameInput, InputMethodManager.SHOW_IMPLICIT);
-        }, 100);
+        new CreateFileDialog().show(item, filesViewModel, this);
     }
 
 

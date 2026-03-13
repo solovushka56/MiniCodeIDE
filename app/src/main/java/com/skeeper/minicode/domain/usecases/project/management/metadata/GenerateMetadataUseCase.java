@@ -31,11 +31,10 @@ public class GenerateMetadataUseCase {
     }
 
     public void execute(ProjectCreateArgs args) throws DomainIOException {
-        var operations = projectRepository.getOperations();
-        var config_file = operations.getProjectConfigFile(args.name());
+        var config_file = projectRepository.getProjectConfigFile(args.name());
         fileStoreRepository.saveFile(config_file.getPath());
 
-        var projPath = operations.getProjectDir(args.name());
+        var projPath = projectRepository.getProjectDir(args.name());
         var colorRect = new ProjectRectColorBinding();
 
         String mainFileName = "";
@@ -64,8 +63,7 @@ public class GenerateMetadataUseCase {
 
 
     public void execute(ProjectModel model) throws DomainIOException {
-        var operations = projectRepository.getOperations();
-        var config_file = operations.getProjectConfigFile(model.name());
+        var config_file = projectRepository.getProjectConfigFile(model.name());
         fileStoreRepository.saveFile(config_file.getPath());
 
         String serialized = serializer.serialize(model);
