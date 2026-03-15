@@ -24,6 +24,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.skeeper.minicode.R;
+import com.skeeper.minicode.core.constants.ProjectConstants;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.databinding.ActivityMainBinding;
 import com.skeeper.minicode.core.singleton.SnippetsManager;
@@ -65,17 +66,18 @@ public class MainActivity extends AppCompatActivity {
 
         });
         binding.sourceCodeButton.setOnClickListener(v -> {
-            String sourceURI = "https://github.com/solovushka56/MiniCodeIDE";
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(sourceURI));
-
-            if (intent.resolveActivity(getPackageManager()) != null) {
+            try {
+                Intent intent = new Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(ProjectConstants.SOURCE_CODE_URL)
+                );
                 startActivity(intent);
-            }
-            else {
-                Toast.makeText(MainActivity.this, "Not found",
-                        Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(MainActivity.this,
+                        "Browser not found", Toast.LENGTH_SHORT).show();
             }
         });
+
         binding.dataResetButton.setOnClickListener((v) -> {
             showDataResetDialog();
         });

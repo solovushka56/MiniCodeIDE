@@ -17,11 +17,17 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.constants.ProjectConstants;
+import com.skeeper.minicode.data.sources.preferences.UserPreferencesProvider;
 import com.skeeper.minicode.databinding.ActivityCompilationSettingsBinding;
 import com.skeeper.minicode.presentation.viewmodels.SharedPrefsViewModel;
 
+import javax.inject.Inject;
+
 public class CompilationSettingsActivity extends AppCompatActivity {
     ActivityCompilationSettingsBinding binding;
+
+    @Inject
+    UserPreferencesProvider userPreferencesProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +48,8 @@ public class CompilationSettingsActivity extends AppCompatActivity {
 
         binding.buttonConfirm.setOnClickListener(v -> {
             String text = binding.serverUrlEditText.getText().toString();
-
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putString("server", text);
+            editor.putString("customServerUrl", text);
             editor.apply();
             finish();
         });
@@ -78,10 +83,12 @@ public class CompilationSettingsActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+        binding.buttonReset.setOnClickListener(v -> {
+            binding.serverUrlEditText.setText(ProjectConstants.SERVER_URL);
+        });
 
-
-        String url = preferences.contains("server")
-                ? preferences.getString("server", "")
+        String url = preferences.contains("customServerUrl")
+                ? preferences.getString("customServerUrl", "")
                 : ProjectConstants.SERVER_URL;
         binding.serverUrlEditText.setText(url);
 

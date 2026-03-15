@@ -22,13 +22,16 @@ import androidx.lifecycle.ViewModelProvider;
 import com.amrdeveloper.codeview.CodeView;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.FragmentCodeEditorBinding;
+import com.skeeper.minicode.domain.enums.ExtensionType;
 import com.skeeper.minicode.domain.models.FileItem;
+import com.skeeper.minicode.domain.usecases.file.GetExtensionUseCase;
 import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
 import com.skeeper.minicode.presentation.viewmodels.HighlightViewModel;
 import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.UndoRedoManager;
 import com.skeeper.minicode.utils.helpers.VibrationManager;
 
+import java.io.File;
 import java.util.Set;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -91,6 +94,9 @@ public class CodeEditorFragment extends Fragment {
             codeView.setSyntaxPatternsMap(data);
             codeView.reHighlightSyntax();
         });
+
+
+
 
         if (boundFileItem != null) {
             highlightViewModel.initHighlightTo(boundFileItem.getDirectory());
@@ -164,8 +170,17 @@ public class CodeEditorFragment extends Fragment {
 
     private void initCodeView(CodeView codeview) {
         codeview.setEnableAutoIndentation(true);
-        codeview.setIndentationStarts(Set.of('{'));
-        codeview.setIndentationEnds(Set.of('}'));
+        var ext = new GetExtensionUseCase().execute(new File(boundFileItem.getName()));
+        if (ext == ExtensionType.PYTHON)
+        {
+            codeview.setIndentationStarts(Set.of(':'));
+            codeview.setEnableAutoIndentation(true);
+        }
+        else if (ext == ExtensionType.JAVA) {
+            codeview.setIndentationStarts(Set.of('{'));
+            codeview.setIndentationEnds(Set.of('}'));
+        }
+
         codeview.setEnableLineNumber(false);
         codeview.setLineNumberTextColor(Color.parseColor("#3DC2EC"));
         codeview.setLineNumberTextSize(31f);

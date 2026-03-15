@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 import com.skeeper.minicode.data.local.FileDirectoryProvider;
 import com.skeeper.minicode.data.local.ResourcesProvider;
 import com.skeeper.minicode.data.local.SharedPreferencesProvider;
-import com.skeeper.minicode.data.operations.ProjectOperations;
 import com.skeeper.minicode.data.parsers.MetadataParser;
 import com.skeeper.minicode.data.repos.compilation.CompilerRepository;
 import com.skeeper.minicode.data.repos.file.DirectoryRepository;
@@ -16,9 +15,10 @@ import com.skeeper.minicode.data.repos.project.ProjectRepository;
 import com.skeeper.minicode.data.repos.UserRepository;
 import com.skeeper.minicode.data.repos.file.FileContentRepository;
 import com.skeeper.minicode.data.repos.file.FileStoreRepository;
-import com.skeeper.minicode.domain.contracts.operations.IProjectOperations;
+import com.skeeper.minicode.data.sources.preferences.UserPreferencesProvider;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
+import com.skeeper.minicode.domain.contracts.other.providers.ISharedPreferencesProvider;
 import com.skeeper.minicode.domain.contracts.repos.compilation.ICompilerRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
 import com.skeeper.minicode.domain.contracts.repos.file.IFileContentRepository;
@@ -70,7 +70,7 @@ public abstract class DataModule {
 
     @Provides
     @Singleton
-    static SharedPreferencesProvider provideSharedPreferencesProvider(Context context) {
+    static ISharedPreferencesProvider provideSharedPreferencesProvider(Context context) {
         return new SharedPreferencesProvider(context);
     }
 
@@ -97,13 +97,6 @@ public abstract class DataModule {
                 .create();
     }
 
-
-    @Provides
-    @Singleton
-    static IProjectOperations provideProjectOperations(
-            IFileDirectoryProvider fileDirectoryProvider, Gson gson) {
-        return new ProjectOperations(fileDirectoryProvider, gson);
-    }
 
     @Provides
     @Singleton
@@ -134,8 +127,10 @@ public abstract class DataModule {
 
     @Provides
     @Singleton
-    static ICompilerRepository provideCompilerRepository() {
-        return new CompilerRepository();
+    static ICompilerRepository provideCompilerRepository(
+            UserPreferencesProvider userPreferencesProvider
+    ) {
+        return new CompilerRepository(userPreferencesProvider);
     }
 
     @Provides
@@ -176,4 +171,14 @@ public abstract class DataModule {
                 loadMetadataUseCase, generateMetadataUseCase);
     }
 
+
+
+
+    @Provides
+    @Singleton
+    static UserPreferencesProvider provideUserPreferencesProvider(
+            ISharedPreferencesProvider sharedPreferencesProvider
+    ) {
+        return new UserPreferencesProvider(sharedPreferencesProvider);
+    }
 }

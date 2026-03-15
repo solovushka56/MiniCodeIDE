@@ -81,7 +81,7 @@ public class ProjectOperations implements IProjectOperations {
             throw new IOException("failed to create proj dir");
         }
 
-        File file = new File(projectDir, fileName);
+        var file = new File(projectDir, fileName);
         try (FileWriter writer = new FileWriter(file)) {
             writer.write(content);
         }
@@ -154,8 +154,6 @@ public class ProjectOperations implements IProjectOperations {
     public File getMetadataDir(String projectName) {
         return new File(getProjectDir(projectName), METADATA_DIR_NAME);
     }
-
-
     public File getProjectConfig(String projectName) {
         return new File(getMetadataDir(projectName),IDE_PROJECT_CONFIG_FILENAME);
     }

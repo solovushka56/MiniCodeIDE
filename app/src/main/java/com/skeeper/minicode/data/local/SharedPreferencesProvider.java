@@ -11,9 +11,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext;
 
 public class SharedPreferencesProvider implements ISharedPreferencesProvider {
     private static final String PREFS_NAME = "AppPrefs";
-
     private final Context context;
-
     @Inject
     public SharedPreferencesProvider(@ApplicationContext Context context) {
         this.context = context;

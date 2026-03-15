@@ -1,13 +1,11 @@
 package com.skeeper.minicode.data.repos.compilation;
 
-import android.provider.SyncStateContract;
-
 import com.skeeper.minicode.core.constants.ProjectConstants;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.data.remote.compile.CompileApiService;
 import com.skeeper.minicode.data.remote.compile.CompileRetrofitClient;
+import com.skeeper.minicode.data.sources.preferences.UserPreferencesProvider;
 import com.skeeper.minicode.domain.contracts.repos.compilation.ICompilerRepository;
-import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
 import com.skeeper.minicode.domain.models.CompileRequest;
 import com.skeeper.minicode.domain.models.CompileResponse;
 
@@ -22,10 +20,15 @@ import retrofit2.Callback;
 public class CompilerRepository implements ICompilerRepository {
 
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-    IDirectoryRepository directoryRepository;
+    private final UserPreferencesProvider userPreferencesProvider;
+
 
     @Inject
     ProjectManager projectManager;
+
+    public CompilerRepository(UserPreferencesProvider userPreferencesProvider) {
+        this.userPreferencesProvider = userPreferencesProvider;
+    }
 
 
     @Override
@@ -34,7 +37,7 @@ public class CompilerRepository implements ICompilerRepository {
                                      ICompileCallback callback) {
         executorService.execute(() -> {
 
-            var client = new CompileRetrofitClient(ProjectConstants.SERVER_URL); // todo to prefs
+            var client = new CompileRetrofitClient(userPreferencesProvider.getSavedServerIp());
             CompileApiService api = client.getClient().create(CompileApiService.class);
 
             Call<CompileResponse> call = api.compileCode(request);

@@ -8,10 +8,10 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class CompileRetrofitClient {
-    private final String BASE_URL;
+    private final String baseUrl;
 
-    public CompileRetrofitClient(String base_url) {
-        BASE_URL = base_url;
+    public CompileRetrofitClient(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     private Retrofit retrofit = null;
@@ -27,7 +27,7 @@ public class CompileRetrofitClient {
                     .build();
 
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(baseUrl)
                     .client(client)
 
                     .addConverterFactory(GsonConverterFactory.create())

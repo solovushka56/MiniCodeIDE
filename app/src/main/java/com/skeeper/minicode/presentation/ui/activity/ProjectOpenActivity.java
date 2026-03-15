@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
@@ -135,9 +136,11 @@ public class ProjectOpenActivity extends AppCompatActivity {
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
         });
         binding.buttonPanelEditName.setOnClickListener(v -> {
-            showRenamePopup();
+            Toast.makeText(this, "in Development...", Toast.LENGTH_SHORT).show();
+//            showRenamePopup();
         });
-
+//        binding.buttonPanelEditName.setAlpha(0.5f);
+        
         binding.buttonPanelStar.setOnClickListener(v -> {
             updateStarButton();
         });

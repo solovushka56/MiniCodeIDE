@@ -1,6 +1,9 @@
 package com.skeeper.minicode.data.repos.project;
 
 
+import static com.skeeper.minicode.core.constants.ProjectConstants.IDE_PROJECT_CONFIG_FILENAME;
+import static com.skeeper.minicode.core.constants.ProjectConstants.METADATA_DIR_NAME;
+
 import com.google.gson.Gson;
 import com.skeeper.minicode.core.constants.ProjectConstants;
 import com.skeeper.minicode.data.local.FileDirectoryProvider;
@@ -52,12 +55,14 @@ public class ProjectRepository implements IProjectRepository {
 
     @Override
     public File getProjectDir(String projectName) {
-        return null;
+        return new File(getProjectsStoreFolder(), projectName);
     }
 
     @Override
     public File getProjectConfigFile(String projectName) {
-        return null;
+        File metadataDir = new File(getProjectDir(projectName),
+                ProjectConstants.METADATA_DIR_NAME);
+        return new File(metadataDir, ProjectConstants.IDE_PROJECT_CONFIG_FILENAME);
     }
 
     @Override
@@ -113,7 +118,15 @@ public class ProjectRepository implements IProjectRepository {
 
     @Override
     public boolean saveMetadata(ProjectModel model) {
-        return false;
+        File projectDir = new File(model.path());
+        File ideFilesPath = new File(projectDir, METADATA_DIR_NAME);
+        if (!ideFilesPath.exists()) ideFilesPath.mkdirs();
+        String content = gson.toJson(model, ProjectModel.class);
+        try {
+            saveFile(ideFilesPath, IDE_PROJECT_CONFIG_FILENAME, content);
+            return true;
+        }
+        catch (IOException e) { return false; }
     }
 
     @Override
