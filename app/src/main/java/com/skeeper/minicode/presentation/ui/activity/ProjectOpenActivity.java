@@ -140,7 +140,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
 //            showRenamePopup();
         });
 //        binding.buttonPanelEditName.setAlpha(0.5f);
-        
+
         binding.buttonPanelStar.setOnClickListener(v -> {
             updateStarButton();
         });
