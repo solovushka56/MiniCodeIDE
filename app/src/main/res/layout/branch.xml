@@ -1,21 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/tag_rect"
+    android:backgroundTint="@color/pale_blue"
     android:padding="9dp"
     >
-    <ImageView
-        android:id="@+id/tagCircleImage"
-        android:src="@drawable/mini_circle"
-        android:layout_gravity="center"
+
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="9dp"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <ImageView
+            android:src="@drawable/actions_icon"
+            android:layout_gravity="center"
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5dp"
+            android:scaleX="1.1"
+            android:scaleY="1.1"
+            />
+
+    </LinearLayout>
+
 
     <TextView
-        android:id="@+id/tagText"
+        android:id="@+id/branchText"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="text"
@@ -23,5 +35,6 @@
         android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
 
 </LinearLayout>

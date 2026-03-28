@@ -203,19 +203,52 @@
 
         </androidx.cardview.widget.CardView>
 
+
+
+
         <com.google.android.material.divider.MaterialDivider
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="25dp"
-
-            android:layout_marginBottom="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
             app:dividerColor="@color/blue_grey" />
 
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/currentBranchTextCard"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:backgroundTint="@color/blue_grey"
+            app:cardCornerRadius="15dp">
 
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:src="@drawable/git_pull"
+                    android:layout_width="30dp"
+                    android:layout_height="50dp"
+                    android:scaleX="0.8"
+                    android:scaleY="0.8"
+                    android:layout_marginHorizontal="10dp"
+                    />
+                <TextView
+                    android:layout_gravity="center"
+                    android:gravity="center_vertical"
+                    android:id="@+id/currentBranchText"
+                    android:text="Current Branch: _main_"
+                    android:textColor="@color/blue_light"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.flexbox.FlexboxLayout
-            android:layout_marginTop="0dp"
+            android:layout_marginTop="15dp"
             android:id="@+id/tagFlexbox"
             app:alignItems="flex_start"
             app:flexWrap="wrap"
@@ -224,6 +257,13 @@
             android:layout_height="wrap_content">
         </com.google.android.flexbox.FlexboxLayout>
 
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/branchesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -248,13 +288,25 @@
 
         <Button
             android:layout_weight="1"
+            android:id="@+id/setBranchButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_shape"
+            android:backgroundTint="@color/violet_light"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Checkout"
+            android:layout_marginRight="10dp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:layout_weight="1"
             android:id="@+id/projectOpenButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ripple_shape"
             android:backgroundTint="@color/violet_light"
             android:fontFamily="@font/cascadia_code"
-            android:text="Open project"
+            android:text="Open"
 
             app:backgroundTint="@null" />
 

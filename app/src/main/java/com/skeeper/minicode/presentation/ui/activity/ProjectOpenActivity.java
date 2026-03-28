@@ -4,16 +4,15 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +25,6 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.flexbox.AlignItems;
-import com.google.android.flexbox.AlignSelf;
 import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
@@ -36,12 +33,14 @@ import com.skeeper.minicode.core.constants.ProjectTags;
 import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.domain.exceptions.file.DomainIOException;
+import com.skeeper.minicode.presentation.viewmodels.GitManageViewModel;
 import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
 import com.skeeper.minicode.presentation.viewmodels.TagViewModel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 import javax.inject.Inject;
@@ -56,10 +55,14 @@ public class ProjectOpenActivity extends AppCompatActivity {
 
     private ActivityProjectOpenViewBinding binding;
     ProjectsViewModel projectsViewModel;
+    GitManageViewModel gitManageViewModel;
+
     TagViewModel tagViewModel;
     ProjectModelParcelable boundModel = null;
-    String time;
 
+    List<String> repositoryBranches = new ArrayList<>();
+    String currentBranchName = null;
+    View currentBranchView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,12 +80,13 @@ public class ProjectOpenActivity extends AppCompatActivity {
         });
 
         projectsViewModel = new ViewModelProvider(this).get(ProjectsViewModel.class);
+        gitManageViewModel = new ViewModelProvider(this).get(GitManageViewModel.class);
         tagViewModel = new ViewModelProvider(this).get(TagViewModel.class);
 
-        initByModel();
+        initViewByModel();
 
-        var list = new ArrayList<>(Arrays.asList(
-                projectManager.loadProjectModel(boundModel.getProjectName()).tags()));
+        var list = new ArrayList<>(Arrays.asList(projectManager.loadProjectModel(
+                boundModel.getProjectName()).tags()));
         boolean starred = list.contains(ProjectTags.PROJECT_STARRED);
         var starImage = binding.starImage;
         int color = starred ? R.color.yellow_saturated : R.color.blue_grey;
@@ -91,73 +95,76 @@ public class ProjectOpenActivity extends AppCompatActivity {
         findViewById(R.id.projectPanelStar).setVisibility(
                 starred ? VISIBLE : INVISIBLE);
 
-        tagViewModel.getTags().observe(this, items -> {
-            int[] colors = {R.color.green_light, R.color.blue_ultra,
-                    R.color.orange_light, R.color.pink};
-            Random random = new Random();
-            binding.tagFlexbox.removeAllViews();
-
-
-            LayoutInflater _inflater = LayoutInflater.from(this);
-            View tagTitleView = _inflater.inflate(R.layout.tag_title,
-                    binding.tagFlexbox, false);
-            addViewToFlexbox(tagTitleView, 9);
-
-            for (String tag : items) {
-                LayoutInflater inflater = LayoutInflater.from(this);
-                View tagView = inflater.inflate(R.layout.tag,
-                        binding.tagFlexbox, false);
-                TextView tagText = tagView.findViewById(R.id.tagText);
-                ImageView tagImage = tagView.findViewById(R.id.tagCircleImage);
-
-                int randIdx = random.nextInt(colors.length);
-                int randColor = colors[randIdx];
-
-                tagImage.setColorFilter(ContextCompat.getColor(this, randColor));
-                tagText.setText(tag);
-                addViewToFlexbox(tagView, 9);
-            }
-
-        });
-
-
+        tagViewModel.getTags().observe(this, this::initTagViews);
         tagViewModel.loadProjectTags(boundModel.getProjectName());
 
 
+        if (Arrays.asList(boundModel.getTags()).contains("git"))
+        {
+            gitManageViewModel.getProjectBranches().observe(this, data -> {
+                repositoryBranches = data;
+            });
+            gitManageViewModel.getCurrentBranch().observe(this, data -> {
+                currentBranchName = data;
+                binding.currentBranchText.setText(currentBranchName != null
+                        ? "Current branch: " + currentBranchName
+                        : "Current branch: " + "Error: Can't load"
+                );
+            });
+            gitManageViewModel.getBranchSetResult().observe(this, success -> {
+                if (success == null) return;
+                Toast.makeText(this, (success)
+                        ? "Checkout successful"
+                        : "Checkout error", Toast.LENGTH_SHORT
+                ).show();
+            });
+            gitManageViewModel.loadProjectBranches(boundModel.getProjectName());
+            gitManageViewModel.loadCurrentBranch(boundModel.getProjectName());
+        }
+
+
         binding.projectOpenButton.setOnClickListener(v -> {
-            var intent = new Intent(ProjectOpenActivity.this, CodeEditorActivity.class);
+            var intent = new Intent(
+                    ProjectOpenActivity.this,
+                    CodeEditorActivity.class
+            );
             intent.putExtra("projectName", boundModel.getProjectName());
             Log.e("TRANSITION", "to code editor");
             startActivity(intent);
         });
-
         binding.buttonPanelRemove.setOnClickListener(v -> {
             projectManager.deleteProject(boundModel.getProjectName());
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
         });
         binding.buttonPanelEditName.setOnClickListener(v -> {
             Toast.makeText(this, "in Development...", Toast.LENGTH_SHORT).show();
-//            showRenamePopup();
+            //showRenamePopup();
         });
-//        binding.buttonPanelEditName.setAlpha(0.5f);
-
         binding.buttonPanelStar.setOnClickListener(v -> {
             updateStarButton();
         });
-
-        if (!Arrays.asList(boundModel.getTags()).contains("git")) {
-            binding.commitAndPushButton.setVisibility(GONE);
-        }
         binding.commitAndPushButton.setOnClickListener(v -> {
             var intent = new Intent(ProjectOpenActivity.this, ProjectPushActivity.class);
             intent.putExtra("PROJECT_NAME", boundModel.getProjectName());
             startActivity(intent);
         });
+        binding.setBranchButton.setOnClickListener(v -> {
+            if (currentBranchName != null)
+                showBranchSetDialog(repositoryBranches, currentBranchName);
+            else Toast.makeText(this, "Can't set branch",
+                    Toast.LENGTH_SHORT).show();
+        });
 
 
+        if (!Arrays.asList(boundModel.getTags()).contains("git"))
+        {
+            binding.commitAndPushButton.setVisibility(GONE);
+            binding.setBranchButton.setVisibility(GONE);
+            binding.currentBranchTextCard.setVisibility(GONE);
+        }
     }
 
-    private void initByModel() {
+    private void initViewByModel() {
         boundModel = (ProjectModelParcelable) getIntent().getParcelableExtra("projectModel");
         String projectFilepath = boundModel.getProjectPath();
         String projectName = boundModel.getProjectName();
@@ -201,8 +208,67 @@ public class ProjectOpenActivity extends AppCompatActivity {
     }
 
 
+    private void showBranchSetDialog(List<String> branches, String currentBranch) {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.dialog_set_branch, null);
+
+        Button positiveButton = dialogView.findViewById(R.id.positiveButton);
+        Button negativeButton = dialogView.findViewById(R.id.negativeButton);
+        LinearLayout container = dialogView.findViewById(R.id.branchesContainer);
+
+        var builder = new MaterialAlertDialogBuilder(this);
+        builder.setView(dialogView);
+        AlertDialog dialog = builder.create();
+        var branchViews = new ArrayList<View>();
+
+        for (String name : branches) {
+            LayoutInflater branchInflater = LayoutInflater.from(this);
+            View branchView = branchInflater.inflate(R.layout.branch,
+                    container, false);
+            TextView branchText = branchView.findViewById(R.id.branchText);
+            branchText.setText(name);
+            branchViews.add(branchView);
+
+            if (Objects.equals(name, currentBranch))
+            {
+                branchView.setAlpha(0.5f);
+                currentBranchView = branchView;
+            }
+
+            var params = new LinearLayout.LayoutParams(
+                    FlexboxLayout.LayoutParams.MATCH_PARENT,
+                    FlexboxLayout.LayoutParams.WRAP_CONTENT
+            );
+            branchView.setLayoutParams(params);
+            container.addView(branchView);
+
+            branchView.setOnClickListener(v -> {
+                if (currentBranchView == null) return;
+                currentBranchView.setAlpha(1f);
+                currentBranchView = branchView; // handle br view change
+                //currentBranchName = name; // anyway not be updated
+                currentBranchView.setAlpha(0.5f);
+            });
+        }
 
 
+        positiveButton.setOnClickListener(v -> {
+         // todo refactor (bad practice) ?????
+            var selectedBranchName = ((TextView) currentBranchView
+                    .findViewById(R.id.branchText)).getText().toString();
+            gitManageViewModel.setRepoBranch(
+                    boundModel.getProjectName(),
+                    selectedBranchName
+            );
+            dialog.dismiss();
+            currentBranchView = null;
+        });
+        negativeButton.setOnClickListener(v -> {
+            dialog.dismiss();
+            currentBranchView = null;
+        });
+        dialog.show();
+    }
     private void updateStarButton() {
         var list = new ArrayList<>(Arrays.asList(
                 projectManager.loadProjectModel(boundModel.getProjectName()).tags()
@@ -225,7 +291,6 @@ public class ProjectOpenActivity extends AppCompatActivity {
         );
 
     }
-
     private void addViewToFlexbox(View view, int marginRight) {
         FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(
                 FlexboxLayout.LayoutParams.WRAP_CONTENT,
@@ -235,5 +300,35 @@ public class ProjectOpenActivity extends AppCompatActivity {
         view.setLayoutParams(params);
         binding.tagFlexbox.addView(view);
     }
+    private void initTagViews(List<String> items) {
+        int[] colors = {R.color.green_light, R.color.blue_ultra,
+                R.color.orange_light, R.color.pink};
+        Random random = new Random();
+        binding.tagFlexbox.removeAllViews();
+
+
+        LayoutInflater _inflater = LayoutInflater.from(this);
+        View tagTitleView = _inflater.inflate(R.layout.tag_title,
+                binding.tagFlexbox, false);
+        addViewToFlexbox(tagTitleView, 9);
+
+        for (String tag : items) {
+            LayoutInflater inflater = LayoutInflater.from(this);
+            View tagView = inflater.inflate(R.layout.tag,
+                    binding.tagFlexbox, false);
+            TextView tagText = tagView.findViewById(R.id.tagText);
+            ImageView tagImage = tagView.findViewById(R.id.tagCircleImage);
+
+            int randIdx = random.nextInt(colors.length);
+            int randColor = colors[randIdx];
+
+            tagImage.setColorFilter(ContextCompat.getColor(this, randColor));
+            tagText.setText(tag);
+            addViewToFlexbox(tagView, 9);
+        }
+
+    }
+
+
 
 }
