@@ -141,7 +141,12 @@ public class CodeEditorActivity extends AppCompatActivity implements
             showOptionsContext(binding.optionsButton);
         });
         binding.recreateButton.setOnClickListener( v-> {
-            recreate();
+            Intent intent = new Intent(
+                    CodeEditorActivity.this,
+                    CodeEditorActivity.class);
+            intent.putExtra("projectName", projectName);
+            startActivity(intent);
+            finish();
         });
         binding.saveButton.setOnClickListener(v -> {
             if (currentCodeFragment == null) return;

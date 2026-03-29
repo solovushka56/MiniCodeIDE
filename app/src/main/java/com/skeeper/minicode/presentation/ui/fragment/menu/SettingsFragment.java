@@ -69,12 +69,12 @@ public class SettingsFragment extends Fragment {
                 CodeEditorSettingsActivity.class));
 
 
-        binding.gitSettings.setIcon(R.drawable.git_icon);
+        binding.gitSettings.setIcon(R.drawable.github);
         binding.gitSettings.setText("Git Integration");
         binding.gitSettings.setClickIntent(new Intent(getContext(),
                 GitIntegrationSettingsActivity.class));
 
-        binding.langSettings.setIcon(R.drawable.redo);
+        binding.langSettings.setIcon(R.drawable.ic_paste);
         binding.langSettings.setText("Language and Font");
         binding.langSettings.setAlpha(0.5f);
 
@@ -85,7 +85,8 @@ public class SettingsFragment extends Fragment {
         binding.themeSettings.setAlpha(0.5f);
 
         binding.themeSettings.setText("Edit Theme");
-        binding.themeSettings.setIcon(R.drawable.tutorials);
+        binding.themeSettings.setIcon(R.drawable.ic_star);
+
 
         //        for (View panel : panels) {
 //            if (panel instanceof SettingItemView) {

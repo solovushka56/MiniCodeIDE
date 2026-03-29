@@ -76,7 +76,7 @@
                     android:backgroundTint="@color/violet"
                     android:fontFamily="@font/cascadia_code"
                     android:imeOptions="actionDone"
-                    android:inputType="textCapSentences|textAutoCorrect"
+                    android:inputType="textVisiblePassword|textUri"
                     android:maxLines="1"
 
                     android:textColor="@color/white" />

@@ -17,6 +17,7 @@
         app:backgroundTint="@null"
         android:backgroundTint="@color/violet_light"
         android:background="@drawable/ripple_shape"
+
         android:clickable="true"
         app:rippleColor="#E5FFFFFF"
         android:padding="15dp"

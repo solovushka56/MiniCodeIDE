@@ -59,7 +59,7 @@
                     android:backgroundTint="@color/violet"
                     android:fontFamily="@font/cascadia_code"
                     android:imeOptions="actionDone"
-                    android:inputType="textCapSentences|textAutoCorrect"
+                    android:inputType="textVisiblePassword"
                     android:maxLength="50"
                     android:maxLines="1"
                     android:textColor="@color/white" />
@@ -84,7 +84,7 @@
                     android:background="@drawable/button_rect_common"
                     android:backgroundTint="@color/violet"
                     android:fontFamily="@font/cascadia_code"
-                    android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+                    android:inputType="textMultiLine|textVisiblePassword"
                     android:scrollHorizontally="false"
                     android:gravity="top"
                     android:minLines="2"
