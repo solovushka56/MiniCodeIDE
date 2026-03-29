@@ -118,6 +118,7 @@ public class ProjectRepository implements IProjectRepository {
 
     @Override
     public boolean saveMetadata(ProjectModel model) {
+        // todo not gen metadata if exists
         File projectDir = new File(model.path());
         File ideFilesPath = new File(projectDir, METADATA_DIR_NAME);
         if (!ideFilesPath.exists()) ideFilesPath.mkdirs();

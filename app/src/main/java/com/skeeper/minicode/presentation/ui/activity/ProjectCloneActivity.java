@@ -49,7 +49,7 @@ public class ProjectCloneActivity extends AppCompatActivity {
             return insets;
         });
 
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.activity_bottom));
         ClipboardManager clipboardManager = (ClipboardManager)
                 getSystemService(Context.CLIPBOARD_SERVICE);
 

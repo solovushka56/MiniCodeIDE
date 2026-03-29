@@ -39,14 +39,13 @@ public class ProjectCreateActivity extends AppCompatActivity {
     @Inject ProjectManager projectManager;
     ProjectsViewModel projectsViewModel;
     TemplateViewModel templateViewModel;
-    private final String currentDateTime = DateTimeHelper.getCurrentTime();
     private String projName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.activity_bottom));
 
         binding = ActivityProjectCreateBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

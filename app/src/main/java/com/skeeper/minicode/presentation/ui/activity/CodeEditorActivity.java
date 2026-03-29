@@ -108,7 +108,7 @@ public class CodeEditorActivity extends AppCompatActivity implements
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.activity_bottom));
         projectName = getIntent().getStringExtra("projectName");
 
         compileViewModel = new ViewModelProvider(this).get(CompileViewModel.class);

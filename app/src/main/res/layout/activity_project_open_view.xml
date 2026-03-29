@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_dark"
+    android:background="@drawable/basic_activity_bg"
     tools:context=".presentation.ui.activity.ProjectOpenActivity">
 
 
@@ -229,7 +229,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageView
-                    android:src="@drawable/git_pull"
+                    android:src="@drawable/git_branch"
                     android:layout_width="30dp"
                     android:layout_height="50dp"
                     android:scaleX="0.8"
@@ -274,40 +274,62 @@
         android:gravity="center"
         android:layout_margin="25dp">
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            app:iconTint="@color/blue_light"
+            app:icon="@drawable/git_commit"
+            app:iconGravity="top"
+            app:iconSize="24dp"
+            app:iconPadding="0dp"
+            android:gravity="center"
+            android:paddingVertical="0dp"
+            android:paddingHorizontal="0dp"
+            android:src="@drawable/git_commit"
             android:layout_weight="1"
             android:id="@+id/commitAndPushButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:background="@drawable/ripple_shape"
             android:backgroundTint="@color/violet_light"
             android:fontFamily="@font/cascadia_code"
-            android:text="Commit and Push"
+            android:text="Commit"
             android:layout_marginRight="10dp"
             app:backgroundTint="@null" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            app:iconTint="@color/blue_light"
+            app:icon="@drawable/git_branch"
+            app:iconGravity="top"
+            app:iconSize="24dp"
+            app:iconPadding="0dp"
+            android:gravity="center"
             android:layout_weight="1"
             android:id="@+id/setBranchButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:background="@drawable/ripple_shape"
             android:backgroundTint="@color/violet_light"
             android:fontFamily="@font/cascadia_code"
             android:text="Checkout"
             android:layout_marginRight="10dp"
+            android:padding="0dp"
             app:backgroundTint="@null" />
 
-        <Button
-            android:layout_weight="1"
+        <com.google.android.material.button.MaterialButton
+            app:iconGravity="top"
+            app:iconSize="24dp"
+
+            app:iconPadding="0dp"
+            android:gravity="center"
+            android:layout_weight="4"
             android:id="@+id/projectOpenButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="60dp"
             android:background="@drawable/ripple_shape"
             android:backgroundTint="@color/violet_light"
             android:fontFamily="@font/cascadia_code"
             android:text="Open"
 
+            android:padding="0dp"
             app:backgroundTint="@null" />
 
     </LinearLayout>

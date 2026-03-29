@@ -55,6 +55,51 @@
     </style>
 
 
+    <style name="CustomNavMaterialButtonActive" parent="Widget.MaterialComponents.Button">
+        <item name="android:scaleY">0.8</item>
+        <item name="android:scaleX">0.8</item>
+        <item name="fontFamily">@font/cascadia_code_semi_bold_origin</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textTop</item>
+        <item name="iconTint">@color/blue_light</item>
+
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/ripple_shape</item>
+        <item name="android:backgroundTint">@color/violet_light</item>
+    </style>
+
+    <style name="CustomNavMaterialButtonInactive" parent="Widget.MaterialComponents.Button">
+        <item name="android:scaleY">0.8</item>
+        <item name="android:scaleX">0.8</item>
+        <item name="fontFamily">@font/cascadia_code_semi_bold_origin</item>
+        <item name="android:layout_width">60dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:layout_margin">15dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textTop</item>
+        <item name="iconTint">@color/violet_light</item>
+
+        <item name="backgroundTint">@null</item>
+        <item name="android:background">@drawable/ripple_shape</item>
+        <item name="android:backgroundTint">@color/violet</item>
+    </style>
+
+
     <style name="NavBarButtonActive">
         <item name="android:scaleY">0.8</item>
         <item name="android:scaleX">0.8</item>

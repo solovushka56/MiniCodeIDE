@@ -1,5 +1,8 @@
 package com.skeeper.minicode.presentation.ui.activity;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -26,9 +29,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.constants.ProjectConstants;
 import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.databinding.ActivityMainBinding;
 import com.skeeper.minicode.core.singleton.SnippetsManager;
+import com.skeeper.minicode.domain.models.ProjectModel;
 import com.skeeper.minicode.presentation.viewmodels.SnippetViewModel;
+import com.skeeper.minicode.presentation.viewmodels.StartScreenViewModel;
 import com.skeeper.minicode.utils.helpers.SystemBarsHelper;
 
 import javax.inject.Inject;
@@ -40,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private SnippetViewModel snippetViewModel;
+    private StartScreenViewModel startScreenViewModel;
+    private ProjectModelParcelable projectModel = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,11 +68,35 @@ public class MainActivity extends AppCompatActivity {
         snippetViewModel = new ViewModelProvider(this).get(SnippetViewModel.class);
         snippetViewModel.saveSnippetsFilePresetIfNotExists();
 
-        binding.startButton.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, MenuActivity.class);
-            startActivity(intent);
-
+        startScreenViewModel = new ViewModelProvider(this).get(StartScreenViewModel.class);
+        startScreenViewModel.getRecentProject().observe(this, model -> {
+            projectModel = model;
+            binding.recentProjectButton.setVisibility(model != null
+                    ? VISIBLE
+                    : INVISIBLE
+            );
         });
+        startScreenViewModel.loadRecentProject();
+
+
+
+        binding.projectsMenuButton.setOnClickListener(v -> {
+            var intent = new Intent(
+                    MainActivity.this,
+                    MenuActivity.class
+            );
+            startActivity(intent);
+        });
+        binding.recentProjectButton.setOnClickListener(v -> {
+            if (projectModel == null) return;
+            var intent = new Intent(
+                    MainActivity.this,
+                    ProjectOpenActivity.class
+            );
+            intent.putExtra("projectModel", projectModel);
+            startActivity(intent);
+        });
+
         binding.sourceCodeButton.setOnClickListener(v -> {
             try {
                 Intent intent = new Intent(
@@ -77,10 +109,11 @@ public class MainActivity extends AppCompatActivity {
                         "Browser not found", Toast.LENGTH_SHORT).show();
             }
         });
-
         binding.dataResetButton.setOnClickListener((v) -> {
             showDataResetDialog();
         });
+
+
 
     }
 
@@ -108,8 +141,6 @@ public class MainActivity extends AppCompatActivity {
 
         dialog.show();
     }
-
-
     private void clearAppData() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             ActivityManager activityManager = (ActivityManager)

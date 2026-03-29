@@ -3,7 +3,13 @@ package com.skeeper.minicode.data.mappers;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.domain.models.ProjectModel;
 
+import javax.inject.Inject;
+
 public final class ProjectMapper {
+
+    @Inject
+    public ProjectMapper() {
+    }
 
     public ProjectModel mapToDomain(ProjectModelParcelable dataModel) {
         return new ProjectModel(

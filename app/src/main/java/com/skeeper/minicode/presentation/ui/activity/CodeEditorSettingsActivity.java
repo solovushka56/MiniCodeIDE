@@ -60,7 +60,7 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.activity_bottom));
 
         keyInputView = binding.keyTextEdit;
         valueInputView = binding.valueTextEdit;

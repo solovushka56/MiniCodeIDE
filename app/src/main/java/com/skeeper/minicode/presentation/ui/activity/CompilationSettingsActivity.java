@@ -43,7 +43,7 @@ public class CompilationSettingsActivity extends AppCompatActivity {
             return insets;
         });
 
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.activity_bottom));
         SharedPreferences preferences = getSharedPreferences("AppPrefs", MODE_PRIVATE);
 
         binding.buttonConfirm.setOnClickListener(v -> {

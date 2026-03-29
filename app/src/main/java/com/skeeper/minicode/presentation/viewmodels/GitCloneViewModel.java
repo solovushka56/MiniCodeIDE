@@ -18,7 +18,11 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 import javax.inject.Inject;
@@ -109,7 +113,7 @@ public class GitCloneViewModel extends ViewModel {
                 onRepoCloned();
                 getCloningState().postValue(RepoCloningState.COMPLETE);
                 Log.i("JGIT", "Cloning successful");
-            } catch (GitAPIException e) {
+            } catch (Exception e) {
                 cloningState.postValue(RepoCloningState.FAILED);
                 projectManager.deleteProject(projectName);
                 Log.e("JGIT", "Clone Failed: " + e.getMessage());
@@ -121,7 +125,8 @@ public class GitCloneViewModel extends ViewModel {
 
 
 
-    public void onRepoCloned() {
+    public void onRepoCloned() throws IOException {
+        addMinicodeToGitExclude(projectDir);
         var rectPalette = new ProjectRectColorBinding();
         var model = new ProjectModel(
                 projectName,
@@ -162,6 +167,49 @@ public class GitCloneViewModel extends ViewModel {
         this.token = token;
     }
 
+
+
+    private void addMinicodeToGitExclude(File repoDir) throws IOException {
+        File excludeFile = new File(repoDir, ".git/info/exclude");
+        File parent = excludeFile.getParentFile();
+
+        if (parent != null && !parent.exists()) {
+            parent.mkdirs();
+        }
+
+        final String rule = ".minicode/";
+        boolean alreadyExists = false;
+        boolean endsWithNewLine = true;
+
+        if (excludeFile.exists()) {
+            try (var reader = new BufferedReader(new FileReader(excludeFile))) {
+                String line;
+                String lastLine = null;
+
+                while ((line = reader.readLine()) != null) {
+                    if (line.trim().equals(rule)) {
+                        alreadyExists = true;
+                        break;
+                    }
+                    lastLine = line;
+                }
+
+                if (lastLine != null) {
+                    endsWithNewLine = true; // readLine съедает \n, для append ниже просто добавим свой
+                }
+            }
+        }
+
+        if (alreadyExists) return;
+
+        try (var writer = new BufferedWriter(new FileWriter(excludeFile, true))) {
+            if (excludeFile.length() > 0 && !endsWithNewLine) {
+                writer.newLine();
+            }
+            writer.write(rule);
+            writer.newLine();
+        }
+    }
 }
 
 

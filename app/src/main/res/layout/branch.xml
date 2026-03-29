@@ -4,37 +4,37 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/tag_rect"
-    android:backgroundTint="@color/pale_blue"
+    android:backgroundTint="@color/violet_light"
     android:padding="9dp"
-    >
+    android:layout_marginBottom="16dp"
+    android:gravity="center_vertical">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <ImageView
-            android:src="@drawable/actions_icon"
-            android:layout_gravity="center"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:scaleX="1.1"
-            android:scaleY="1.1"
-            />
-
-    </LinearLayout>
-
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/actions_icon"
+        android:scaleX="1.2"
+        android:scaleY="1.2" />
 
     <TextView
         android:id="@+id/branchText"
-        android:layout_gravity="center"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="text"
         android:textSize="14sp"
-        android:textColor="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/white" />
 
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/branchSelectedCheckmark"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:src="@drawable/check" />
 
 </LinearLayout>

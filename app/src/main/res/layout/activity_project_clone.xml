@@ -126,7 +126,7 @@
                         android:clickable="true"
                         android:contentDescription="null"
 
-                        app:srcCompat="@drawable/ic_paste"
+                        app:srcCompat="@drawable/clipboard"
                         />
 
                     <TextView

@@ -13,6 +13,7 @@ public class UserPreferencesProvider {
 
     private static final String KEY_IS_FIRST_RUN = "isFirstRun";
     private static final String SERVER_URL = "customServerUrl";
+    private static final String RECENT_PROJECT_NAME = "";
 
     @Inject
     public UserPreferencesProvider(ISharedPreferencesProvider sharedPreferencesProvider) {
@@ -34,4 +35,12 @@ public class UserPreferencesProvider {
     public void setSavedServerIp(String value) {
         prefs.edit().putString(SERVER_URL, value).apply();
     }
+
+    public String getRecentProjectName() {
+        return prefs.getString(RECENT_PROJECT_NAME, "");
+    }
+    public void setRecentProjectName(String value) {
+        prefs.edit().putString(RECENT_PROJECT_NAME, value).apply();
+    }
+
 }

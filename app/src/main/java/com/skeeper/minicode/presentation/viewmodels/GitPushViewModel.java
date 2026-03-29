@@ -12,6 +12,7 @@ import com.skeeper.minicode.domain.enums.RepoCloningState;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
@@ -53,6 +54,12 @@ public class GitPushViewModel extends ViewModel {
         task.execute();
     }
 
+    public String getRemoteUrl(File repoDir) throws Exception {
+        try (Git git = Git.open(repoDir)) {
+            var config = git.getRepository().getConfig();
+            return config.getString("remote", "origin", "url");
+        }
+    }
 
     public MutableLiveData<String> getPushResult() {
         return pushResult;
@@ -123,6 +130,8 @@ public class GitPushViewModel extends ViewModel {
                 viewModel.pushResult.setValue(result);
             }
         }
+
+
 
     }
 

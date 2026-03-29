@@ -14,6 +14,8 @@
     <color name="violet_muted">#261D53</color>
     <color name="blue_grey">#29243A</color>
     <color name="blue_dark">#17102E</color>
+    <color name="gradient_dark">#110d21</color>
+    <color name="activity_bottom">#0d0a1c</color>
     <color name="orange_light">#ED6663</color>
     <color name="orange">#CC425E</color>
     <color name="green_light">#2BBD97</color>

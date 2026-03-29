@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.activity.MainActivity"
-    android:background="@color/blue_dark"
+    android:background="@drawable/start_activity_bg"
     >
 
     <LinearLayout
@@ -39,22 +39,39 @@
             android:textColor="#D9D9D9"
             android:textSize="18sp" />
 
-        <ImageButton
-            android:id="@+id/___startButton"
-            android:layout_width="150dp"
-            android:layout_height="70dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:background="@drawable/app_start_button"
-            android:contentDescription="start btn"
-            android:textColor="@color/white"
-            android:textSize="30dp"
-            android:visibility="gone"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/projectsMenuButton"
+            android:text="Open workspace"
+            app:icon="@drawable/ic_folder"
 
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginHorizontal="66dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_shape"
+            app:backgroundTint="@color/violet_light"
+            app:rippleColor="@color/soft_blue"
+            app:iconTint="@color/blue_light"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/recentProjectButton"
+            android:text="Open recent project"
+            app:icon="@drawable/ic_file"
+
+            android:layout_marginBottom="8dp"
+            android:layout_marginHorizontal="66dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_shape"
+            app:backgroundTint="@color/violet_light"
+            app:rippleColor="@color/soft_blue"
+            app:iconTint="@color/blue_light"
             />
 
         <LinearLayout
-
+            android:visibility="gone"
             android:id="@+id/startButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,8 +102,8 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="5dp"
+                android:layout_marginEnd="8dp"
                 android:scaleX="0.8"
                 android:scaleY="0.8"
                 android:src="@drawable/ic_run_mini"

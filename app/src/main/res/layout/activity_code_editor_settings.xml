@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.activity.CodeEditorSettingsActivity"
-    android:background="@color/blue_dark"
+    android:background="@drawable/basic_activity_bg"
     >
 
     <LinearLayout
@@ -38,10 +38,8 @@
             android:id="@+id/parentCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            app:cardBackgroundColor="@color/blue_grey"
-            app:cardCornerRadius="15dp"
-
+            android:layout_marginBottom="0dp"
+            app:cardBackgroundColor="@color/blue_dark"
             >
 
 
@@ -54,52 +52,51 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="15dp"
+                    android:layout_marginHorizontal="0dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="15dp"
-                        android:layout_weight="1.4"
-
                         android:hint="@string/enter_snippet_key"
-                        android:textColorHint="@color/blue_light"
-                        app:cursorColor="@color/blue_light"
-                        app:hintTextColor="@color/pale_blue">
+                        app:endIconDrawable="@drawable/editor"
+                        android:textColorHint="@color/violet_light"
+                        app:hintTextColor="@color/pale_blue"
+                        android:layout_marginRight="15dp"
+                        >
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/keyTextEdit"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/button_rect_common"
-                            android:backgroundTint="@color/violet_light"
+                            android:backgroundTint="@color/violet"
                             android:fontFamily="@font/cascadia_code"
                             android:imeOptions="actionDone"
-                            android:inputType="textCapSentences|textAutoCorrect"
+                            android:inputType="textVisiblePassword"
                             android:maxLength="18"
                             android:maxLines="1"
                             android:textColor="@color/blue_light"
-                            android:textCursorDrawable="@color/blue_light"
 
                             />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
                     <com.google.android.material.textfield.TextInputLayout
+                        android:layout_weight="1"
+                        android:id="@+id/projectUrlInput"
+                        android:gravity="center_vertical"
                         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
                         android:hint="@string/enter_snippet_value"
-                        android:textColorHint="@color/blue_light"
-                        app:cursorColor="@color/blue_light"
-                        app:helperTextTextColor="@color/blue_light"
+                        app:endIconDrawable="@drawable/editor"
+                        android:textColorHint="@color/violet_light"
                         app:hintTextColor="@color/pale_blue"
-
                         >
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -107,15 +104,14 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="@drawable/button_rect_common"
-                            android:backgroundTint="@color/violet_light"
+                            android:backgroundTint="@color/violet"
                             android:fontFamily="@font/cascadia_code"
                             android:imeOptions="actionDone"
-                            android:inputType="textCapSentences|textAutoCorrect"
+                            android:inputType="textVisiblePassword"
                             android:maxLength="25"
                             android:maxLines="1"
                             android:textColor="@color/blue_light"
-                            android:textColorHint="@color/blue_light"
-                            android:textCursorDrawable="@color/blue_light" />
+                            android:textColorHint="@color/blue_light" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -124,8 +120,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="15dp"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginVertical="15dp"
                     android:gravity="center"
                     android:orientation="horizontal">
 
@@ -177,6 +172,13 @@
 
         </androidx.cardview.widget.CardView>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            app:dividerColor="@color/blue_grey"
+            android:layout_marginBottom="15dp"
+            />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -192,6 +194,9 @@
 
 
         </ScrollView>
+
+
+
     </LinearLayout>
 
     <Button

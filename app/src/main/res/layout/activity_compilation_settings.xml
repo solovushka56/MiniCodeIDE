@@ -5,9 +5,10 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/blue_dark"
-
+    android:background="@drawable/basic_activity_bg"
     tools:context=".presentation.ui.activity.CompilationSettingsActivity">
+
+
     <Button
         android:layout_margin="25dp"
         android:id="@+id/buttonConfirm"
@@ -95,7 +96,7 @@
                 android:backgroundTint="@color/violet_light"
                 android:clickable="true"
                 android:contentDescription="null"
-                app:srcCompat="@drawable/ic_paste" />
+                app:srcCompat="@drawable/clipboard" />
 
             <ImageButton
                 android:id="@+id/buttonReset"

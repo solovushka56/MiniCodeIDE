@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.activity.ProjectCreateActivity"
-    android:background="@color/blue_dark"
+    android:background="@drawable/basic_activity_bg"
     >
 
 

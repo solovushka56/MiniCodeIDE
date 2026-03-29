@@ -1,10 +1,15 @@
 package com.skeeper.minicode.presentation.adapters;
 
+import static android.content.Context.CLIPBOARD_SERVICE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -71,7 +76,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
                 .start();
 
         holder.parentRectView.setOnClickListener(v -> {
-
             ViewScaleComponent.scaleView(holder.parentRectView, 110, 0.7f, 0.7f,
                     () -> ViewScaleComponent.scaleView(holder.parentRectView, 150, 1f, 1f, () -> {
                         try{
@@ -85,8 +89,18 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
                             },
                             QuartInterpolations::quartIn),
                     QuartInterpolations::quartOut);
+        });
+        holder.parentRectView.setOnLongClickListener(v -> {
+            String dirPath = currentModel.path();
 
+            ClipboardManager clipboard = (ClipboardManager)
+                    context.getSystemService(Context.CLIPBOARD_SERVICE);
 
+            ClipData clip = ClipData.newPlainText("project_directory", dirPath);
+            clipboard.setPrimaryClip(clip);
+
+            Toast.makeText(context, "Project path copied", Toast.LENGTH_SHORT).show();
+            return true;
         });
 
     }

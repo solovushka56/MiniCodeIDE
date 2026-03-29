@@ -43,7 +43,7 @@ public class ProjectPushActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.activity_bottom));
 
 
         projectName = getIntent().getStringExtra("PROJECT_NAME");
@@ -73,15 +73,10 @@ public class ProjectPushActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
                 return;
             }
-            String pushUrl = binding.pushUriEditText.getText().toString();
             String commitName = binding.commitEditText.getText().toString();
             String commitMessage = binding.commitMessageEditText.getText().toString();
 
-            if (pushUrl.isEmpty() || commitName.isEmpty()) {
-                Toast.makeText(this, "Fill in the missing text fields!",
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
+
             String fullMessage;
             if (!commitMessage.isEmpty())
                 fullMessage = commitName + "\n\n" + commitMessage;

@@ -4,12 +4,16 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +34,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.constants.ProjectTags;
+import com.skeeper.minicode.data.local.SharedPreferencesProvider;
+import com.skeeper.minicode.data.sources.preferences.UserPreferencesProvider;
 import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.core.singleton.ProjectManager;
@@ -64,11 +70,14 @@ public class ProjectOpenActivity extends AppCompatActivity {
     String currentBranchName = null;
     View currentBranchView = null;
 
+    @Inject
+    UserPreferencesProvider preferencesProvider;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        getWindow().setNavigationBarColor(getResources().getColor(R.color.violet));
+        getWindow().setNavigationBarColor(getResources().getColor(R.color.activity_bottom));
 
 
         binding = ActivityProjectOpenViewBinding.inflate(getLayoutInflater());
@@ -111,11 +120,11 @@ public class ProjectOpenActivity extends AppCompatActivity {
                         : "Current branch: " + "Error: Can't load"
                 );
             });
-            gitManageViewModel.getBranchSetResult().observe(this, success -> {
-                if (success == null) return;
-                Toast.makeText(this, (success)
+            gitManageViewModel.getBranchSetResult().observe(this, result -> {
+                if (result == null) return;
+                Toast.makeText(this, (result.currentBranch != null)
                         ? "Checkout successful"
-                        : "Checkout error", Toast.LENGTH_SHORT
+                        : "Error: " + result.errorMessage, Toast.LENGTH_SHORT
                 ).show();
             });
             gitManageViewModel.loadProjectBranches(boundModel.getProjectName());
@@ -130,6 +139,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
             );
             intent.putExtra("projectName", boundModel.getProjectName());
             Log.e("TRANSITION", "to code editor");
+            preferencesProvider.setRecentProjectName(boundModel.getProjectName());
             startActivity(intent);
         });
         binding.buttonPanelRemove.setOnClickListener(v -> {
@@ -222,6 +232,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
         var branchViews = new ArrayList<View>();
 
         for (String name : branches) {
+            Log.e("BRANCH_UI", "add view: " + name);
             LayoutInflater branchInflater = LayoutInflater.from(this);
             View branchView = branchInflater.inflate(R.layout.branch,
                     container, false);
@@ -229,9 +240,11 @@ public class ProjectOpenActivity extends AppCompatActivity {
             branchText.setText(name);
             branchViews.add(branchView);
 
+
+
             if (Objects.equals(name, currentBranch))
             {
-                branchView.setAlpha(0.5f);
+                animateBranch(branchView, true);
                 currentBranchView = branchView;
             }
 
@@ -239,15 +252,16 @@ public class ProjectOpenActivity extends AppCompatActivity {
                     FlexboxLayout.LayoutParams.MATCH_PARENT,
                     FlexboxLayout.LayoutParams.WRAP_CONTENT
             );
+            params.bottomMargin = 16;
             branchView.setLayoutParams(params);
             container.addView(branchView);
 
             branchView.setOnClickListener(v -> {
                 if (currentBranchView == null) return;
-                currentBranchView.setAlpha(1f);
+                animateBranch(currentBranchView, false);
                 currentBranchView = branchView; // handle br view change
                 //currentBranchName = name; // anyway not be updated
-                currentBranchView.setAlpha(0.5f);
+                animateBranch(currentBranchView, true);
             });
         }
 
@@ -329,6 +343,30 @@ public class ProjectOpenActivity extends AppCompatActivity {
 
     }
 
+    private void animateBranch(View branchView, boolean select) {
+        int fromColor = ContextCompat.getColor(
+                this,
+                select ? R.color.violet_light : R.color.pale_blue
+        );
+        int toColor = ContextCompat.getColor(
+                this,
+                select ? R.color.pale_blue : R.color.violet_light
+        );
+
+        ValueAnimator colorAnimator = ValueAnimator.ofArgb(fromColor, toColor);
+        colorAnimator.setDuration(220);
+        colorAnimator.setInterpolator(new DecelerateInterpolator());
+
+        colorAnimator.addUpdateListener(animator -> {
+            int animatedColor = (int) animator.getAnimatedValue();
+            branchView.setBackgroundTintList(ColorStateList.valueOf(animatedColor));
+        });
+
+        colorAnimator.start();
+
+        ImageView checkView = branchView.findViewById(R.id.branchSelectedCheckmark);
+        checkView.setVisibility(select ? VISIBLE : INVISIBLE);
+    }
 
 
 }

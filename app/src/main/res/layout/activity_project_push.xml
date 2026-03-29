@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.activity.ProjectPushActivity"
-    android:background="@color/blue_dark">
+    android:background="@drawable/basic_activity_bg"
+    >
 
 
     <LinearLayout
@@ -56,7 +57,7 @@
                         android:backgroundTint="@color/violet"
                         android:fontFamily="@font/cascadia_code"
                         android:imeOptions="actionDone"
-                        android:inputType="textCapSentences|textAutoCorrect"
+                        android:inputType="textVisiblePassword"
                         android:maxLength="50"
                         android:maxLines="1"
                         android:textColor="@color/white" />
@@ -81,9 +82,9 @@
                         android:backgroundTint="@color/violet"
                         android:fontFamily="@font/cascadia_code"
                         android:imeOptions="actionDone"
-                        android:inputType="textCapSentences|textAutoCorrect|textMultiLine"
+                        android:inputType="textVisiblePassword|textMultiLine"
                         android:maxLength="1000"
-                        android:maxLines="20"
+                        android:maxLines="15"
                         android:textColor="@color/white"
 
 
@@ -92,6 +93,7 @@
 
 
                 <com.google.android.material.divider.MaterialDivider
+
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
 
@@ -100,6 +102,7 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:visibility="gone"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -28,7 +28,7 @@ public class GitManageViewModel extends ViewModel {
             new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<String> currentBranch =
             new MutableLiveData<>("");
-    private final MutableLiveData<Boolean> branchSetResult =
+    private final MutableLiveData<BranchSetResult> branchSetResult =
             new MutableLiveData<>(); // true means success
 
     @Inject
@@ -46,12 +46,13 @@ public class GitManageViewModel extends ViewModel {
                         projectManager.loadProjectModel(projectName),
                         branch
                 );
-                branchSetResult.postValue(true);
+
+                branchSetResult.postValue(new BranchSetResult(branch, null));
                 currentBranch.postValue(branch);
             }
             catch (Exception e) {
-                Log.e("BranchChanged", "Failed to chang branch");
-                branchSetResult.postValue(false);
+                Log.e("BranchChanged", "Failed to chang branch: " + e.getMessage());
+                branchSetResult.postValue(new BranchSetResult(null, e.getMessage()));
             }
         });
     }
@@ -76,7 +77,6 @@ public class GitManageViewModel extends ViewModel {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-
         });
     }
 
@@ -87,8 +87,20 @@ public class GitManageViewModel extends ViewModel {
         return currentBranch;
     }
 
-    public MutableLiveData<Boolean> getBranchSetResult() {
+    public MutableLiveData<BranchSetResult> getBranchSetResult() {
         return branchSetResult;
     }
+
+    public class BranchSetResult {
+        public String currentBranch = null;
+        public String errorMessage = null;
+
+        public BranchSetResult(String currentBranch, String errorMessage) {
+            this.currentBranch = currentBranch;
+            this.errorMessage = errorMessage;
+        }
+    }
+
 }
+
 

@@ -125,13 +125,28 @@
 
             android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/projectsRecyclerView"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="recycler view for project rects"
-                android:clipToOutline="true"
-                />
+                android:layout_height="match_parent">
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/projectsRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="recycler view for project rects"
+                    android:clipToOutline="true"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_edge_fade_transparent_center"
+                    android:clickable="false"
+                    android:focusable="false" />
+
+
+            </FrameLayout>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
