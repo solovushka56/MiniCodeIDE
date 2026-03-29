@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
+
         SystemBarsHelper.hideNavigationBar(this);
 
         snippetViewModel = new ViewModelProvider(this).get(SnippetViewModel.class);
