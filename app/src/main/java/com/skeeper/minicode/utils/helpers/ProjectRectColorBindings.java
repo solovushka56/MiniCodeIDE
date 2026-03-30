@@ -6,7 +6,7 @@ import java.util.List;
 public class ProjectRectColorBindings {
 
     public static ProjectRectColorBinding orangeBinding = new ProjectRectColorBinding(
-            "#ED6663", "#CC425E");
+            "#c13c6c", "#751756");
     public static ProjectRectColorBinding violetBinding = new ProjectRectColorBinding(
             "#4C3BCF", "#2D246D");
     public static ProjectRectColorBinding greenBinding = new ProjectRectColorBinding(

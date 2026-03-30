@@ -6,19 +6,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
-import com.skeeper.minicode.data.mappers.ProjectMapper;
+import com.skeeper.minicode.data.repos.git.GitManageRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IFileDirectoryProvider;
-import com.skeeper.minicode.domain.enums.RepoCloningState;
-
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.lib.StoredConfig;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -27,39 +21,39 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class GitPushViewModel extends ViewModel {
 
-    IFileDirectoryProvider fileDirectoryProvider;
-
+    private final IFileDirectoryProvider fileDirectoryProvider;
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private final MutableLiveData<String> pushResult = new MutableLiveData<>();
+
+    private final GitManageRepository gitManageRepository;
+    private final ProjectManager projectManager;
 
     public String username = null;
     public String token = null;
 
-    @Inject ProjectManager projectManager;
-
-
     @Inject
-    public GitPushViewModel(IFileDirectoryProvider fileDirectoryProvider) {
+    public GitPushViewModel(
+            ProjectManager projectManager,
+            IFileDirectoryProvider fileDirectoryProvider,
+            GitManageRepository gitManageRepository
+    ) {
+        this.projectManager = projectManager;
         this.fileDirectoryProvider = fileDirectoryProvider;
+        this.gitManageRepository = gitManageRepository;
     }
 
 
     public void createCommitAndPush(File repoDir, String commitMessage) {
-        if (username ==  null || token == null) return;
-        GitPushTask task = new GitPushTask(
-                this,
-                repoDir,
-                username,
-                token,
-                commitMessage);
-        task.execute();
+        if (username ==  null || token == null || commitMessage.isEmpty()) return;
+
+        executor.execute(() -> {
+            var task = new GitPushTask(this, gitManageRepository,
+                    repoDir, username, token, commitMessage);
+            task.execute();
+        });
     }
 
-    public String getRemoteUrl(File repoDir) throws Exception {
-        try (Git git = Git.open(repoDir)) {
-            var config = git.getRepository().getConfig();
-            return config.getString("remote", "origin", "url");
-        }
-    }
+
 
     public MutableLiveData<String> getPushResult() {
         return pushResult;
@@ -79,62 +73,34 @@ public class GitPushViewModel extends ViewModel {
         private final String token;
         private final File projectDir;
         private final String commitMessage;
+        private final GitManageRepository gitManageRepository;
         GitPushTask(GitPushViewModel viewModel,
+                    GitManageRepository gitManageRepository,
                     File projectDir,
                     String username,
                     String token,
-                    String commitMessage) {
+                    String commitMessage
+        ) {
             this.viewModelRef = new WeakReference<>(viewModel);
             this.username = username;
             this.token = token;
             this.projectDir = projectDir;
             this.commitMessage = commitMessage;
+            this.gitManageRepository = gitManageRepository;
         }
 
         @Override
         protected String doInBackground(Void... voids) {
-            File gitDir = new File(projectDir, ".git");
-
-            Repository repository = null;
-            try {
-                repository = new FileRepositoryBuilder()
-                        .readEnvironment()
-                        .findGitDir(projectDir)
-                        .build();
-            } catch (IOException e) {
-                return "Error: " + e.getMessage();
-            }
-            try (Git git = new Git(repository)) {
-
-                git.add()
-                        .addFilepattern(".")
-                        .call();
-
-                git.commit()
-                        .setMessage(commitMessage)
-                        .call();
-
-                git.push().setCredentialsProvider(new UsernamePasswordCredentialsProvider(
-                        username, token)).call();
-
-                return "Push successful";
-            } catch (Exception e) {
-                return "Error: " + e.getMessage();
-            }
+            return gitManageRepository.pushChanges(projectDir,
+                    username, token, commitMessage);
         }
 
         @Override
         protected void onPostExecute(String result) {
             GitPushViewModel viewModel = viewModelRef.get();
-            if (viewModel != null) {
-                viewModel.pushResult.setValue(result);
-            }
+            if (viewModel != null) viewModel.pushResult.postValue(result);
         }
-
-
-
     }
-
 }
 
 

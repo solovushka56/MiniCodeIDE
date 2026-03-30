@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/group_rect_black"
+    android:background="@drawable/black_gradient_rect"
     tools:context=".presentation.ui.fragment.menu.ProjectsFragment"
     >
 
@@ -125,9 +125,16 @@
 
             android:layout_height="match_parent">
 
-            <FrameLayout
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:clickable="false"
+                android:focusable="false"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardElevation="0dp"
+                app:cardUseCompatPadding="false"
+                app:cardPreventCornerOverlap="false">
 
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -141,12 +148,13 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_edge_fade_transparent_center"
                     android:clickable="false"
                     android:focusable="false" />
 
+<!--                    android:background="@drawable/fade_overlay"-->
+<!--                    android:background="@drawable/bg_edge_fade_transparent_center"-->
 
-            </FrameLayout>
+            </androidx.cardview.widget.CardView>
 
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

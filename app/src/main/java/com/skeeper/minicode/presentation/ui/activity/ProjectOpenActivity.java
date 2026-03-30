@@ -4,7 +4,6 @@ import static android.view.View.GONE;
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 
-import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -34,13 +33,14 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.core.constants.ProjectTags;
-import com.skeeper.minicode.data.local.SharedPreferencesProvider;
 import com.skeeper.minicode.data.sources.preferences.UserPreferencesProvider;
 import com.skeeper.minicode.databinding.ActivityProjectOpenViewBinding;
 import com.skeeper.minicode.data.models.ProjectModelParcelable;
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.presentation.viewmodels.GitManageViewModel;
+import com.skeeper.minicode.presentation.viewmodels.GitPullViewModel;
 import com.skeeper.minicode.presentation.viewmodels.ProjectsViewModel;
+import com.skeeper.minicode.presentation.viewmodels.SecurePrefViewModel;
 import com.skeeper.minicode.presentation.viewmodels.TagViewModel;
 
 import java.util.ArrayList;
@@ -56,22 +56,23 @@ import dagger.hilt.android.AndroidEntryPoint;
 @AndroidEntryPoint
 public class ProjectOpenActivity extends AppCompatActivity {
 
-    @Inject
-    ProjectManager projectManager;
+
 
     private ActivityProjectOpenViewBinding binding;
-    ProjectsViewModel projectsViewModel;
-    GitManageViewModel gitManageViewModel;
+    private ProjectsViewModel projectsViewModel;
+    private GitManageViewModel gitManageViewModel;
+    private SecurePrefViewModel securePrefViewModel;
+    private GitPullViewModel gitPullViewModel;
 
-    TagViewModel tagViewModel;
-    ProjectModelParcelable boundModel = null;
+    private TagViewModel tagViewModel;
+    private ProjectModelParcelable boundModel = null;
 
-    List<String> repositoryBranches = new ArrayList<>();
-    String currentBranchName = null;
-    View currentBranchView = null;
+    private List<String> repositoryBranches = new ArrayList<>();
+    private String currentBranchName = null;
+    private View currentBranchView = null;
 
-    @Inject
-    UserPreferencesProvider preferencesProvider;
+    @Inject UserPreferencesProvider preferencesProvider;
+    @Inject ProjectManager projectManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,28 +89,22 @@ public class ProjectOpenActivity extends AppCompatActivity {
             return insets;
         });
 
+        initProjectViewByExtraArg();
+        setupProjectStar();
+
         projectsViewModel = new ViewModelProvider(this).get(ProjectsViewModel.class);
         gitManageViewModel = new ViewModelProvider(this).get(GitManageViewModel.class);
         tagViewModel = new ViewModelProvider(this).get(TagViewModel.class);
+        securePrefViewModel = new ViewModelProvider(this).get(SecurePrefViewModel.class);
+        gitPullViewModel = new ViewModelProvider(this).get(GitPullViewModel.class);
 
-        initViewByModel();
 
-        var list = new ArrayList<>(Arrays.asList(projectManager.loadProjectModel(
-                boundModel.getProjectName()).tags()));
-        boolean starred = list.contains(ProjectTags.PROJECT_STARRED);
-        var starImage = binding.starImage;
-        int color = starred ? R.color.yellow_saturated : R.color.blue_grey;
-        starImage.setColorFilter(ContextCompat.getColor(this, color));
-
-        findViewById(R.id.projectPanelStar).setVisibility(
-                starred ? VISIBLE : INVISIBLE);
 
         tagViewModel.getTags().observe(this, this::initTagViews);
         tagViewModel.loadProjectTags(boundModel.getProjectName());
 
 
-        if (Arrays.asList(boundModel.getTags()).contains("git"))
-        {
+        if (Arrays.asList(boundModel.getTags()).contains("git")) {
             gitManageViewModel.getProjectBranches().observe(this, data -> {
                 repositoryBranches = data;
             });
@@ -129,6 +124,18 @@ public class ProjectOpenActivity extends AppCompatActivity {
             });
             gitManageViewModel.loadProjectBranches(boundModel.getProjectName());
             gitManageViewModel.loadCurrentBranch(boundModel.getProjectName());
+
+            securePrefViewModel.getUsername().observe(this, username -> {
+                if (username != null) gitPullViewModel.setUsername(username); });
+            securePrefViewModel.getToken().observe(this, token -> {
+                if (token != null) gitPullViewModel.setToken(token); });
+
+            gitPullViewModel.getPullResult().observe(this, result -> {
+                Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
+            });
+
+            securePrefViewModel.loadUsername();
+            securePrefViewModel.loadToken();
         }
 
 
@@ -145,6 +152,7 @@ public class ProjectOpenActivity extends AppCompatActivity {
         binding.buttonPanelRemove.setOnClickListener(v -> {
             projectManager.deleteProject(boundModel.getProjectName());
             startActivity(new Intent(ProjectOpenActivity.this, MenuActivity.class));
+            finish();
         });
         binding.buttonPanelEditName.setOnClickListener(v -> {
             Toast.makeText(this, "in Development...", Toast.LENGTH_SHORT).show();
@@ -164,18 +172,41 @@ public class ProjectOpenActivity extends AppCompatActivity {
             else Toast.makeText(this, "Can't set branch",
                     Toast.LENGTH_SHORT).show();
         });
+        binding.gitPullButton.setOnClickListener(v -> {
+            gitPullViewModel.makeGitPull(boundModel.getProjectPath());
+        });
 
 
         if (!Arrays.asList(boundModel.getTags()).contains("git"))
         {
+            binding.gitPullButton.setVisibility(GONE);
             binding.commitAndPushButton.setVisibility(GONE);
             binding.setBranchButton.setVisibility(GONE);
             binding.currentBranchTextCard.setVisibility(GONE);
         }
     }
 
-    private void initViewByModel() {
+    private void setupProjectStar() {
+        var list = new ArrayList<>(Arrays.asList(projectManager.loadProjectModel(
+                boundModel.getProjectName()).tags()));
+        boolean starred = list.contains(ProjectTags.PROJECT_STARRED);
+        var starImage = binding.starImage;
+        int color = starred ? R.color.yellow_saturated : R.color.blue_grey;
+        starImage.setColorFilter(ContextCompat.getColor(this, color));
+        findViewById(R.id.projectPanelStar).setVisibility(
+                starred ? VISIBLE : INVISIBLE);
+    }
+
+    private void initProjectViewByExtraArg() {
+
         boundModel = (ProjectModelParcelable) getIntent().getParcelableExtra("projectModel");
+
+        if (boundModel == null) {
+            Toast.makeText(this, "Failed to open project: empty projectModel", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
         String projectFilepath = boundModel.getProjectPath();
         String projectName = boundModel.getProjectName();
         String mainRectColor = boundModel.getMainRectColorHex();

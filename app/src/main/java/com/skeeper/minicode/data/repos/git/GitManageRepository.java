@@ -10,8 +10,11 @@ import org.eclipse.jgit.api.ListBranchCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -106,6 +109,74 @@ public class GitManageRepository {
             }
             Log.i("BRANCHES_GET", String.valueOf(new ArrayList<>(result).size()));
             return new ArrayList<>(result);
+        }
+    }
+
+
+    public void pullChanges(String projectPath, String username, String token) throws Exception {
+        try (var git = Git.open(new File(projectPath))) {
+
+            var status = git.status().call();
+            boolean isModified = //tracked
+                    !status.getModified().isEmpty()
+                    || !status.getChanged().isEmpty()
+                    || !status.getAdded().isEmpty()
+                    || !status.getRemoved().isEmpty()
+                    || !status.getMissing().isEmpty()
+                    || !status.getConflicting().isEmpty();
+
+            if (isModified) throw new Exception(
+                    "Repo has uncommitted changes. Make a commit first");
+
+            var pullCommand = git.pull().setRemote("origin");
+
+            if (username != null && token != null)
+                pullCommand.setCredentialsProvider(
+                        new UsernamePasswordCredentialsProvider(username, token));
+
+            var result = pullCommand.call();
+            if (!result.isSuccessful()) {
+                throw new IllegalStateException(
+                        "Pull failed: " + result.toString());
+            }
+        }
+    }
+
+
+    public String pushChanges(File projectDir,
+                              String username,
+                              String token,
+                              String commitMessage
+    ) {
+        Repository repository = null;
+        try {
+            repository = new FileRepositoryBuilder()
+                    .readEnvironment()
+                    .findGitDir(projectDir)
+                    .build();
+        }
+        catch (IOException e) { return "Error: " + e.getMessage(); }
+
+        try (var git = new Git(repository)) {
+
+            git.add().addFilepattern(".").call();
+            git.commit().setMessage(commitMessage).call();
+            git.push().setCredentialsProvider(
+                    new UsernamePasswordCredentialsProvider(username, token)
+            ).call();
+
+            return "Push successful";
+        }
+        catch (Exception e) {
+            return "Error: " + e.getMessage();
+        }
+    }
+
+
+    public String getRemoteUrl(File repoDir) throws Exception {
+        try (Git git = Git.open(repoDir)) {
+            var config = git.getRepository().getConfig();
+            return config.getString("remote", "origin", "url");
         }
     }
 }

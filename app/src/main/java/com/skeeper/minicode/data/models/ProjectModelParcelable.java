@@ -89,14 +89,13 @@ public class ProjectModelParcelable implements Parcelable {
 
     //todo: move method to other entity
     private void initRandomPalette() {
-        List<ProjectRectColorBinding> colorBindings = new ArrayList<>(
-                ProjectRectColorBindings.bindingsList);
-        Collections.shuffle(colorBindings);
-
-        var randomizedPalette = colorBindings.get(0);
-
-        setMainRectColorHex(randomizedPalette.mainRectColor);
-        setInnerRectColorHex(randomizedPalette.innerRectColor);
+//        List<ProjectRectColorBinding> colorBindings = new ArrayList<>(
+//                ProjectRectColorBindings.bindingsList);
+//        Collections.shuffle(colorBindings);
+//        var randomizedPalette = colorBindings.get(0);//random
+        var green = ProjectRectColorBindings.greenBinding; // hardcoded
+        setMainRectColorHex(green.mainRectColor);
+        setInnerRectColorHex(green.innerRectColor);
     }
 
     public String getMainRectColorHex() {

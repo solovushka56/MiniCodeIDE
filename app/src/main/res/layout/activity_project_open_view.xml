@@ -276,6 +276,28 @@
 
         <com.google.android.material.button.MaterialButton
             app:iconTint="@color/blue_light"
+            app:icon="@drawable/check"
+            app:iconGravity="top"
+            app:iconSize="24dp"
+
+            app:iconPadding="0dp"
+            android:gravity="center"
+            android:paddingVertical="0dp"
+            android:paddingHorizontal="0dp"
+            android:src="@drawable/git_commit"
+            android:layout_weight="1"
+            android:id="@+id/gitPullButton"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/ripple_shape"
+            android:backgroundTint="@color/violet_light"
+            android:fontFamily="@font/cascadia_code"
+            android:text="Pull"
+            android:layout_marginRight="10dp"
+            app:backgroundTint="@null" />
+
+        <com.google.android.material.button.MaterialButton
+            app:iconTint="@color/blue_light"
             app:icon="@drawable/git_commit"
             app:iconGravity="top"
             app:iconSize="24dp"

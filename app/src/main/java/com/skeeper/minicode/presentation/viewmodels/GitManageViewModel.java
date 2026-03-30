@@ -91,6 +91,7 @@ public class GitManageViewModel extends ViewModel {
         return branchSetResult;
     }
 
+
     public class BranchSetResult {
         public String currentBranch = null;
         public String errorMessage = null;

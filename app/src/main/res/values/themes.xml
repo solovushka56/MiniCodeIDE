@@ -6,6 +6,8 @@
 
 <!--        <item name="android:background">@color/blue_dark</item>-->
 <!--        <item name="android:windowBackground">@color/blue_dark</item>-->
+        <item name="android:windowBackground">@color/violet_menu</item>
+
         <item name="fontFamily">@font/cascadia_code</item>
         <item name="android:fontFamily">@font/cascadia_code</item>
     </style>
@@ -14,6 +16,7 @@
 <!--        <item name="android:navigationBarColor">@android:color/transparent</item>-->
         <item name="android:fontFamily">@font/cascadia_code_semi_bold_origin</item>
         <item name="fontFamily">@font/cascadia_code_semi_bold_origin</item>
+        <item name="android:windowBackground">@color/violet_menu</item>
 
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowSharedElementEnterTransition">@transition/shared_item_enter</item>
