@@ -46,11 +46,11 @@ public class CompileViewModel extends ViewModel {
         this.compilerRepository = compilerRepository;
     }
 
-    public void compileAsync(String projectName) {
-        executor.execute(() -> compile(projectName));
+    public void compileAsync(String projectName, String stdin) {
+        executor.execute(() -> compile(projectName, stdin));
     }
 
-    private void compile(String projectName) {
+    private void compile(String projectName, String stdin) {
         var metadata = projectManager.loadProjectModel(projectName);
         var rootDirectory = projectManager.getProjectDir(projectName);
 
@@ -74,7 +74,9 @@ public class CompileViewModel extends ViewModel {
                 extension.name().toLowerCase(), // as extension
                 filesMap,
                 mainFile.getName(),
-                new String[] {}
+                new String[] {},
+                stdin
+
         );
 
         compilerRepository.getCompilationResult(request, projectName,

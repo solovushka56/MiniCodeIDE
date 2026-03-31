@@ -89,7 +89,7 @@
                     android:gravity="top"
                     android:textSize="15sp"
                     android:layout_margin="10dp"
-                    android:id="@+id/compileText"
+                    android:id="@+id/compileConsole"
                     android:textColor="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>

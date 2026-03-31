@@ -196,20 +196,29 @@ public class CodeEditorActivity extends AppCompatActivity implements
         });
 
 
-        binding.compilePanel.setOnClickListener(v -> {
-            compileViewModel.compileAsync(projectName);
+        binding.runCodeButton.setOnClickListener(v -> {
+            String stdin = binding.compileConsole.getText() != null
+                    ? binding.compileConsole.getText().toString() : "";
+            compileViewModel.compileAsync(projectName, stdin);
             binding.compileProgress.setVisibility(VISIBLE);
         });
-
+        binding.clearConsole.setOnClickListener(v -> {
+            binding.compileConsole.setText("");
+        });
         compileViewModel.getCompileResult().observe(this, compileResponse -> {
+            var startConsoleText = binding.compileConsole.getText().toString();
+            String stdinNewLine = startConsoleText.trim().isEmpty() ? "" : "\n";
             binding.compileProgress.setVisibility(INVISIBLE);
-            binding.compileText.setText(
-                    compileResponse.output() + "\n" + compileResponse.errors());
+            binding.compileConsole.setText(
+                    binding.compileConsole.getText() + stdinNewLine +
+                    compileResponse.output() + "\n" +
+                    compileResponse.errors()
+            );
         });
 
         compileViewModel.getCompileException().observe(this, error -> {
             binding.compileProgress.setVisibility(INVISIBLE);
-            binding.compileText.setText(error);
+            binding.compileConsole.setText(error);
         });
 
         binding.hideCompilePanelBtn.setOnClickListener(v -> {

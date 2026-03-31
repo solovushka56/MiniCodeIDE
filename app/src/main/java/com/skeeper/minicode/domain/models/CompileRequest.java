@@ -6,5 +6,6 @@ public record CompileRequest(
         String language,
         Map<String, String> files,
         String mainFile,
-        String[] cliArguments
+        String[] cliArguments,
+        String stdin
 ) {}

@@ -4,18 +4,13 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.ViewCompat;
@@ -45,7 +40,7 @@ public class CompilePanelView extends ConstraintLayout {
         compileProgress = findViewById(R.id.compileProgress);
         runCodeButton = findViewById(R.id.runCodeButton);
         hideCompilePanelButton = findViewById(R.id.hideCompilePanelBtn);
-        compileText = findViewById(R.id.compileText);
+        compileText = findViewById(R.id.compileConsole);
 
     }
 

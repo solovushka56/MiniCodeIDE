@@ -83,6 +83,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"/>
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/clearConsole"
+                        android:layout_margin="2dp"
+                        android:text="Clear"
+                        android:backgroundTint="@color/violet"
+                        app:cornerRadius="8dp"
+                        app:iconGravity="textEnd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"/>
                     <ImageButton
                         android:id="@+id/hideCompilePanelBtn"
                         android:scaleX="0.8"
@@ -105,10 +114,11 @@
                     android:layout_height="match_parent">
 
                     <EditText
+
                         android:gravity="top"
                         android:textSize="15sp"
                         android:layout_margin="10dp"
-                        android:id="@+id/compileText"
+                        android:id="@+id/compileConsole"
                         android:textColor="@color/white"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"/>
