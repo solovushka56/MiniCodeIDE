@@ -2,15 +2,13 @@ package com.skeeper.minicode.presentation.viewmodels;
 
 
 /// for syntax highlight and work with editing file syntax
-import android.content.Context;
-import android.widget.Toast;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.data.repos.project.CodeLangRepository;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
-import com.skeeper.minicode.domain.enums.ExtensionType;
+import com.skeeper.minicode.domain.enums.EditorLang;
 import com.skeeper.minicode.domain.usecases.project.syntax.GetLangRegexMapUseCase;
 import com.skeeper.minicode.domain.usecases.file.GetExtensionUseCase;
 
@@ -29,7 +27,7 @@ public class HighlightViewModel extends ViewModel {
     private final IResourcesProvider resourcesProvider;
     private File editingFile;
 
-    private Map<ExtensionType, Map<Pattern, Integer>>
+    private Map<EditorLang, Map<Pattern, Integer>>
             langMap = new HashMap<>(); /// to cache
 
     private final MutableLiveData<Map<Pattern, Integer>>
@@ -48,9 +46,9 @@ public class HighlightViewModel extends ViewModel {
     public void initHighlightTo(File editingFile) {
         this.editingFile = editingFile;
 
-        ExtensionType langType = new GetExtensionUseCase().execute(editingFile);
+        EditorLang langType = new GetExtensionUseCase().execute(editingFile);
 
-        if (langType == ExtensionType.OTHER) return;
+        if (langType == EditorLang.OTHER) return;
 
         // todo handle case where we have cached maps
         var map = getLangRegexMapUseCase.execute(langType);

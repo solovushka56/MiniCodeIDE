@@ -95,7 +95,7 @@ public class SnippetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             arrowTextView.setText(arrows[position]);
 
             arrowButton.setOnClickListener(v -> {
-                VibrationManager.vibrate(20L, itemView.getContext());
+                VibrationManager.vibrate(10L, itemView.getContext());
                 listener.onArrowPressed(position);
             });
         }
@@ -116,7 +116,7 @@ public class SnippetsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             textView.setContentDescription(currentModel.getSymbolValue());
 
             rect.setOnClickListener(v -> {
-                VibrationManager.vibrate(20L, itemView.getContext());
+                VibrationManager.vibrate(10L, itemView.getContext());
                 listener.onKeyPressed(currentModel);
             });
         }

@@ -1,0 +1,16 @@
+{
+  "languages": [
+    {
+      "name": "java",
+      "scopeName": "source.java",
+      "grammar": "textmate/java/syntaxes/java.tmLanguage.json",
+      "languageConfiguration": "textmate/java/language-configuration.json"
+    },
+    {
+      "name": "python",
+      "scopeName": "source.python",
+      "grammar": "textmate/python/syntaxes/MagicPython.tmLanguage.json",
+      "languageConfiguration": "textmate/python/language-configuration.json"
+    }
+  ]
+}

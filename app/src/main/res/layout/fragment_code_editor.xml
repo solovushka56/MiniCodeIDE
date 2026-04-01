@@ -6,6 +6,7 @@
     tools:context=".presentation.ui.fragment.CodeEditorFragment">
 
     <com.amrdeveloper.codeview.CodeView
+        android:visibility="gone"
         android:id="@+id/codeViewMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,8 +21,16 @@
         android:inputType="text|textNoSuggestions|textMultiLine|textVisiblePassword"
         android:textColor="#E5DADA"
         android:textIsSelectable="true"
-
         android:layerType="hardware"
         android:scrollbars="vertical|horizontal"
         android:scrollbarStyle="outsideOverlay" />
+
+    <io.github.rosemoe.sora.widget.CodeEditor
+        android:id="@+id/codeEditorMain"
+        android:background="@color/blue_grey"
+        android:backgroundTint="@color/blue_grey"
+        android:fontFamily="@font/cascadia_code_semi_bold_origin"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </FrameLayout>

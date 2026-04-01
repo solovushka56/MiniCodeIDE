@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
@@ -40,9 +39,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.amrdeveloper.codeview.CodeView;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IKeyPressedListener;
-import com.skeeper.minicode.presentation.ui.component.CompilePanelView;
 import com.skeeper.minicode.presentation.ui.dialog.CreateFileDialog;
 import com.skeeper.minicode.presentation.ui.dialog.DeleteFileDialog;
 import com.skeeper.minicode.presentation.ui.dialog.MoveFileDialog;
@@ -70,6 +67,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import io.github.rosemoe.sora.widget.CodeEditor;
 
 @AndroidEntryPoint
 public class CodeEditorActivity extends AppCompatActivity implements
@@ -224,6 +222,11 @@ public class CodeEditorActivity extends AppCompatActivity implements
         binding.hideCompilePanelBtn.setOnClickListener(v -> {
             hideCompilePanel();
         });
+
+
+        binding.buttonUndo.setOnClickListener(v -> performUndo());
+        binding.buttonRedo.setOnClickListener(v -> performRedo());
+//        updateButtonStates();
     }
 
 
@@ -373,19 +376,56 @@ public class CodeEditorActivity extends AppCompatActivity implements
 
 
 
-    private CodeView getCurrentCodeView() {
-        return currentCodeFragment.codeView;
-    }
-
-    private UndoRedoManager getCurrentUndoRedoManager() {
-        return currentCodeFragment.undoRedoManager;
+    private CodeEditor getCurrentCodeView() {
+        return currentCodeFragment.editor;
     }
 
 
     private void updateButtonStates() {
-        binding.buttonUndo.setEnabled(getCurrentUndoRedoManager().canUndo());
-        binding.buttonRedo.setEnabled(getCurrentUndoRedoManager().canRedo());
+        CodeEditor editor = getCurrentCodeView();
+        if (editor == null) {
+            binding.buttonUndo.setEnabled(false);
+            binding.buttonRedo.setEnabled(false);
+            return;
+        }
+
+        boolean canUndo = false;
+        boolean canRedo = false;
+
+        try {
+            canUndo = editor.canUndo();
+            canRedo = editor.canRedo();
+        } catch (Throwable ignored) {
+            try {
+                canUndo = editor.getText().canUndo();
+                canRedo = editor.getText().canRedo();
+            } catch (Throwable ignored2) {
+            }
+        }
+
+        binding.buttonUndo.setEnabled(canUndo);
+        binding.buttonRedo.setEnabled(canRedo);
+
+        binding.buttonUndo.setAlpha(canUndo ? 1f : 0.45f);
+        binding.buttonRedo.setAlpha(canRedo ? 1f : 0.45f);
     }
+
+    private void performUndo() {
+        CodeEditor editor = getCurrentCodeView();
+        if (editor == null) return;
+
+        editor.undo();
+        updateButtonStates();
+    }
+
+    private void performRedo() {
+        CodeEditor editor = getCurrentCodeView();
+        if (editor == null) return;
+
+        editor.redo();
+        updateButtonStates();
+    }
+
 
     private void setupKeyboardListener() {
 
@@ -482,38 +522,87 @@ public class CodeEditorActivity extends AppCompatActivity implements
 
     @Override
     public void onArrowPressed(int direction) {
-        int cursorPosition = getCurrentCodeView().getSelectionStart();
+        CodeEditor editor = getCurrentCodeView();
+        if (editor == null) return;
+
         switch (direction) {
             case 0:
-                if (cursorPosition > 0) getCurrentCodeView().setSelection(cursorPosition - 1);
+                moveCursorLeft(editor);
                 break;
             case 1:
-                if (cursorPosition < getCurrentCodeView().getText().length())
-                    getCurrentCodeView().setSelection(cursorPosition + 1);
+                moveCursorRight(editor);
                 break;
             case 2:
-                moveCursorVertically(getCurrentCodeView(), -1);
+                moveCursorUp(editor);
                 break;
             case 3:
-                moveCursorVertically(getCurrentCodeView(), 1);
+                moveCursorDown(editor);
                 break;
         }
     }
 
-    private void moveCursorVertically(EditText editText, int direction) {
-        int cursorPosition = editText.getSelectionStart();
-        Layout layout = editText.getLayout();
 
-        if (layout != null) {
-            int line = layout.getLineForOffset(cursorPosition);
-            int newLine = line + direction;
 
-            if (newLine >= 0 && newLine < layout.getLineCount()) {
-                float x = layout.getPrimaryHorizontal(cursorPosition);
-                int newPos = layout.getOffsetForHorizontal(newLine, x);
-                editText.setSelection(newPos);
-            }
+    private void moveCursorLeft(CodeEditor editor) {
+        if (editor == null) return;
+
+        int line = getCursorLine(editor);
+        int column = getCursorColumn(editor);
+
+        if (column > 0) {
+            editor.setSelection(line, column - 1);
+            return;
         }
+
+        if (line > 0) {
+            int prevLine = line - 1;
+            int prevLineLength = editor.getText().getColumnCount(prevLine);
+            editor.setSelection(prevLine, prevLineLength);
+        }
+    }
+
+    private void moveCursorRight(CodeEditor editor) {
+        if (editor == null) return;
+
+        int line = getCursorLine(editor);
+        int column = getCursorColumn(editor);
+        int currentLineLength = editor.getText().getColumnCount(line);
+        int lastLine = editor.getText().getLineCount() - 1;
+
+        if (column < currentLineLength) {
+            editor.setSelection(line, column + 1);
+            return;
+        }
+
+        if (line < lastLine) {
+            editor.setSelection(line + 1, 0);
+        }
+    }
+    private void moveCursorUp(CodeEditor editor) {
+        if (editor == null) return;
+
+        int line = getCursorLine(editor);
+        int column = getCursorColumn(editor);
+
+        if (line <= 0) return;
+
+        int targetLine = line - 1;
+        int targetColumn = Math.min(column, editor.getText().getColumnCount(targetLine));
+        editor.setSelection(targetLine, targetColumn);
+    }
+
+    private void moveCursorDown(CodeEditor editor) {
+        if (editor == null) return;
+
+        int line = getCursorLine(editor);
+        int column = getCursorColumn(editor);
+        int lastLine = editor.getText().getLineCount() - 1;
+
+        if (line >= lastLine) return;
+
+        int targetLine = line + 1;
+        int targetColumn = Math.min(column, editor.getText().getColumnCount(targetLine));
+        editor.setSelection(targetLine, targetColumn);
     }
 
     @Override
@@ -527,14 +616,51 @@ public class CodeEditorActivity extends AppCompatActivity implements
     }
 
     private void writeKeySymbol(SnippetModel keySymbolItemModel) {
-        var currentCodeView = getCurrentCodeView();
-        if (currentCodeView == null) {
+        CodeEditor editor = getCurrentCodeView();
+        if (editor == null || keySymbolItemModel == null) {
             Log.e("INIT_E", "key symbol key not inited");
             return;
         }
-        int cursorPosition = currentCodeView.getSelectionEnd();
-        Editable editable = currentCodeView.getText();
-        editable.insert(cursorPosition, keySymbolItemModel.getSymbolValue());
-        currentCodeView.setSelection(cursorPosition + keySymbolItemModel.getSymbolValue().length());
+
+        String text = keySymbolItemModel.getSymbolValue();
+        if (text == null) return;
+
+        insertTextAtCursor(editor, text);
     }
+
+    private void insertTextAtCursor(CodeEditor editor, String text) {
+        if (editor == null || text == null) return;
+
+        int line = getCursorLine(editor);
+        int column = getCursorColumn(editor);
+
+        editor.getText().insert(line, column, text);
+
+        moveCursorAfterInsertedText(editor, line, column, text);
+
+        updateButtonStates();
+    }
+    private void moveCursorAfterInsertedText(CodeEditor editor, int startLine, int startColumn, String insertedText) {
+        if (editor == null || insertedText == null) return;
+
+        String[] parts = insertedText.split("\n", -1);
+
+        if (parts.length == 1) {
+            editor.setSelection(startLine, startColumn + insertedText.length());
+            return;
+        }
+
+        int newLine = startLine + parts.length - 1;
+        int newColumn = parts[parts.length - 1].length();
+        editor.setSelection(newLine, newColumn);
+    }
+    private int getCursorLine(CodeEditor editor) {
+        return editor.getCursor().getLeftLine();
+    }
+
+    private int getCursorColumn(CodeEditor editor) {
+        return editor.getCursor().getLeftColumn();
+    }
+
+
 }

@@ -1,7 +1,7 @@
 package com.skeeper.minicode.domain.usecases.project.syntax;
 
 import com.skeeper.minicode.domain.contracts.repos.project.ICodeLangRepository;
-import com.skeeper.minicode.domain.enums.ExtensionType;
+import com.skeeper.minicode.domain.enums.EditorLang;
 import com.skeeper.minicode.domain.usecases.project.syntax.lang.GetJavaMapUseCase;
 import com.skeeper.minicode.domain.usecases.project.syntax.lang.GetPythonMapUseCase;
 
@@ -18,7 +18,7 @@ public class GetLangRegexMapUseCase {
     }
 
 
-    public Map<Pattern, Integer> execute(ExtensionType extension) {
+    public Map<Pattern, Integer> execute(EditorLang extension) {
         return switch (extension) {
             case PYTHON -> new GetPythonMapUseCase(codeLangRepository).execute(extension);
             case JAVA -> new GetJavaMapUseCase(codeLangRepository).execute(extension);

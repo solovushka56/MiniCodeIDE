@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
 import com.skeeper.minicode.domain.contracts.repos.compilation.ICompilerRepository;
-import com.skeeper.minicode.domain.enums.ExtensionType;
+import com.skeeper.minicode.domain.enums.EditorLang;
 import com.skeeper.minicode.domain.models.CompileRequest;
 import com.skeeper.minicode.domain.models.CompileResponse;
 import com.skeeper.minicode.domain.contracts.repos.file.IDirectoryRepository;
@@ -64,7 +64,7 @@ public class CompileViewModel extends ViewModel {
         }
 
         var extension = new GetExtensionUseCase().execute(mainFile);
-        if (extension != ExtensionType.PYTHON && extension != ExtensionType.JAVA) {
+        if (extension != EditorLang.PYTHON && extension != EditorLang.JAVA) {
             compileException.postValue("Unsupported language");
             return;
         }

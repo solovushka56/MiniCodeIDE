@@ -2,22 +2,22 @@ package com.skeeper.minicode.domain.usecases.file;
 
 import androidx.annotation.NonNull;
 
-import com.skeeper.minicode.domain.enums.ExtensionType;
+import com.skeeper.minicode.domain.enums.EditorLang;
 
 import java.io.File;
 import java.util.Locale;
 
 public class GetExtensionUseCase {
 
-    public ExtensionType execute(@NonNull File file) {
+    public EditorLang execute(@NonNull File file) {
         if (file.isDirectory())
-            return ExtensionType.OTHER;
+            return EditorLang.OTHER;
 
 
         String fileName = file.getName();
         int lastDotIdx = fileName.lastIndexOf('.');
         if (lastDotIdx == -1 || lastDotIdx == fileName.length() - 1) {
-            return ExtensionType.OTHER;
+            return EditorLang.OTHER;
         }
 
         String extension = fileName
@@ -25,11 +25,11 @@ public class GetExtensionUseCase {
                 .toLowerCase(Locale.ROOT);
 
         return switch (extension) {
-            case "java" -> ExtensionType.JAVA;
-            case "py" -> ExtensionType.PYTHON;
-            case "xml" -> ExtensionType.XML;
-            case "html" -> ExtensionType.HTML;
-            default -> ExtensionType.OTHER;
+            case "java" -> EditorLang.JAVA;
+            case "py" -> EditorLang.PYTHON;
+            case "xml" -> EditorLang.XML;
+            case "html" -> EditorLang.HTML;
+            default -> EditorLang.OTHER;
         };
     }
 }

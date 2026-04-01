@@ -1,12 +1,12 @@
 package com.skeeper.minicode.domain.models;
 
-import com.skeeper.minicode.domain.enums.ExtensionType;
+import com.skeeper.minicode.domain.enums.EditorLang;
 
 import java.util.List;
 
 public class LangModel {
 
-    ExtensionType langType;
+    EditorLang langType;
 
     List<String> keywords;
     List<String> operators;
@@ -15,7 +15,7 @@ public class LangModel {
     List<String> attributes;
 
 
-    public LangModel(ExtensionType langType, List<String> keywords, List<String> operators,
+    public LangModel(EditorLang langType, List<String> keywords, List<String> operators,
                      List<String> objectTypes, List<String> primitiveTypes,
                      List<String> attributes)
     {
@@ -47,7 +47,7 @@ public class LangModel {
         return attributes;
     }
 
-    public ExtensionType getLangType() {
+    public EditorLang getLangType() {
         return langType;
     }
 }

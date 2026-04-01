@@ -3,7 +3,7 @@ package com.skeeper.minicode.domain.usecases.project.syntax.lang;
 import android.graphics.Color;
 
 import com.skeeper.minicode.domain.contracts.repos.project.ICodeLangRepository;
-import com.skeeper.minicode.domain.enums.ExtensionType;
+import com.skeeper.minicode.domain.enums.EditorLang;
 import com.skeeper.minicode.domain.models.HighlightThemeModel;
 import com.skeeper.minicode.domain.usecases.project.syntax.GetLangRegexMapUseCase;
 
@@ -18,7 +18,7 @@ public class GetJavaMapUseCase extends GetLangRegexMapUseCase {
     }
 
     @Override
-    public Map<Pattern, Integer> execute(ExtensionType extension) {
+    public Map<Pattern, Integer> execute(EditorLang extension) {
         var langModel = codeLangRepository.getLangModel(extension);
 
         Map<Pattern, Integer> syntaxPatternsMap = new LinkedHashMap<>();

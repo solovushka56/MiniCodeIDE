@@ -117,7 +117,7 @@ public class CodeEditorSettingsActivity extends AppCompatActivity {
         snippetPanel.setLayoutParams(layoutParams);
 
         snippetPanel.removeButton.setOnClickListener(v -> {
-            VibrationManager.vibrate(70, this);
+            VibrationManager.vibrate(25, this);
             snippetsList.remove(boundModel);
             ViewAnimator.collapseLeft(snippetPanel, 300L, true);
             snippetPanel.animate().alpha(0f).setDuration(250L).setInterpolator(new DecelerateInterpolator()).withEndAction(() ->

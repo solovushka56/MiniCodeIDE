@@ -8,7 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.skeeper.minicode.R;
 import com.skeeper.minicode.domain.contracts.other.providers.IResourcesProvider;
 import com.skeeper.minicode.domain.contracts.repos.project.ICodeLangRepository;
-import com.skeeper.minicode.domain.enums.ExtensionType;
+import com.skeeper.minicode.domain.enums.EditorLang;
 import com.skeeper.minicode.domain.models.LangModel;
 
 import java.io.IOException;
@@ -27,8 +27,8 @@ public class CodeLangRepository implements ICodeLangRepository {
     }
 
     @Override
-    public LangModel getLangModel(ExtensionType extensionType) {
-        var langRawRes = getLangRaw(extensionType);
+    public LangModel getLangModel(EditorLang editorLang) {
+        var langRawRes = getLangRaw(editorLang);
 
         try (InputStream inputStream = resourcesProvider.getResources().openRawResource(langRawRes)) {
             InputStreamReader reader = new InputStreamReader(inputStream);
@@ -42,7 +42,7 @@ public class CodeLangRepository implements ICodeLangRepository {
     }
 
 
-    public int getLangRaw(ExtensionType type) {
+    public int getLangRaw(EditorLang type) {
         return switch (type) {
             case JAVA -> R.raw.java_lang_syntax;
             case PYTHON -> R.raw.py_lang_syntax;

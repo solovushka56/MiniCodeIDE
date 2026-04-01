@@ -1,7 +1,5 @@
 package com.skeeper.minicode.domain.models;
 
-import com.skeeper.minicode.domain.enums.ExtensionType;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;

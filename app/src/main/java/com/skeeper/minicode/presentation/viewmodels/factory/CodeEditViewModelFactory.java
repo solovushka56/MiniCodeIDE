@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import com.skeeper.minicode.domain.enums.FileOpenMode;
 import com.skeeper.minicode.domain.models.FileItem;
-import com.skeeper.minicode.presentation.viewmodels.CodeEditViewModel;
+import com.skeeper.minicode.presentation.viewmodels.CodeEditorViewModel;
 
 public class CodeEditViewModelFactory implements ViewModelProvider.Factory {
     private final FileItem fileItem;
@@ -20,8 +20,8 @@ public class CodeEditViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(CodeEditViewModel.class)) {
-            return (T) new CodeEditViewModel(fileItem, fileOpenMode);
+        if (modelClass.isAssignableFrom(CodeEditorViewModel.class)) {
+            return (T) new CodeEditorViewModel(fileItem, fileOpenMode);
         }
         throw new IllegalArgumentException("Unknown ViewModel class");
     }

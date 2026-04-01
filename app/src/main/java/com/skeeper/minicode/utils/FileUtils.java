@@ -1,7 +1,5 @@
 package com.skeeper.minicode.utils;
 
-import com.skeeper.minicode.domain.enums.ExtensionType;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -13,7 +11,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
 
 
 public class FileUtils {
