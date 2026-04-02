@@ -179,21 +179,31 @@
             android:layout_marginBottom="15dp"
             />
 
-        <ScrollView
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <LinearLayout
-                android:id="@+id/itemsLayout"
+            android:layout_height="match_parent"
+            android:clickable="false"
+            android:focusable="false"
+            app:cardCornerRadius="20dp"
+            app:cardBackgroundColor="@android:color/transparent"
+            app:cardElevation="0dp"
+            app:cardUseCompatPadding="false"
+            app:cardPreventCornerOverlap="false">
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:layout_height="match_parent">
 
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/itemsLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+                    </LinearLayout>
 
-
-        </ScrollView>
+            </ScrollView>
+        </androidx.cardview.widget.CardView>
 
 
 

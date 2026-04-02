@@ -148,10 +148,8 @@ public class CodeEditorActivity extends AppCompatActivity implements
         });
         binding.saveButton.setOnClickListener(v -> {
             if (currentCodeFragment == null) return;
+            currentCodeFragment.saveNow();
             Toast.makeText(this, "File Saved!", Toast.LENGTH_SHORT).show();
-            filesViewModel.saveFile(
-                    currentCodeFragment.getBoundFileItem().getDirectory(),
-                    getCurrentCodeView().getText().toString());
         });
         binding.compilePanelShowButton.setOnClickListener(v -> {
             showCompilePanel();
@@ -195,6 +193,8 @@ public class CodeEditorActivity extends AppCompatActivity implements
 
 
         binding.runCodeButton.setOnClickListener(v -> {
+            if (currentCodeFragment != null)
+                currentCodeFragment.flushPendingSave();
             String stdin = binding.compileConsole.getText() != null
                     ? binding.compileConsole.getText().toString() : "";
             compileViewModel.compileAsync(projectName, stdin);
@@ -662,5 +662,10 @@ public class CodeEditorActivity extends AppCompatActivity implements
         return editor.getCursor().getLeftColumn();
     }
 
-
+    @Override
+    protected void onPause() {
+        if (currentCodeFragment != null)
+            currentCodeFragment.flushPendingSave();
+        super.onPause();
+    }
 }

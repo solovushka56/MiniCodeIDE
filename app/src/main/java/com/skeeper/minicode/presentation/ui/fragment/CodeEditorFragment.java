@@ -21,6 +21,8 @@ import com.skeeper.minicode.R;
 import com.skeeper.minicode.databinding.FragmentCodeEditorBinding;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.LangModel;
+import com.skeeper.minicode.presentation.viewmodels.CodeEditorSaveViewModel;
+import com.skeeper.minicode.presentation.viewmodels.CodeEditorViewModel;
 import com.skeeper.minicode.presentation.viewmodels.HighlightViewModel;
 import com.skeeper.minicode.utils.FileUtils;
 import com.skeeper.minicode.utils.helpers.EditorTextMateApplier;
@@ -38,9 +40,11 @@ public class CodeEditorFragment extends Fragment {
     public FragmentCodeEditorBinding binding;
     private final ImageButton buttonUndo;
     private final ImageButton buttonRedo;
+    private CodeEditorSaveViewModel saveViewModel;
+    private boolean suppressAutosave = true;
+
     public UndoRedoManager undoRedoManager;
-//    public HighlightViewModel highlightViewModel;
-//    public CodeEditorViewModel codeEditorViewModel;
+    public CodeEditorViewModel codeEditorViewModel;
 
     private final FileItem boundFileItem;
     public CodeEditor editor = null;
@@ -62,15 +66,16 @@ public class CodeEditorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         editor = binding.codeEditorMain;
+        codeEditorViewModel = new ViewModelProvider(this).get(CodeEditorViewModel.class);
+        codeEditorViewModel.getFileText().observe(getViewLifecycleOwner(), data -> editor.setText(data));
+        codeEditorViewModel.loadFileText(boundFileItem);
 
-//        setupCodeEditor();
-        //setupButtonListeners(buttonUndo, buttonRedo);
-        //codeEditorViewModel = new ViewModelProvider(this).get(CodeEditorViewModel.class);
+        saveViewModel = new ViewModelProvider(this).get(CodeEditorSaveViewModel.class);
+        setupAutosave();
+        observeSaveState();
 
+        suppressAutosave = false;
 
-        if (boundFileItem != null) {
-            editor.setText(FileUtils.readFileText(boundFileItem.getDirectory()));
-        }
 
         try {
             TextMateManager.init(requireContext());
@@ -80,7 +85,7 @@ public class CodeEditorFragment extends Fragment {
             //editor.setEditorLanguage(language);
         }
         catch (Exception e) {
-            Log.e("EDITORRR", "failed to init: " + e.getMessage());
+            Log.e("EDITOR_EXC", "failed to init: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -94,15 +99,12 @@ public class CodeEditorFragment extends Fragment {
         editor.setLineNumberEnabled(true);
         editor.setWordwrap(false);
         editor.setBackgroundResource(R.color.blue_grey);
-
-
         editor.setInputType(
                 InputType.TYPE_CLASS_TEXT
                         | InputType.TYPE_TEXT_FLAG_MULTI_LINE
                         | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
                         | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
         );
-
 
         var typeface = ResourcesCompat.getFont(requireContext(),
                 R.font.cascadia_code);
@@ -118,6 +120,39 @@ public class CodeEditorFragment extends Fragment {
         scheme.setColor(EditorColorScheme.TEXT_NORMAL, Color.parseColor("#E5DADA"));
     }
 
+    private void setupAutosave() {
+        if (editor == null) return;
+
+        editor.subscribeAlways(io.github.rosemoe.sora.event.ContentChangeEvent.class, event -> {
+            if (suppressAutosave) return;
+            if (boundFileItem == null) return;
+
+            saveViewModel.onEditorTextChanged(
+                    boundFileItem.getDirectory(),
+                    editor.getText().toString()
+            );
+        });
+    }
+
+    private void observeSaveState() {
+        saveViewModel.getSaveError().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.trim().isEmpty()) {
+                Log.e("SAVE_FILE", "save error:" + error);
+            }
+        });
+    }
+    public void saveNow() {
+        if (boundFileItem == null || editor == null) return;
+
+        saveViewModel.saveNow(
+                boundFileItem.getDirectory(),
+                editor.getText().toString()
+        );
+    }
+
+    public void flushPendingSave() {
+        saveViewModel.flushPendingSave();
+    }
     public FileItem getBoundFileItem() {
         return boundFileItem;
     }

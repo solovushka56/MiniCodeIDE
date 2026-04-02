@@ -89,6 +89,7 @@ dependencies {
     implementation("io.github.rosemoe:language-textmate")
     implementation("io.github.rosemoe:language-treesitter")
     implementation("io.github.rosemoe:oniguruma-native")
+    implementation("io.github.rosemoe:language-java")
 
     coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.5")
 
