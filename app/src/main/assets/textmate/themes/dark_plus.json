@@ -4,6 +4,131 @@
   "include": "./dark_vs.json",
   "tokenColors": [
     {
+      "name": "Comments",
+      "scope": [
+        "comment",
+        "punctuation.definition.comment"
+      ],
+      "settings": {
+        "foreground": "#6A9955"
+      }
+    },
+    {
+      "name": "Keywords control",
+      "scope": [
+        "keyword.control",
+        "keyword.control.flow",
+        "keyword.control.import",
+        "keyword.control.flow.python",
+        "keyword.control.import.python"
+      ],
+      "settings": {
+        "foreground": "#C586C0"
+      }
+    },
+    {
+      "name": "Storage / declarations",
+      "scope": [
+        "storage",
+        "storage.type",
+        "storage.modifier",
+        "storage.type.function.python",
+        "storage.type.class.python",
+        "storage.type.function.async.python",
+        "storage.type.function.lambda.python",
+        "storage.modifier.declaration.python"
+      ],
+      "settings": {
+        "foreground": "#569CD6"
+      }
+    },
+    {
+      "name": "Variables",
+      "scope": [
+        "variable",
+        "variable.parameter",
+        "variable.language",
+        "variable.language.special.self.python",
+        "variable.language.special.cls.python",
+        "variable.parameter.function.language.python",
+        "support.variable",
+        "entity.name.variable",
+        "meta.definition.variable.name"
+      ],
+      "settings": {
+        "foreground": "#9CDCFE"
+      }
+    },
+    {
+      "name": "Strings",
+      "scope": [
+        "string",
+        "string.quoted",
+        "string.quoted.single",
+        "string.quoted.double",
+        "string.quoted.docstring",
+        "constant.character.format.placeholder.other.python"
+      ],
+      "settings": {
+        "foreground": "#CE9178"
+      }
+    },
+    {
+      "name": "Numbers / constants",
+      "scope": [
+        "constant.numeric",
+        "constant.numeric.python",
+        "constant.numeric.float.python",
+        "constant.numeric.dec.python",
+        "constant.language.python"
+      ],
+      "settings": {
+        "foreground": "#B5CEA8"
+      }
+    },
+    {
+      "name": "Function names",
+      "scope": [
+        "entity.name.function",
+        "entity.name.function.python",
+        "support.function"
+      ],
+      "settings": {
+        "foreground": "#DCDCAA"
+      }
+    },
+    {
+      "name": "Type names",
+      "scope": [
+        "entity.name.type",
+        "entity.name.class",
+        "entity.name.type.class.python",
+        "support.class",
+        "support.type",
+        "entity.other.inherited-class.python"
+      ],
+      "settings": {
+        "foreground": "#4EC9B0"
+      }
+    },
+    {
+      "name": "Python punctuation and brackets",
+      "scope": [
+        "punctuation.parenthesis.begin.python",
+        "punctuation.parenthesis.end.python",
+        "punctuation.definition.list.begin.python",
+        "punctuation.definition.list.end.python",
+        "punctuation.definition.dict.begin.python",
+        "punctuation.definition.dict.end.python",
+        "punctuation.separator.element.python",
+        "punctuation.separator.colon.python",
+        "punctuation.separator.period.python"
+      ],
+      "settings": {
+        "foreground": "#D4D4D4"
+      }
+    },
+    {
       "name": "Function declarations",
       "scope": [
         "entity.name.function",
@@ -193,6 +318,19 @@
       "scope": "entity.name.label",
       "settings": {
         "foreground": "#C8C8C8"
+      }
+    },
+    {
+      "name": "Java imports",
+      "scope": [
+        "keyword.other.package.java",
+        "keyword.other.import.java",
+        "keyword.control.java",
+        "storage.modifier.java",
+        "storage.modifier.package.java"
+      ],
+      "settings": {
+        "foreground": "#C586C0"
       }
     }
   ],

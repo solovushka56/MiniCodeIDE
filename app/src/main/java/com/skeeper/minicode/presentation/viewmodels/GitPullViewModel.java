@@ -9,6 +9,7 @@ import com.skeeper.minicode.domain.models.ProjectModel;
 
 import java.io.File;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
@@ -17,7 +18,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 
 @HiltViewModel
 public class GitPullViewModel extends ViewModel {
-    Executor executor = Executors.newSingleThreadExecutor();
+    ExecutorService executor = Executors.newSingleThreadExecutor();
 
     private final MutableLiveData<String> pullResult = new MutableLiveData<>();
     public String username = null;

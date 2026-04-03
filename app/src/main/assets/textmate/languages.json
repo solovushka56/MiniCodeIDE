@@ -11,6 +11,30 @@
       "scopeName": "source.python",
       "grammar": "textmate/python/syntaxes/MagicPython.tmLanguage.json",
       "languageConfiguration": "textmate/python/language-configuration.json"
+    },
+    {
+      "name": "csharp",
+      "scopeName": "source.cs",
+      "grammar": "textmate/csharp/syntaxes/csharp.tmLanguage.json",
+      "languageConfiguration": "textmate/csharp/language-configuration.json"
+    },
+    {
+      "name": "xml",
+      "scopeName": "text.xml",
+      "grammar": "textmate/xml/syntaxes/xml.tmLanguage.json",
+      "languageConfiguration": "textmate/xml/language-configuration.json"
+    },
+    {
+      "name": "cpp",
+      "scopeName": "source.cpp",
+      "grammar": "textmate/cpp/syntaxes/cpp.tmLanguage.json",
+      "languageConfiguration": "textmate/cpp/language-configuration.json"
+    },
+    {
+      "name": "json",
+      "scopeName": "source.json",
+      "grammar": "textmate/json/syntaxes/JSON.tmLanguage.json",
+      "languageConfiguration": "textmate/json/language-configuration.json"
     }
   ]
 }

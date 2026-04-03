@@ -42,13 +42,12 @@ public class CodeEditorFragment extends Fragment {
     private final ImageButton buttonRedo;
     private CodeEditorSaveViewModel saveViewModel;
     private boolean suppressAutosave = true;
+    private final FileItem boundFileItem;
+    @Nullable private Runnable onEditorHistoryChanged;
 
-    public UndoRedoManager undoRedoManager;
     public CodeEditorViewModel codeEditorViewModel;
 
-    private final FileItem boundFileItem;
     public CodeEditor editor = null;
-
     public CodeEditorFragment(FileItem fileItem, ImageButton buttonUndo, ImageButton buttonRedo) {
         this.boundFileItem = fileItem;
         this.buttonUndo = buttonUndo;
@@ -66,19 +65,8 @@ public class CodeEditorFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         editor = binding.codeEditorMain;
-        codeEditorViewModel = new ViewModelProvider(this).get(CodeEditorViewModel.class);
-        codeEditorViewModel.getFileText().observe(getViewLifecycleOwner(), data -> editor.setText(data));
-        codeEditorViewModel.loadFileText(boundFileItem);
-
-        saveViewModel = new ViewModelProvider(this).get(CodeEditorSaveViewModel.class);
-        setupAutosave();
-        observeSaveState();
-
-        suppressAutosave = false;
-
 
         try {
-            TextMateManager.init(requireContext());
             TextMateManager.applyColorScheme(editor);
             EditorTextMateApplier.applyLanguageByFileName(editor, boundFileItem.getName());
             //TextMateLanguage language = TextMateLanguage.create("source.python", true);
@@ -88,8 +76,22 @@ public class CodeEditorFragment extends Fragment {
             Log.e("EDITOR_EXC", "failed to init: " + e.getMessage());
             e.printStackTrace();
         }
-
         setupCodeEditor();
+
+
+        codeEditorViewModel = new ViewModelProvider(this).get(CodeEditorViewModel.class);
+        codeEditorViewModel.getFileText().observe(getViewLifecycleOwner(), data -> {
+            editor.setText(data == null ? "" : data);
+            notifyEditorHistoryChanged();
+        });
+        codeEditorViewModel.loadFileText(boundFileItem);
+
+        saveViewModel = new ViewModelProvider(this).get(CodeEditorSaveViewModel.class);
+
+        setupUndoRedoStateSync();
+        setupAutosave();
+        observeSaveState();
+        suppressAutosave = false;
     }
 
 
@@ -112,6 +114,8 @@ public class CodeEditorFragment extends Fragment {
         editor.setTypefaceLineNumber(typeface);
         editor.setLineNumberEnabled(false);
         editor.setScrollBarEnabled(false); // todo back
+        editor.setHighlightBracketPair(true);
+        editor.setBlockLineWidth(0.08f);
 
         int bg = ContextCompat.getColor(getContext(), R.color.blue_grey);
         var scheme = editor.getColorScheme();
@@ -155,5 +159,21 @@ public class CodeEditorFragment extends Fragment {
     }
     public FileItem getBoundFileItem() {
         return boundFileItem;
+    }
+    public void setOnEditorHistoryChanged(@Nullable Runnable onEditorHistoryChanged) {
+        this.onEditorHistoryChanged = onEditorHistoryChanged;
+    }
+    private void notifyEditorHistoryChanged() {
+        if (onEditorHistoryChanged != null) {
+            onEditorHistoryChanged.run();
+        }
+    }
+
+    private void setupUndoRedoStateSync() {
+        if (editor == null) return;
+
+        editor.subscribeAlways(io.github.rosemoe.sora.event.ContentChangeEvent.class, event -> {
+            notifyEditorHistoryChanged();
+        });
     }
 }

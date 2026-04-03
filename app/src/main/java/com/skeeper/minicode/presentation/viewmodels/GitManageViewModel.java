@@ -46,7 +46,6 @@ public class GitManageViewModel extends ViewModel {
                         projectManager.loadProjectModel(projectName),
                         branch
                 );
-
                 branchSetResult.postValue(new BranchSetResult(branch, null));
                 currentBranch.postValue(branch);
             }

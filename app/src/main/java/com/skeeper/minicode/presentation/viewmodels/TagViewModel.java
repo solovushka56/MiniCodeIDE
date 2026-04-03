@@ -38,24 +38,23 @@ public class TagViewModel extends ViewModel {
     private final IProjectRepository projectRepository;
     private final SaveTagsUseCase saveTagsUseCase;
     private final LoadTagsUseCase loadTagsUseCase;
+    private final ProjectMapper mapper;
     @Inject
     public TagViewModel(GenerateMetadataUseCase generateMetadataUseCase,
                         IProjectRepository projectRepository,
-                        ISerializer<ProjectModel> projectModelISerializer) {
+                        ISerializer<ProjectModel> projectModelISerializer, ProjectMapper mapper) {
         this.generateMetadataUseCase = generateMetadataUseCase;
         this.projectRepository = projectRepository;
         this.loadMetadataUseCase = new LoadMetadataUseCase(projectRepository);
+        this.mapper = mapper;
         saveTagsUseCase = new SaveTagsUseCase(
                 loadMetadataUseCase,
                 generateMetadataUseCase,
                 projectRepository, projectModelISerializer
-                );
+        );
         loadTagsUseCase = new LoadTagsUseCase(loadMetadataUseCase);
     }
 
-    public MutableLiveData<List<String>> getTags() {
-        return tags;
-    }
 
 
     public void loadProjectTags(String projectName) {
@@ -65,28 +64,30 @@ public class TagViewModel extends ViewModel {
         });
     }
 
-    public void saveProjectTags(String[] newTags, String projectName) { // to repo or usecase
-        var mapper = new ProjectMapper();
-        var dataModel = mapper.mapFromDomain(projectRepository.loadProject(projectName));
-        dataModel.setTags(newTags);
-        try {
-            generateMetadataUseCase.execute(mapper.mapToDomain(dataModel));
-        } catch (DomainIOException e) {
-            throw new RuntimeException(e);
-        }
-        tags.setValue(Arrays.asList(newTags));
+    public void saveProjectTags(String[] updatedTags, String projectName) { // to repo or usecase
+        executor.execute(() -> {
+            var project = projectRepository.loadProject(projectName);
+            var modifiedProject = new ProjectModel(
+                    project.name(),
+                    project.description(),
+                    project.path(),
+                    updatedTags,
+                    project.mainRectColorHex(),
+                    project.innerRectColorHex(),
+                    project.mainFilePath());
+            try {
+                generateMetadataUseCase.execute(modifiedProject);
+            }
+            catch (DomainIOException e) {
+                throw new RuntimeException(e);
+            }
+            tags.postValue(Arrays.asList(updatedTags));
+        });
+    }
 
 
-//        executor.execute(() -> {
-//            try {
-//                saveTagsUseCase.execute(newTags, projectName);
-//                tags.postValue(Arrays.asList(newTags));
-//            } catch (DomainIOException e) {
-//                Log.e("TAGS_SAVING", "Failed saver tags in tag vm");
-//            }
-//
-//        });
-
+    public MutableLiveData<List<String>> getTags() {
+        return tags;
     }
 
 }

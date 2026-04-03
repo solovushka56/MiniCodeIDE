@@ -13,7 +13,6 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,17 +51,18 @@ import com.skeeper.minicode.presentation.viewmodels.CompileViewModel;
 import com.skeeper.minicode.presentation.viewmodels.FilesViewModel;
 import com.skeeper.minicode.presentation.viewmodels.SnippetViewModel;
 import com.skeeper.minicode.presentation.viewmodels.factory.FileViewModelFactory;
-import com.skeeper.minicode.utils.helpers.UndoRedoManager;
 import com.skeeper.minicode.domain.contracts.other.callbacks.IFileTreeListener;
 import com.skeeper.minicode.domain.models.FileItem;
 import com.skeeper.minicode.domain.models.SnippetModel;
 
 import com.skeeper.minicode.core.singleton.ProjectManager;
+import com.skeeper.minicode.utils.helpers.TextMateManager;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
@@ -130,10 +129,12 @@ public class CodeEditorActivity extends AppCompatActivity implements
             finish();
         });
         binding.openFolderButton.setOnClickListener(v -> {
-            hideKeyboard();
-            if (currentCodeFragment != null)
-                getCurrentCodeView().clearFocus();
-            binding.drawerLayout.openDrawer(GravityCompat.START);
+            v.post(() -> {
+                hideKeyboard();
+                if (currentCodeFragment != null)
+                    getCurrCodeEditor().clearFocus();
+                binding.drawerLayout.openDrawer(GravityCompat.START);
+            });
         });
         binding.optionsButton.setOnClickListener(v -> {
             showOptionsContext(binding.optionsButton);
@@ -224,16 +225,33 @@ public class CodeEditorActivity extends AppCompatActivity implements
         });
 
 
-        binding.buttonUndo.setOnClickListener(v -> performUndo());
-        binding.buttonRedo.setOnClickListener(v -> performRedo());
-//        updateButtonStates();
+        binding.buttonUndo.setOnClickListener(v -> {
+            if (currentCodeFragment != null) performUndo();
+        });
+        binding.buttonRedo.setOnClickListener(v -> {
+            if (currentCodeFragment != null) performRedo();
+        });
+        updateButtonStates();
+
+        View.OnClickListener openFileTree = v -> {
+            hideKeyboard();
+            if (currentCodeFragment != null)
+                getCurrCodeEditor().clearFocus();
+            binding.drawerLayout.openDrawer(GravityCompat.START);
+        };
+        binding.fileImg.setOnClickListener(openFileTree);
+        binding.fileImgText.setOnClickListener(openFileTree);
+
+        try {
+            TextMateManager.init(this);
+        } catch (Exception e) {}
     }
 
 
     private void showCompilePanel() {
         hideKeyboard();
         if (currentCodeFragment != null)
-            getCurrentCodeView().clearFocus();
+            getCurrCodeEditor().clearFocus();
 
 
         if (binding.compilePanel.getVisibility() == VISIBLE) return;
@@ -320,7 +338,6 @@ public class CodeEditorActivity extends AppCompatActivity implements
 
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         popupWindow.setElevation(16f);
-//        popupWindow.setAnimationStyle(R.style.CustomPopupAnimation);
 
         View editor_options = menuView.findViewById(R.id.menu_code_editor_options);
 
@@ -357,13 +374,16 @@ public class CodeEditorActivity extends AppCompatActivity implements
     public void setNewCodeEditorFragment(FileItem fileItem) {
         if (cachedFragments.get(fileItem) == null) {
             currentCodeFragment = new CodeEditorFragment(fileItem, binding.buttonUndo, binding.buttonRedo);
+            currentCodeFragment.setOnEditorHistoryChanged(this::updateButtonStates);
             cachedFragments.put(fileItem, currentCodeFragment);
         }
         else {
             currentCodeFragment = cachedFragments.get(fileItem);
+            currentCodeFragment.setOnEditorHistoryChanged(this::updateButtonStates);
         }
-        setCodeFragment(currentCodeFragment);
 
+        setCodeFragment(currentCodeFragment);
+        binding.codeViewFrame.post(this::updateButtonStates);
     }
 
     public void setCodeFragment(CodeEditorFragment newFragment) {
@@ -374,15 +394,16 @@ public class CodeEditorActivity extends AppCompatActivity implements
         fragmentTransaction.commit();
     }
 
-
-
-    private CodeEditor getCurrentCodeView() {
-        return currentCodeFragment.editor;
+    @Nullable
+    private CodeEditor getCurrCodeEditor() {
+        return currentCodeFragment != null
+                ? currentCodeFragment.editor
+                : null;
     }
 
 
     private void updateButtonStates() {
-        CodeEditor editor = getCurrentCodeView();
+        var editor = getCurrCodeEditor();
         if (editor == null) {
             binding.buttonUndo.setEnabled(false);
             binding.buttonRedo.setEnabled(false);
@@ -411,43 +432,104 @@ public class CodeEditorActivity extends AppCompatActivity implements
     }
 
     private void performUndo() {
-        CodeEditor editor = getCurrentCodeView();
+        CodeEditor editor = getCurrCodeEditor();
         if (editor == null) return;
 
-        editor.undo();
+        boolean canUndo = false;
+        try {
+            canUndo = editor.canUndo();
+        } catch (Throwable ignored) {
+            try {
+                canUndo = editor.getText().canUndo();
+            } catch (Throwable ignored2) {
+            }
+        }
+
+        if (!canUndo) {
+            updateButtonStates();
+            return;
+        }
+
+        try {
+            editor.undo();
+        } catch (Throwable ignored) {
+            try {
+                editor.getText().undo();
+            } catch (Throwable ignored2) {
+            }
+        }
+
         updateButtonStates();
     }
 
     private void performRedo() {
-        CodeEditor editor = getCurrentCodeView();
+        CodeEditor editor = getCurrCodeEditor();
         if (editor == null) return;
 
-        editor.redo();
+        boolean canRedo = false;
+        try {
+            canRedo = editor.canRedo();
+        } catch (Throwable ignored) {
+            try {
+                canRedo = editor.getText().canRedo();
+            } catch (Throwable ignored2) {
+            }
+        }
+
+        if (!canRedo) {
+            updateButtonStates();
+            return;
+        }
+
+        try {
+            editor.redo();
+        } catch (Throwable ignored) {
+            try {
+                editor.getText().redo();
+            } catch (Throwable ignored2) {
+            }
+        }
+
         updateButtonStates();
     }
 
 
-    private void setupKeyboardListener() {
+    private boolean isKeyboardVisible = false;
+    private int lastBottomPanelHeight = -1;
 
+    private void setupKeyboardListener() {
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             Rect rect = new Rect();
             rootView.getWindowVisibleDisplayFrame(rect);
 
             int screenHeight = rootView.getRootView().getHeight();
             int keyboardHeight = screenHeight - rect.bottom;
+            boolean shouldShowKeyboardPanel = keyboardHeight > convertDpToPx(minKeyboardHeight);
 
-            if (keyboardHeight > convertDpToPx(minKeyboardHeight)) {
+            if (shouldShowKeyboardPanel) {
                 int fillerTab = convertDpToPx(21);
-                bottomPanel.getLayoutParams().height = keyboardHeight + fillerTab;
-                bottomPanel.setVisibility(VISIBLE);
+                int targetHeight = keyboardHeight + fillerTab;
 
+                boolean heightChanged = lastBottomPanelHeight != targetHeight;
+                boolean visibilityChanged = !isKeyboardVisible || bottomPanel.getVisibility() != VISIBLE;
+
+                if (heightChanged || visibilityChanged) {
+                    ViewGroup.LayoutParams lp = bottomPanel.getLayoutParams();
+                    lp.height = targetHeight;
+                    bottomPanel.setLayoutParams(lp);
+                    bottomPanel.setVisibility(VISIBLE);
+
+                    lastBottomPanelHeight = targetHeight;
+                    isKeyboardVisible = true;
+                }
             } else {
-                bottomPanel.setVisibility(GONE);
+                if (isKeyboardVisible || bottomPanel.getVisibility() != GONE) {
+                    bottomPanel.setVisibility(GONE);
+                    isKeyboardVisible = false;
+                    lastBottomPanelHeight = -1;
+                }
             }
-            bottomPanel.requestLayout();
-
         });
-
     }
     private int convertDpToPx(int dp) {
         return (int) TypedValue.applyDimension(
@@ -522,7 +604,7 @@ public class CodeEditorActivity extends AppCompatActivity implements
 
     @Override
     public void onArrowPressed(int direction) {
-        CodeEditor editor = getCurrentCodeView();
+        CodeEditor editor = getCurrCodeEditor();
         if (editor == null) return;
 
         switch (direction) {
@@ -607,7 +689,7 @@ public class CodeEditorActivity extends AppCompatActivity implements
 
     @Override
     public void onKeyPressed(SnippetModel pressedKey) {
-        var currentCodeView = getCurrentCodeView();
+        var currentCodeView = getCurrCodeEditor();
         if (currentCodeView == null) {
             Log.e("INIT_E", "codeview is null");
             return;
@@ -616,7 +698,7 @@ public class CodeEditorActivity extends AppCompatActivity implements
     }
 
     private void writeKeySymbol(SnippetModel keySymbolItemModel) {
-        CodeEditor editor = getCurrentCodeView();
+        CodeEditor editor = getCurrCodeEditor();
         if (editor == null || keySymbolItemModel == null) {
             Log.e("INIT_E", "key symbol key not inited");
             return;
